@@ -27,7 +27,7 @@ class LoginController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        $requiredFields = ['firstName', 'lastName', 'email', 'role', 'password'];
+        $requiredFields = ['firstName', 'lastName', 'email', 'password'];
         foreach ($requiredFields as $field) {
             if (empty($data[$field])) {
                 return $this->createApiResponse([], sprintf('Missing required field: %s.', $field), Response::HTTP_BAD_REQUEST);
