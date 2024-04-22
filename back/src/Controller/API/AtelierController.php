@@ -3,6 +3,7 @@
 namespace App\Controller\API;
 
 use App\Entity\Atelier;
+use App\Entity\Reservation;
 use App\Entity\User;
 use App\Repository\AtelierRepository;
 use App\Repository\EcoleRepository;
@@ -11,6 +12,7 @@ use App\Trait\ApiResponseTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -193,5 +195,45 @@ class AtelierController extends AbstractController
         $entityManager->flush();
 
         return $this->createApiResponse(['message'=> 'Atelier updated successfully'],  Response::HTTP_OK);
+    }
+
+    #[Route('/all/user/{userId}', name: 'get_atelier_by_user', methods: ['GET'])]
+    public function getUserAteliers(int $userId, EntityManagerInterface $entityManager): Response
+    {
+        $user = $entityManager->getRepository(User::class)->find($userId);
+        if (!$user) {
+            throw new NotFoundHttpException('User not found.');
+        }
+
+        $reservations = $user->getReservations();
+
+        if ($reservations->isEmpty()) {
+            throw new NotFoundHttpException('No reservations found for this user.');
+        }
+
+        $ateliers = [];
+        foreach ($reservations as $reservation) {
+            foreach ($reservation->getAteliers() as $atelier) {
+                $ateliers[] = [
+                    'id' => $atelier->getId(),
+                    'date_debut' => $atelier->getDateDebut() ? $atelier->getDateDebut()->format('Y-m-d H:i:s') : null,
+                    'date_fin' => $atelier->getDateFin() ? $atelier->getDateFin()->format('Y-m-d H:i:s') : null,
+                    'date_inscription_maximum' => $atelier->getDateInscriptionMaximum() ? $atelier->getDateInscriptionMaximum()->format('Y-m-d H:i:s') : null,
+                    'limite_participant' => $atelier->getLimiteParticipant(),
+                    'localisation' => $atelier->getLocalisation(),
+                    'thematique' => $atelier->getThematique(),
+                    'ecole' => $atelier->getEcole() ? [
+                        'id' => $atelier->getEcole()->getId(),
+                        'nom' => $atelier->getEcole()->getNom()
+                    ] : null,
+                ];
+            }
+        }
+
+        if (empty($ateliers)) {
+            throw new NotFoundHttpException('No ateliers found associated with the user\'s reservations.');
+        }
+
+        return $this->createApiResponse($ateliers, Response::HTTP_OK);
     }
 }
