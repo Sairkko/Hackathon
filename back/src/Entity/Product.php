@@ -33,11 +33,11 @@ class Product
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $note = null;
-
     #[ORM\ManyToMany(targetEntity: Atelier::class, mappedBy: 'products')]
     private Collection $ateliers;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $description = null;
 
     public function __construct()
     {
@@ -121,18 +121,6 @@ class Product
         return $this;
     }
 
-    public function getNote(): ?float
-    {
-        return $this->note;
-    }
-
-    public function setNote(float $note): static
-    {
-        $this->note = $note;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Atelier>
      */
@@ -156,6 +144,18 @@ class Product
         if ($this->ateliers->removeElement($atelier)) {
             $atelier->removeProduct($this);
         }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }

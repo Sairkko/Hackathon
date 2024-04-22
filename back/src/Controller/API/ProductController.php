@@ -44,6 +44,7 @@ class ProductController extends AbstractController
         $product->setCepage($data['cepage']);
         $product->setMillesime($data['millesime']);
         $product->setType($data['type']);
+        $product->setDescription($data['type'] ?? "");
 
         $entityManager->persist($product);
         $entityManager->flush();
@@ -65,7 +66,7 @@ class ProductController extends AbstractController
                 'cepage' => $product->getCepage(),
                 'stock' => $product->getStock(),
                 'type' => $product->getType(),
-                'note' => $product->getNote(),
+                'description' => $product->getDescription(),
             ];
         }, $products);
 
@@ -89,7 +90,7 @@ class ProductController extends AbstractController
             'cepage' => $product->getCepage(),
             'stock' => $product->getStock(),
             'type' => $product->getType(),
-            'note' => $product->getNote(),
+            'description' => $product->getDescription(),
         ];
 
         return $this->createApiResponse(['product' => $productData], 'Product retrieved.', Response::HTTP_OK);
@@ -127,6 +128,7 @@ class ProductController extends AbstractController
         $product->setCepage($data['cepage'] ?? $product->getCepage());
         $product->setStock($data['stock'] ?? $product->getStock());
         $product->setType($data['type'] ?? $product->getType());
+        $product->setDescription($data['description'] ?? $product->getDescription());
 
         $entityManager->flush();
 
