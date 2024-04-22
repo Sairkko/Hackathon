@@ -16,6 +16,8 @@ return [
         '/_profiler/open' => [[['_route' => '_profiler_open_file', '_controller' => 'web_profiler.controller.profiler::openAction'], null, null, null, false, false, null]],
         '/register' => [[['_route' => 'app_register', '_controller' => 'App\\Controller\\API\\LoginController::register'], null, ['POST' => 0], null, false, false, null]],
         '/login' => [[['_route' => 'app_login', '_controller' => 'App\\Controller\\API\\LoginController::login'], null, ['POST' => 0], null, false, false, null]],
+        '/product/new' => [[['_route' => 'app_product_new', '_controller' => 'App\\Controller\\API\\ProductController::createProduct'], null, ['POST' => 0], null, false, false, null]],
+        '/product/all' => [[['_route' => 'app_product_get_all_products', '_controller' => 'App\\Controller\\API\\ProductController::getAllProducts'], null, ['GET' => 0], null, false, false, null]],
         '/' => [[['_route' => 'app_homepage', '_controller' => 'App\\Controller\\HomepageController::index'], null, null, null, false, false, null]],
     ],
     [ // $regexpList
@@ -38,6 +40,11 @@ return [
                         .')'
                     .')'
                 .')'
+                .'|/product/(?'
+                    .'|one/([^/]++)(*:226)'
+                    .'|delete/([^/]++)(*:249)'
+                    .'|edit/([^/]++)(*:270)'
+                .')'
             .')/?$}sDu',
     ],
     [ // $dynamicRoutes
@@ -48,8 +55,11 @@ return [
         148 => [[['_route' => '_profiler_router', '_controller' => 'web_profiler.controller.router::panelAction'], ['token'], null, null, false, false, null]],
         168 => [[['_route' => '_profiler_exception', '_controller' => 'web_profiler.controller.exception_panel::body'], ['token'], null, null, false, false, null]],
         181 => [[['_route' => '_profiler_exception_css', '_controller' => 'web_profiler.controller.exception_panel::stylesheet'], ['token'], null, null, false, false, null]],
-        191 => [
-            [['_route' => '_profiler', '_controller' => 'web_profiler.controller.profiler::panelAction'], ['token'], null, null, false, true, null],
+        191 => [[['_route' => '_profiler', '_controller' => 'web_profiler.controller.profiler::panelAction'], ['token'], null, null, false, true, null]],
+        226 => [[['_route' => 'app_product_get_product_by_id', '_controller' => 'App\\Controller\\API\\ProductController::getOneProduct'], ['id'], ['GET' => 0], null, false, true, null]],
+        249 => [[['_route' => 'app_product_delete_product', '_controller' => 'App\\Controller\\API\\ProductController::deleteProduct'], ['id'], ['DELETE' => 0], null, false, true, null]],
+        270 => [
+            [['_route' => 'app_product_edit_product', '_controller' => 'App\\Controller\\API\\ProductController::editProduct'], ['id'], ['PUT' => 0], null, false, true, null],
             [null, null, null, null, false, false, 0],
         ],
     ],
