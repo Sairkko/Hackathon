@@ -1,4 +1,6 @@
 ./DS_Store
 back/vendor
 back/var
+back/.idea
+.idea
 front/node_modules
