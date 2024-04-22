@@ -37,6 +37,9 @@ class Atelier
     #[ORM\ManyToMany(targetEntity: Reservation::class, mappedBy: 'ateliers')]
     private Collection $reservations;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $date_inscription_maximum = null;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -155,6 +158,18 @@ class Atelier
         if ($this->reservations->removeElement($reservation)) {
             $reservation->removeAtelier($this);
         }
+
+        return $this;
+    }
+
+    public function getDateInscriptionMaximum(): ?\DateTimeInterface
+    {
+        return $this->date_inscription_maximum;
+    }
+
+    public function setDateInscriptionMaximum(?\DateTimeInterface $date_inscription_maximum): static
+    {
+        $this->date_inscription_maximum = $date_inscription_maximum;
 
         return $this;
     }

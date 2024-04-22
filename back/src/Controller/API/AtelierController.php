@@ -49,6 +49,12 @@ class AtelierController extends AbstractController
         $atelier->setLimiteParticipant($data['limite_participant']);
         $atelier->setLocalisation($data['localisation'] ?? null);
         $atelier->setThematique($data['thematique'] ?? null);
+        if (!empty($data['date_inscription_maximum'])) {
+            $dateInscriptionMaximum = new \DateTime($data['date_inscription_maximum']);
+        } else {
+            $dateInscriptionMaximum = (clone new \DateTime($data['date_debut']))->modify('-1 week');
+        }
+        $atelier->setDateInscriptionMaximum($dateInscriptionMaximum);
 
         $entityManager->persist($atelier);
         $entityManager->flush();
@@ -67,6 +73,7 @@ class AtelierController extends AbstractController
                 'id' => $atelier->getId(),
                 'date_debut' => $atelier->getDateDebut()->format('Y-m-d H:i:s'),
                 'date_fin' => $atelier->getDateFin()->format('Y-m-d H:i:s'),
+                'date_inscription_maximum' => $atelier->getDateInscriptionMaximum()->format('Y-m-d H:i:s'),
                 'limite_participant' => $atelier->getLimiteParticipant(),
                 'localisation' => $atelier->getLocalisation(),
                 'thematique' => $atelier->getThematique()
@@ -89,6 +96,7 @@ class AtelierController extends AbstractController
             'id' => $atelier->getId(),
             'date_debut' => $atelier->getDateDebut()->format('Y-m-d H:i:s'),
             'date_fin' => $atelier->getDateFin()->format('Y-m-d H:i:s'),
+            'date_inscription_maximum' => $atelier->getDateInscriptionMaximum()->format('Y-m-d H:i:s'),
             'limite_participant' => $atelier->getLimiteParticipant(),
             'localisation' => $atelier->getLocalisation(),
             'thematique' => $atelier->getThematique(),
@@ -127,12 +135,24 @@ class AtelierController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
 
+        $dateDebut = !empty($data['date_debut']) ? new \DateTime($data['date_debut']) : $atelier->getDateDebut();
+        $dateFin = !empty($data['date_fin']) ? new \DateTime($data['date_fin']) : $atelier->getDateFin();
+
+        if ($dateDebut > $dateFin) {
+            return $this->createApiResponse([], 'erreur : Date de fin avant date de debut.', Response::HTTP_BAD_REQUEST);
+        }
+
         if (!empty($data['date_debut'])) {
             $atelier->setDateDebut(new \DateTime($data['date_debut']));
+            $atelier->setDateInscriptionMaximum((clone new \DateTime($data['date_debut']))->modify('-1 week'));
         }
 
         if (!empty($data['date_fin'])) {
             $atelier->setDateFin(new \DateTime($data['date_fin']));
+        }
+
+        if (!empty($data['date_inscription_maximum'])) {
+            $atelier->setDateInscriptionMaximum(new \DateTime($data['date_inscription_maximum']));
         }
 
         $atelier->setLimiteParticipant($data['limite_participant'] ?? $atelier->getLimiteParticipant());
