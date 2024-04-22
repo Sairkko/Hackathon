@@ -40,6 +40,9 @@ class Atelier
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date_inscription_maximum = null;
 
+    #[ORM\ManyToOne(inversedBy: 'ateliers')]
+    private ?Ecole $ecole = null;
+
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -170,6 +173,18 @@ class Atelier
     public function setDateInscriptionMaximum(?\DateTimeInterface $date_inscription_maximum): static
     {
         $this->date_inscription_maximum = $date_inscription_maximum;
+
+        return $this;
+    }
+
+    public function getEcole(): ?Ecole
+    {
+        return $this->ecole;
+    }
+
+    public function setEcole(?Ecole $ecole): static
+    {
+        $this->ecole = $ecole;
 
         return $this;
     }

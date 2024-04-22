@@ -49,7 +49,7 @@ class ProductController extends AbstractController
         $entityManager->persist($product);
         $entityManager->flush();
 
-        return $this->createApiResponse(['product' => ['id' => $product->getId()]], 'Product created.', Response::HTTP_CREATED);
+        return $this->createApiResponse([], 'Product created.', Response::HTTP_CREATED);
     }
 
     #[Route('/all', name: 'get_all_products', methods: ['GET'])]
@@ -70,7 +70,7 @@ class ProductController extends AbstractController
             ];
         }, $products);
 
-        return $this->createApiResponse(['products' => $productData], 'All products retrieved.', Response::HTTP_OK);
+        return $this->createApiResponse($productData, 'All products retrieved.', Response::HTTP_OK);
     }
 
     #[Route('/one/{id}', name: 'get_product_by_id', methods: ['GET'])]
@@ -93,7 +93,7 @@ class ProductController extends AbstractController
             'description' => $product->getDescription(),
         ];
 
-        return $this->createApiResponse(['product' => $productData], 'Product retrieved.', Response::HTTP_OK);
+        return $this->createApiResponse($productData, 'Product retrieved.', Response::HTTP_OK);
     }
 
     #[Route('/delete/{id}', name: 'delete_product', methods: ['DELETE'])]

@@ -5,6 +5,7 @@ namespace App\Controller\API;
 use App\Entity\Atelier;
 use App\Entity\User;
 use App\Repository\AtelierRepository;
+use App\Repository\EcoleRepository;
 use App\Repository\UserRepository;
 use App\Trait\ApiResponseTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,7 +33,7 @@ class AtelierController extends AbstractController
      * @throws Exception
      */
     #[Route('/new', name: 'new', methods: ['POST'])]
-    public function atelier(Request $request, EntityManagerInterface $entityManager): Response
+    public function atelier(EcoleRepository $ecoleRepository ,Request $request, EntityManagerInterface $entityManager): Response
     {
         $data = json_decode($request->getContent(), true);
 
@@ -56,10 +57,20 @@ class AtelierController extends AbstractController
         }
         $atelier->setDateInscriptionMaximum($dateInscriptionMaximum);
 
+        if (isset($data['school'])) {
+            $ecole = $ecoleRepository->find($data['school']);
+            if (!$ecole) {
+                return $this->createApiResponse([], 'Ecole not found', Response::HTTP_BAD_REQUEST);
+            }
+            $atelier->setEcole($ecole);
+        } else {
+            $atelier->setEcole(null);
+        }
+
         $entityManager->persist($atelier);
         $entityManager->flush();
 
-        return $this->createApiResponse(['id' => $atelier->getId()], Response::HTTP_CREATED);
+        return $this->createApiResponse([], Response::HTTP_CREATED);
     }
 
     #[Route('/all', name: 'all', methods: ['GET'])]
@@ -69,6 +80,7 @@ class AtelierController extends AbstractController
 
         $ateliersArray = [];
         foreach ($ateliers as $atelier) {
+            $ecoleData = $atelier->getEcole();
             $ateliersArray[] = [
                 'id' => $atelier->getId(),
                 'date_debut' => $atelier->getDateDebut()->format('Y-m-d H:i:s'),
@@ -76,7 +88,11 @@ class AtelierController extends AbstractController
                 'date_inscription_maximum' => $atelier->getDateInscriptionMaximum()->format('Y-m-d H:i:s'),
                 'limite_participant' => $atelier->getLimiteParticipant(),
                 'localisation' => $atelier->getLocalisation(),
-                'thematique' => $atelier->getThematique()
+                'thematique' => $atelier->getThematique(),
+                'ecole' => $ecoleData ? [
+                    'id' => $ecoleData->getId(),
+                    'nom' => $ecoleData->getNom()
+                ] : null,
             ];
         }
 
@@ -92,6 +108,7 @@ class AtelierController extends AbstractController
             throw new NotFoundHttpException('Atelier not found.');
         }
 
+        $ecoleData = $atelier->getEcole();
         $atelierArray = [
             'id' => $atelier->getId(),
             'date_debut' => $atelier->getDateDebut()->format('Y-m-d H:i:s'),
@@ -100,6 +117,10 @@ class AtelierController extends AbstractController
             'limite_participant' => $atelier->getLimiteParticipant(),
             'localisation' => $atelier->getLocalisation(),
             'thematique' => $atelier->getThematique(),
+            'ecole' => $ecoleData ? [
+                'id' => $ecoleData->getId(),
+                'nom' => $ecoleData->getNom()
+            ] : null,
         ];
 
         return $this->createApiResponse($atelierArray, Response::HTTP_OK);
@@ -125,7 +146,7 @@ class AtelierController extends AbstractController
      */
 
     #[Route('/edit/{id}', name: 'edit_atelier', methods: ['PUT'])]
-    public function editProduct(int $id, Request $request, AtelierRepository $atelierRepository, EntityManagerInterface $entityManager): Response
+    public function editProduct(EcoleRepository $ecoleRepository, int $id, Request $request, AtelierRepository $atelierRepository, EntityManagerInterface $entityManager): Response
     {
         $atelier = $atelierRepository->find($id);
 
@@ -158,6 +179,16 @@ class AtelierController extends AbstractController
         $atelier->setLimiteParticipant($data['limite_participant'] ?? $atelier->getLimiteParticipant());
         $atelier->setLocalisation($data['localisation'] ?? $atelier->getLocalisation());
         $atelier->setThematique($data['thematique'] ?? $atelier->getThematique());
+
+        if (isset($data['school'])) {
+            $ecole = $ecoleRepository->find($data['school']);
+            if (!$ecole) {
+                return $this->createApiResponse([], 'Ecole not found', Response::HTTP_BAD_REQUEST);
+            }
+            $atelier->setEcole($ecole);
+        } else {
+            $atelier->setEcole(null);
+        }
 
         $entityManager->flush();
 
