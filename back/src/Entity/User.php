@@ -36,6 +36,9 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
     #[ORM\ManyToMany(targetEntity: Reservation::class, mappedBy: 'user')]
     private Collection $reservations;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $token = null;
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
@@ -141,6 +144,18 @@ class User implements \Symfony\Component\Security\Core\User\PasswordAuthenticate
         if ($this->reservations->removeElement($reservation)) {
             $reservation->removeUser($this);
         }
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): static
+    {
+        $this->token = $token;
 
         return $this;
     }

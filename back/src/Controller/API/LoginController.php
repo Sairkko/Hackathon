@@ -53,11 +53,18 @@ class LoginController extends AbstractController
     }
 
     #[Route('/login', name: 'app_login', methods: ['POST'])]
-    public function login(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
+    public function login(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
         $data = json_decode($request->getContent(), true);
-        $email = $data['email'] ?? '';
-        $password = $data['password'] ?? '';
+
+        $requiredFields = ['email', 'password'];
+        foreach ($requiredFields as $field) {
+            if (empty($data[$field])) {
+                return $this->createApiResponse([], sprintf('Missing required field: %s.', $field), Response::HTTP_BAD_REQUEST);
+            }
+        }
+        $email = $data['email'];
+        $password = $data['password'];
 
         $user = $userRepository->findOneBy(['mail' => $email]);
 
@@ -66,6 +73,11 @@ class LoginController extends AbstractController
         }
 
         $token = bin2hex(random_bytes(32));
+
+        $user->setToken($token);
+        $entityManager->persist($user);
+        $entityManager->flush();
+
 
         return $this->createApiResponse(['token' => $token], 'Login successful.', Response::HTTP_OK);
     }
