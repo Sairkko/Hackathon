@@ -14,7 +14,9 @@ module.exports = {
       "red-200": '#F2CCD9',
       "red-100": '#F8E5EC',
       "dark-red": "#4F2424",
-      "grey": "#B5B5B5"
+      "grey": "#B5B5B5",
+      'hover-red': '#9A0034',
+      'white' : '#ffffff'
     },
     extend: {},
   },
