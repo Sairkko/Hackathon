@@ -12,6 +12,7 @@ export const useUserStore = defineStore('userStore', {
   }),
   actions: {
     setUser(user: User | null) { // Remplacez `User` par l'interface ou le type approprié.
+      localStorage.setItem('user', JSON.stringify(user))
       this.user = user;
     }
   },

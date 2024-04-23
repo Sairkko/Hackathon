@@ -1,19 +1,13 @@
 <template>
-  <div id="app_layout">
-    <Toast position="top-right" />
-    <component :is="layout">
-      <router-view>
-      </router-view>
-    </component>
+  <div id="base_layout">
+    <slot />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, shallowRef, watch} from "vue";
-import { useRoute } from "vue-router";
+import { defineComponent } from "vue";
+// import router from "../router";
 import { useUserStore } from '../store/UserStrore';
-import BaseLayout from "./BaseLayout.vue";
-import PageLayout from "./PageLayout.vue";
 
 
 export default defineComponent({
@@ -21,8 +15,6 @@ export default defineComponent({
   setup() {
     const userStore = useUserStore();
     const user = userStore.getUser!
-    const layout = shallowRef(PageLayout);
-    const route = useRoute();
 
     //  router.beforeEach((to, from, next) => {
     //   if (to.name != 'Login' && user.token == "" ) {
@@ -42,22 +34,9 @@ export default defineComponent({
       userStore.setUser(JSON.parse(localStorage.getItem("appUser")!))
     }
     
-    watch(
-      () => route.meta,
-        (meta) => {
-        switch (meta.layout) {
-          case "PageLayout":
-            layout.value = PageLayout;
-            break;
-          case "BaseLayout":
-            layout.value = BaseLayout;
-            break;
-        }
-      },
-      { immediate: false }
-    );
-    
-    return { layout };
+
+    return {
+    }
   }
 })
 </script>
