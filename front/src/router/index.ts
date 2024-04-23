@@ -2,6 +2,8 @@ import { createWebHistory, createRouter } from 'vue-router';
 import LoginPage from '../views/LoginPage.vue';
 
 import HomePage from '../views/HomePage.vue'
+import FooterCompoenent from "@/components/FooterCompoenent.vue";
+import NavBar from "@/components/NavBar.vue";
 
 const routes = [
   { path: '/', component: HomePage },
@@ -13,6 +15,10 @@ const routes = [
       layout: 'AppLayout'
     }
   },
+  {
+    path: '/footer',
+    component: FooterCompoenent
+  }
 ]
 
 

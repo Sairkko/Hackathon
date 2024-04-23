@@ -9,11 +9,15 @@ import 'primeicons/primeicons.css';
 import { pinia } from './store';
 import Toast from 'primevue/toast';
 import './assets/tailwind.css';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import {fas} from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-
+library.add(fas)
 createApp(App)
     .use(router)
     .use(PrimeVue)
     .use(pinia)
     .component('Toast',Toast)
+    .component("font-awesome-icon", FontAwesomeIcon)
     .mount('#app')
