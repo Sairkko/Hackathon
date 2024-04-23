@@ -1,53 +1,57 @@
 <template>
-  <div class="login-body">
-    <div class="body-container">
-      <div class="grid">
-        <div class="col-12 lg-4 text-center">
-          <img
-            src="../assets/winApp.png"
-            alt="winApp"
-            style="width: 400px; padding: 20px;"
-          />
-          <h1 class="login-title">Connexion</h1>
-          
+  <div class="flex items-center justify-center h-screen">
+    <div class="w-full max-w-md">
+        <div class="mb-4">
+          <img src="../assets/winApp.png" alt="winApp" class="w-80 mx-auto py-5"/>
         </div>
-        <div class="col-12 lg-6 right-side">
-          <div class="login-wrapper">
-            <div class="login-container">
-              <span class="title">Login</span>
-
-              <div class="grid fluid">
-                <div class="col-12">
-                  <InputText
+        <Card>
+            <template #title>
+                Connexion
+            </template>
+            <template #content>
+                <div class="mb-6">
+                <InputText
                     id="username"
                     placeholder="Username"
                     type="email"
-                    v-model="username"
+                    v-model="user.email"
                     @keyup.enter="onClick"
-                  />
-                </div>
-                <div class="col-12">
-                  <InputText
+                />
+                <InputText
                     id="password"
                     placeholder="Password"
                     type="password"
-                    v-model="password"
+                    v-model="user.password"
                     @keyup.enter="onClick"
-                  />
+                />
                 </div>
-                <div class="col-6">
-                  <Button class="button-plug " label="Sign In" icon="pi pi-check" @click="onClick" />
+                <div class="flex items-center flex-col justify-between">
+                    <a
+                        class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800"
+                        href="#"
+                        @click="resetPassword"
+                    >
+                        Mot de passe oublié?
+                    </a>
+                    <button
+                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        type="button"
+                        @click="onClick"
+                    >
+                        Valider
+                    </button>
+                    
                 </div>
-                <div class="col-6 password-container">
-                  <button @click="resetPassword" class="link">
-                    Forgot Password?
-                  </button>
+                <div class="text-center mt-4">
+                <a
+                    class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800"
+                    href="#"
+                >
+                    Vous n'avez pas de compte? Créez votre compte
+                </a>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+            </template>
+        </Card>
     </div>
   </div>
 </template>
@@ -56,18 +60,21 @@
 import { defineComponent, ref, computed } from "vue";
 import { useUserStore } from "../store/UserStrore";
 import InputText from "primevue/inputtext";
-import Button from "primevue/button";
+// import Button from "primevue/button";
+import userApi from "../api/UserApi"
+import User from "../models/User"
+import Card from "primevue/card"
 
 export default defineComponent({
   name: "LoginPage",
   components: {
     InputText,
-    Button,
+    // Button,
+    Card
   },
   setup() {
-    const username = ref("");
-    const password = ref("");
     const usersStore = useUserStore();
+    const user = ref<User>(new User())
 
     const appUser = computed(() => {
       return usersStore.getUser;
@@ -75,7 +82,12 @@ export default defineComponent({
 
 
     const onClick = () => {
-    //   login user
+     userApi.login(user.value).then(response => {
+        console.log(response.data)
+        const el = Object.assign(new User(),response.data.data)
+        usersStore.setUser(el)
+        localStorage.setItem("user", JSON.stringify(response.data.data))
+     })
     };
 
     const resetPassword = () => {
@@ -93,23 +105,13 @@ export default defineComponent({
 
     return {
       appUser,
-      username,
-      password,
       onClick,
       resetPassword,
+      user
     };
   },
 });
 </script>
 
 <style scoped>
-.login-title {
-  font-size:30px;
-  padding: 20px;
-}
-.button.button-plug, .buttonset.button-plug > .button, .splitbutton.button-plug > .button {
-    color: #ffffff;
-    background: linear-gradient(#2b59a5, #2d89c9);
-    border: 1px solid #2b59a5;
-}
 </style>

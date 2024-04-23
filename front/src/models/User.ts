@@ -3,9 +3,7 @@ export default class User {
     token?: string;
     password?: string;
     username?: string;
-    mail?: string;
+    email?: string;
+    role?: string[];
 
-    constructor(){
-
-    }
 }

@@ -1,8 +1,13 @@
+import User from '@/models/User';
 import apiClient from './apiClient';
 
 class UserApi {
-  register() {
-    return apiClient.get("/users");
+  register(user: User) {
+    return apiClient.post("/register", user);
+  }
+
+  login(user: User) {
+    return apiClient.post("/login", user);
   }
 }
 
