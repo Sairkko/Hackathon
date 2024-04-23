@@ -6,52 +6,71 @@
         </div>
         <Card class="p-card-no-padding">
             <template #title>
-                Connexion
+                Inscription
                 
             </template>
             <template #content>
                 <div class="px-8">
                     <InputText
+                        :class="'w-full ' + ((user.firstName === '') ? 'p-invalid' : '')"
+                        id="firstName"
+                        placeholder="Nom *"
+                        type="firstName"
+                        v-model="user.firstName"
+                        @keyup.enter="onClick"
+                        @blur="user.firstName === undefined ? user.firstName = '' : ''"
+                    />
+                    <InputText
+                        :class="'w-full ' + ((user.lastName === '') ? 'p-invalid' : '')"
+                        id="lastName"
+                        placeholder="Prénom *"
+                        type="lastName"
+                        v-model="user.lastName"
+                        @keyup.enter="onClick"
+                        @blur="user.lastName === undefined ? user.lastName = '' : ''"
+                    />
+                    <InputText
+                        class="w-full"
+                        id="phoneNumber"
+                        placeholder="Téléphone"
+                        type="phoneNumber"
+                        v-model="user.phoneNumber"
+                        @keyup.enter="onClick"
+                    />
+                    <InputText
                         :class="'w-full ' + ((user.email === '') ? 'p-invalid' : '')"
-                        id="username"
-                        placeholder="Email"
+                        id="email"
+                        placeholder="Email *"
                         type="email"
                         v-model="user.email"
-                        @blur="user.email === undefined ? user.email = '' : ''"
                         @keyup.enter="onClick"
+                        @blur="user.email === undefined ? user.email = '' : ''"
                     />
                     <InputText
                         :class="'w-full ' + ((user.password === '') ? 'p-invalid' : '')"
                         id="password"
-                        placeholder="Password"
+                        placeholder="Password *"
                         type="password"
                         v-model="user.password"
-                        @blur="user.password === undefined ? user.password = '' : ''"
                         @keyup.enter="onClick"
+                        @blur="user.password === undefined ? user.password = '' : ''"
                     />
                     <div class="flex items-center flex-col justify-between gap-2">
-                        <a
-                            class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800"
-                            href="#"
-                            @click="resetPassword"
-                        >
-                            Mot de passe oublié?
-                        </a>
                         <Button
                             class="bg-red hover:bg-red-700 text-white font-bold py-2 px-20"
                             @click="onClick"
                             label="Valider"
                         />
                         <span>
-                            Vous n'avez pas de compte ?
+                            Vous avez un compte ?
                         </span>
-                        <router-link :to="{path: '/register'}">
-                            <a
-                                class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800"
-                                href="#"
-                            >
-                                Créez votre compte
-                            </a>
+                        <router-link :to="{path: '/login'}">
+                          <a
+                              class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800"
+                              href="#"
+                          >
+                              Connectez vous !
+                          </a>
                         </router-link>
                     </div>
                 </div>
@@ -69,10 +88,10 @@ import Button from "primevue/button";
 import userApi from "../api/UserApi"
 import User from "../models/User"
 import Card from "primevue/card"
-import router from "../router";
+import router from "../router/index";
 
 export default defineComponent({
-  name: "LoginPage",
+  name: "RegisterPage",
   components: {
     InputText,
     Button,
@@ -81,6 +100,7 @@ export default defineComponent({
   setup() {
     const usersStore = useUserStore();
     const user = ref<User>(new User())
+    
 
     const appUser = computed(() => {
       return usersStore.getUser;
@@ -88,12 +108,9 @@ export default defineComponent({
 
 
     const onClick = () => {
-     userApi.login(user.value).then(response => {
-        console.log(response.data)
-        const el = Object.assign(new User(),response.data.data)
-        usersStore.setUser(el)
-        localStorage.setItem("user", JSON.stringify(response.data.data))
-        router.push({path: "/"})
+     userApi.register(user.value).then(response => {
+        console.log(response)
+        router.push({path: '/login'})
      })
     };
 
