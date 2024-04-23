@@ -21,6 +21,35 @@ class ReservationRepository extends ServiceEntityRepository
         parent::__construct($registry, Reservation::class);
     }
 
+    public function countTotalParticipantsForAtelier($atelierId)
+    {
+        $qb = $this->createQueryBuilder('r');
+        $qb->select('SUM(r.nombre)') // Utilisation de SUM pour additionner les participants
+        ->join('r.ateliers', 'a')
+            ->where('a.id = :atelierId')
+            ->setParameter('atelierId', $atelierId);
+
+        $result = $qb->getQuery()->getSingleScalarResult();
+        return (int)$result; // Retourner un entier, même si aucun participant n'est trouvé (retournera 0)
+    }
+
+    public function hasUserAlreadyReservedAtelier($userId, $atelierId)
+    {
+        $qb = $this->createQueryBuilder('r');
+        $qb->select('count(r.id)')
+            ->join('r.user', 'u')
+            ->join('r.ateliers', 'a')
+            ->where('u.id = :userId AND a.id = :atelierId')
+            ->setParameters([
+                'userId' => $userId,
+                'atelierId' => $atelierId,
+            ]);
+
+        $count = $qb->getQuery()->getSingleScalarResult();
+        return $count > 0;
+    }
+
+
 //    /**
 //     * @return Reservation[] Returns an array of Reservation objects
 //     */
