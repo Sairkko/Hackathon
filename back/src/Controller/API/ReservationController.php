@@ -33,7 +33,7 @@ class ReservationController extends AbstractController
     }
 
     #[Route('/new', name: 'new_reservation', methods: ['POST'])]
-    public function createReservation(Request $request, EntityManagerInterface $entityManager, AtelierRepository $atelierRepository, UserRepository $userRepository): Response
+    public function createReservation(Request $request, EntityManagerInterface $entityManager, AtelierRepository $atelierRepository, UserRepository $userRepository, ReservationRepository $reservationRepository): Response
     {
         $data = json_decode($request->getContent(), true);
 
@@ -49,6 +49,17 @@ class ReservationController extends AbstractController
 
         if ($atelier->getEcole() && empty($data['classe'])) {
             return $this->createApiResponse([], 'Atelier with school requires a class.', Response::HTTP_BAD_REQUEST);
+        }
+
+        if ($reservationRepository->hasUserAlreadyReservedAtelier($data['user'], $data['atelier'])) {
+            return $this->createApiResponse([], 'User has already reserved this atelier.', Response::HTTP_BAD_REQUEST);
+        }
+
+        $currentTotalParticipants = $reservationRepository->countTotalParticipantsForAtelier($atelier->getId());
+        $proposedTotalParticipants = $currentTotalParticipants + $data['nombre_participant'];
+
+        if ($proposedTotalParticipants > $atelier->getLimiteParticipant()) {
+            return $this->createApiResponse([], 'This reservation exceeds the participant limit for the atelier.', Response::HTTP_BAD_REQUEST);
         }
 
         $reservation = new Reservation();
