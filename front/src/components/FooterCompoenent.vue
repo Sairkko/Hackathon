@@ -23,7 +23,7 @@
         <a href="#" aria-label="Facebook" class="hover:text-gray-200">
         </a>
         <a href="#" aria-label="Twitter" class="hover:text-gray-200">
-          <font-awesome-icon icon="x-twitter" />
+          <font-awesome-icon icon="twitter" />
         </a>
         <a href="#" aria-label="Instagram" class="hover:text-gray-200 bg-dark">
         </a>

@@ -1,18 +1,21 @@
 <template>
   <div id="page_layout">
-    Header
+    <NavBar />
     <slot />
-    Footer
+    <FooterCompoenent />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import FooterCompoenent from "../components/FooterCompoenent.vue";
+import NavBar from "../components/NavBar.vue";
 // import router from "../router";
 import { useUserStore } from '../store/UserStrore';
 
 
 export default defineComponent({
+  components: { FooterCompoenent, NavBar },
   name: "AppLayout",
   setup() {
     const userStore = useUserStore();

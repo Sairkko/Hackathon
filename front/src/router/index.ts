@@ -3,11 +3,6 @@ import LoginPage from '../views/LoginPage.vue';
 import RegisterPage from '../views/RegisterPage.vue';
 import HomePage from '../views/HomePage.vue';
 
-import HomePage from '../views/HomePage.vue'
-import FooterCompoenent from "@/components/FooterCompoenent.vue";
-
-const routes = [
-  { path: '/', component: HomePage },
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -22,9 +17,6 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
-    path: '/footer',
-    component: FooterCompoenent
-  }
     path: '/register',
     name: 'RegisterPage',
     component: RegisterPage,
