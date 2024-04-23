@@ -21,6 +21,12 @@ class Reservation
     #[ORM\ManyToMany(targetEntity: Atelier::class, inversedBy: 'reservations')]
     private Collection $ateliers;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $classe = null;
+
+    #[ORM\Column]
+    private ?int $nombre = null;
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
@@ -76,6 +82,30 @@ class Reservation
     public function removeAtelier(Atelier $atelier): static
     {
         $this->ateliers->removeElement($atelier);
+
+        return $this;
+    }
+
+    public function getClasse(): ?string
+    {
+        return $this->classe;
+    }
+
+    public function setClasse(?string $classe): static
+    {
+        $this->classe = $classe;
+
+        return $this;
+    }
+
+    public function getNombre(): ?int
+    {
+        return $this->nombre;
+    }
+
+    public function setNombre(int $nombre): static
+    {
+        $this->nombre = $nombre;
 
         return $this;
     }

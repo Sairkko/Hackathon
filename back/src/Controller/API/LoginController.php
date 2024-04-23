@@ -72,14 +72,24 @@ class LoginController extends AbstractController
             return $this->createApiResponse([], 'Invalid credentials.', Response::HTTP_UNAUTHORIZED);
         }
 
-        $token = bin2hex(random_bytes(32));
+        if (!$user->getToken()) {
+            $token = bin2hex(random_bytes(32));
+            $user->setToken($token);
+            $entityManager->persist($user);
+            $entityManager->flush();
+        }
 
-        $user->setToken($token);
-        $entityManager->persist($user);
-        $entityManager->flush();
+        $userData = [
+            'id' => $user->getId(),
+            'nom' => $user->getNom(),
+            'prenom' => $user->getPrenom(),
+            'token' => $user->getToken(),
+            'telephone' => $user->getNumeroTelephone(),
+            'mail' => $user->getMail(),
+        ];
 
 
-        return $this->createApiResponse(['token' => $token], 'Login successful.', Response::HTTP_OK);
+        return $this->createApiResponse($userData, 'Login successful.', Response::HTTP_OK);
     }
 
 
