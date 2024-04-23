@@ -87,7 +87,7 @@ class AtelierController extends AbstractController
                 'id' => $atelier->getId(),
                 'date_debut' => $atelier->getDateDebut()->format('Y-m-d H:i:s'),
                 'date_fin' => $atelier->getDateFin()->format('Y-m-d H:i:s'),
-                'date_inscription_maximum' => $atelier->getDateInscriptionMaximum()->format('Y-m-d H:i:s'),
+                'date_inscription_maximum' => $atelier->getDateInscriptionMaximum()?->format('Y-m-d H:i:s'),
                 'limite_participant' => $atelier->getLimiteParticipant(),
                 'localisation' => $atelier->getLocalisation(),
                 'thematique' => $atelier->getThematique(),
