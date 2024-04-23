@@ -9,8 +9,8 @@
                 Connexion
             </template>
             <template #content>
-                <div class="mb-6">
                 <InputText
+                    class="w-full mb-5"
                     id="username"
                     placeholder="Username"
                     type="email"
@@ -18,14 +18,14 @@
                     @keyup.enter="onClick"
                 />
                 <InputText
+                    class="w-full mb-5"
                     id="password"
                     placeholder="Password"
                     type="password"
                     v-model="user.password"
                     @keyup.enter="onClick"
                 />
-                </div>
-                <div class="flex items-center flex-col justify-between">
+                <div class="flex items-center flex-col justify-between gap-2">
                     <a
                         class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800"
                         href="#"
@@ -33,22 +33,20 @@
                     >
                         Mot de passe oublié?
                     </a>
-                    <button
-                        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        type="button"
+                    <Button
+                        class="bg-red hover:bg-red-700 text-white font-bold py-2 px-12"
                         @click="onClick"
+                        label="Valider"
+                    />
+                    <span>
+                        Vous n'avez pas de compte ?
+                    </span>
+                    <a
+                        class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800"
+                        href="#"
                     >
-                        Valider
-                    </button>
-                    
-                </div>
-                <div class="text-center mt-4">
-                <a
-                    class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800"
-                    href="#"
-                >
-                    Vous n'avez pas de compte? Créez votre compte
-                </a>
+                         Créez votre compte
+                    </a>
                 </div>
             </template>
         </Card>
@@ -60,7 +58,7 @@
 import { defineComponent, ref, computed } from "vue";
 import { useUserStore } from "../store/UserStrore";
 import InputText from "primevue/inputtext";
-// import Button from "primevue/button";
+import Button from "primevue/button";
 import userApi from "../api/UserApi"
 import User from "../models/User"
 import Card from "primevue/card"
@@ -69,7 +67,7 @@ export default defineComponent({
   name: "LoginPage",
   components: {
     InputText,
-    // Button,
+    Button,
     Card
   },
   setup() {
