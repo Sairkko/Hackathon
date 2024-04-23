@@ -24,6 +24,11 @@ services:
     networks:
       - app-network
 
+  mailcatcher:
+    restart: on-failure
+    image: schickling/mailcatcher
+    ports: [ "1025:1025", "1080:1080" ]
+
 networks:
   app-network:
     driver: bridge
