@@ -62,7 +62,7 @@ function prepareForDeletion(){
     </template>
   </Card>
 
-  <Dialog v-if=isEdit v-model:visible="visible" modal header="Modification du vin" :style="{ width: '25rem' }">
+  <Dialog v-if=isEdit v-model:visible="visible" modal header="Modification du vin" class="w-1/3">
     <div class="flex flex-col gap-2">
       <label class="text-sm font-semibold" for="wine_name">Nom du vin</label>
       <InputText id="wine_name" v-model="wine_name" />
@@ -92,8 +92,8 @@ function prepareForDeletion(){
       <a @click="visible=false" class="bg-[#309A1F] text-center text-white px-3 pb-1 pt-2 mt-3 rounded-md w-full cursor-pointer">Valider</a>
     </div>
   </Dialog>
-  <Dialog v-else v-model:visible="visible" modal header="Supression du vin" :style="{ width: '25rem' }">
-    <h1>Êtes-sûr de vouloir supprimer le vin "{{ props.title }}" ?</h1>
+  <Dialog v-else v-model:visible="visible" modal header="Supression du vin" class="w-1/3">
+    <h1 class="m-8">Êtes-vous sûr de vouloir supprimer le vin "{{ props.title }}" ?</h1>
     <div class="flex justify-center gap-3">
       <a @click="visible=false" class="bg-grey text-center text-white px-3 pb-1 pt-2 mt-3 rounded-md cursor-pointer max-w-max">Annuler</a>
       <a @click="visible=false" class="bg-[#E04242] text-center text-white px-3 pb-1 pt-2 mt-3 rounded-md cursor-pointer max-w-max">Confirmer la suppression</a>

@@ -13,7 +13,8 @@ import Button from 'primevue/button';
 import InputText from "primevue/inputtext";
 import Dialog from 'primevue/dialog';
 import Textarea from "primevue/textarea";
-
+import Dropdown from "primevue/dropdown";
+import InputGroup from "primevue/inputgroup";
 
 import './assets/tailwind.css';
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -34,5 +35,7 @@ createApp(App)
     .component('InputText', InputText)
     .component('Dialog', Dialog)
     .component('Textarea', Textarea)
+    .component('Dropdown', Dropdown)
+    .component('ImputGroup', InputGroup)
     .component("font-awesome-icon", FontAwesomeIcon)
     .mount('#app')

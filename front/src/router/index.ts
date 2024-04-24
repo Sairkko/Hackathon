@@ -2,7 +2,6 @@ import { createWebHistory, createRouter, RouteRecordRaw } from 'vue-router';
 import LoginPage from '../views/LoginPage.vue';
 import RegisterPage from '../views/RegisterPage.vue';
 import HomePage from '../views/HomePage.vue';
-import VignificationComponent from "@/components/VignificationComponent.vue";
 import AtelierComponent from "@/components/AtelierComponent.vue";
 import WineInventoryPage from "@/views/WineInventoryPage.vue";
 
