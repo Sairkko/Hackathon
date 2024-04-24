@@ -62,6 +62,7 @@ function toggleMenu() {
   flex-direction: column;
   padding: 10px;
   margin-top: 170px;
+  z-index: 1000;
 }
 
 .mobile-menu a {
