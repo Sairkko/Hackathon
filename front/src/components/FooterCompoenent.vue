@@ -10,11 +10,11 @@
         </div>
       </div>
       <div class="flex flex-col font-bold">
-        <div class="md:flex flex flex-wrap md:px-4 md:gap-6  justify-around mb-4">
+        <div class="flex md:flex-wrap md:px-4 md:gap-6  justify-around mb-4">
           <a href="#" class="block md:inline hover:text-gray-200 mx-2">Procédé de vinification</a>
           <a href="#" class="block md:inline hover:text-gray-200 mx-2">Les ateliers</a>
         </div>
-        <div class="md:flex flex flex-wrap md:px-4 md:gap-10 gap-2 justify-around mb-4">
+        <div class="flex md:flex-wrap md:px-4 md:gap-10 gap-2 justify-around mb-4">
           <a href="#" class="block md:inline hover:text-gray-200 mx-2">Mes réservations</a>
           <a href="#" class="block lg:inline hover:text-gray-200 mx-2">À propos</a>
         </div>
