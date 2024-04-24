@@ -9,7 +9,12 @@ import 'primeicons/primeicons.css';
 import { pinia } from './store';
 import Toast from 'primevue/toast';
 import Card from 'primevue/card';
-import Button from "primevue/button";
+import Button from 'primevue/button';
+import InputText from "primevue/inputtext";
+import Dialog from 'primevue/dialog';
+import Textarea from "primevue/textarea";
+
+
 import './assets/tailwind.css';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {fas} from "@fortawesome/free-solid-svg-icons"
@@ -25,6 +30,9 @@ createApp(App)
     .use(pinia)
     .component('Toast',Toast)
     .component('Card',Card)
-    .component('Button',Button)
+    .component('Button', Button)
+    .component('InputText', InputText)
+    .component('Dialog', Dialog)
+    .component('Textarea', Textarea)
     .component("font-awesome-icon", FontAwesomeIcon)
     .mount('#app')
