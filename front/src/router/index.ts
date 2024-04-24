@@ -4,6 +4,8 @@ import RegisterPage from '../views/RegisterPage.vue';
 import HomePage from '../views/HomePage.vue';
 import VignificationComponent from "@/components/VignificationComponent.vue";
 import AtelierComponent from "@/components/AtelierComponent.vue";
+import ProposComponent from "@/components/ProposComponent.vue";
+import ProposPage from "@/views/ProposPage.vue";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -30,6 +32,14 @@ const routes: RouteRecordRaw[] = [
     path: '/home',
     name: 'HomePage',
     component: HomePage,
+    meta: {
+      layout: 'PageLayout'
+    }
+  },
+  {
+    path: '/propos',
+    name: 'propos',
+    component: ProposPage,
     meta: {
       layout: 'PageLayout'
     }
