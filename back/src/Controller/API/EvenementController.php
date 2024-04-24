@@ -240,7 +240,6 @@ class EvenementController extends AbstractController
         return $this->createApiResponse(['message'=> 'Atelier updated successfully'], Response::HTTP_OK);
     }
 
-
     #[Route('/all/user/{userId}', name: 'get_evenement_by_user', methods: ['GET'])]
     public function getUserAteliers(int $userId, EntityManagerInterface $entityManager): Response
     {
@@ -250,7 +249,6 @@ class EvenementController extends AbstractController
         }
 
         $reservations = $user->getReservations();
-
         if ($reservations->isEmpty()) {
             throw new NotFoundHttpException('No reservations found for this user.');
         }
@@ -259,27 +257,25 @@ class EvenementController extends AbstractController
         $reservationsArray = [];
         foreach ($reservations as $reservation) {
             foreach ($reservation->getAteliers() as $atelier) {
-                $atelierContentData = $atelier->getAtelierContent();
-
-                $reservationsArray[] = [
-                    'id' => $reservation->getId(),
-                    'classe' => $reservation->getClasse(),
-                    'nombre' => $reservation->getNombre(),
-                    'isPaid' => $reservation->isIsPaid(),
-                ];
-
-                $ateliers = [
+                $atelierContent = $atelier->getAtelierContent();
+                $ateliers[] = [
                     'id' => $atelier->getId(),
-                    'date_debut' => $atelier->getDateDebut()->format('Y-m-d H:i:s'),
-                    'date_fin' => $atelier->getDateFin()->format('Y-m-d H:i:s'),
-                    'date_inscription_maximum' => $atelier->getDateInscriptionMaximum()->format('Y-m-d H:i:s'),
-                    'limite_participant' => $atelier->getLimiteParticipant(),
+                    'date_debut' => $atelier->getDateDebut() ? $atelier->getDateDebut()->format('Y-m-d H:i:s') : null,
+                    'date_fin' => $atelier->getDateFin() ? $atelier->getDateFin()->format('Y-m-d H:i:s') : null,
+                    'date_inscription_maximum' => $atelier->getDateInscriptionMaximum() ? $atelier->getDateInscriptionMaximum()->format('Y-m-d H:i:s') : null,
                     'localisation' => $atelier->getLocalisation(),
-                    'atelierContent' => $atelierContentData ? [
-                        'id' => $atelierContentData->getId(),
-                        'nom' => $atelierContentData->getNom()
+                    'ecole' => $atelier->getEcole() ? [
+                        'id' => $atelier->getEcole()->getId(),
+                        'nom' => $atelier->getEcole()->getNom()
                     ] : null,
-                    'reservations' => $reservationsArray
+                    'atelier_content' => $atelierContent ? [
+                        'id' => $atelierContent->getId(),
+                        'nom' => $atelierContent->getNom()
+                    ] : null,
+                    'reservation' => [
+                        'id' => $reservation->getId(),
+                        'is_paid' => $reservation->isIsPaid(),
+                    ]
                 ];
             }
         }
