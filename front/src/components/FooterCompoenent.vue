@@ -21,11 +21,13 @@
       </div>
       <div class="flex justify-center md:justify-end items-center space-x-4">
         <a href="#" aria-label="Facebook" class="hover:text-gray-200">
+          <font-awesome-icon :icon="['fab', 'facebook-f']" />
         </a>
         <a href="#" aria-label="Twitter" class="hover:text-gray-200">
-          <font-awesome-icon icon="twitter" />
+          <font-awesome-icon :icon="['fab', 'x-twitter']" />
         </a>
         <a href="#" aria-label="Instagram" class="hover:text-gray-200 bg-dark">
+          <font-awesome-icon :icon="['fab', 'instagram']" />
         </a>
       </div>
     </div>

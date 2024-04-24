@@ -6,8 +6,16 @@
 </template>
 
 <script>
+  import { library } from '@fortawesome/fontawesome-svg-core'
+
 export default {
 
+   setup() {
+    console.log(library)
+    return {
+
+    }
+   }
 }
 </script>
 

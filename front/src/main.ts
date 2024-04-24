@@ -11,11 +11,11 @@ import Toast from 'primevue/toast';
 import './assets/tailwind.css';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {fas} from "@fortawesome/free-solid-svg-icons"
-import { faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faXTwitter, faInstagram, faFacebookF, faTwitter } from '@fortawesome/free-brands-svg-icons';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-library.add(fas, faTwitter)
+library.add(fas, faXTwitter, faInstagram, faFacebookF, faTwitter)
 createApp(App)
     .use(router)
     .use(PrimeVue)
