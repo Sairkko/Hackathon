@@ -23,7 +23,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-#[Route('/reservation', name: 'app_resrevation_')]
+#[Route('/reservation', name: 'app_reservation')]
 class ReservationController extends AbstractController
 {
     use ApiResponseTrait;
@@ -66,6 +66,7 @@ class ReservationController extends AbstractController
 
         $reservation->addUser($user);
         $reservation->addAtelier($atelier);
+        $reservation->setIsPaid(false);
         $reservation->setNombre($data['nombre_participant']);
 
         if (!empty($data['classe'])) {
@@ -78,6 +79,21 @@ class ReservationController extends AbstractController
         $entityManager->flush();
 
         return $this->createApiResponse(['reservationId' => $reservation->getId()], 'Reservation created.', Response::HTTP_CREATED);
+    }
+
+    #[Route('/paid/{id}', name: 'payement', methods: ['PUT'])]
+    public function Payement(ReservationRepository $reservationRepository, int $id, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $reservation = $reservationRepository->find($id);
+
+        if (!$reservation) {
+            return $this->createApiResponse([], 'Reservation not Found.', Response::HTTP_BAD_REQUEST);
+        }
+
+        $reservation->setIsPaid(true );
+        $entityManager->flush();
+
+        return $this->createApiResponse(['message'=> 'Reservation updated successfully'],  Response::HTTP_OK);
     }
 
     #[Route('/show/{idAtelier}', name: 'show_by_atelier', methods: ['GET'])]
@@ -128,9 +144,54 @@ class ReservationController extends AbstractController
         }
 
         $reservation->removeUser($user);
+
+        if ($reservation->getUser()->isEmpty()) {
+            foreach ($reservation->getAteliers() as $atelier) {
+                $reservation->removeAtelier($atelier);
+            }
+
+            $entityManager->remove($reservation);
+        }
+
         $entityManager->flush();
 
         return $this->createApiResponse([], 'User removed from the reservation.', Response::HTTP_OK);
     }
+
+    #[Route('/create-with-ateliers', name: 'create_user_with_ateliers', methods: ['POST'])]
+    public function createUserWithAteliers(Request $request, UserRepository $userRepository, AtelierRepository $atelierRepository, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $user = new User();
+        $user->setNom($data['nom']);
+        $user->setPrenom($data['prenom']);
+        $user->setMail($data['mail']);
+        $user->setRole('ROLE_USER');
+        $user->setPassword($passwordHasher->hashPassword($user, '123456789'));
+        if (isset($data['telephone'])) {
+            $user->setNumeroTelephone($data['telephone']);
+        }
+
+        $entityManager->persist($user);
+
+        foreach ($data['ateliersId'] as $atelierId) {
+            $atelier = $atelierRepository->find($atelierId);
+            if ($atelier) {
+                $reservation = new Reservation();
+                $reservation->addUser($user);
+                $reservation->addAtelier($atelier);
+                $reservation->setNombre(1);
+                $reservation->setIsPaid(false);
+
+                $entityManager->persist($reservation);
+            }
+        }
+
+        $entityManager->flush();
+
+        return $this->createApiResponse(['userId' => $user->getId()], 'User and reservations created.', Response::HTTP_CREATED);
+    }
+
 
 }
