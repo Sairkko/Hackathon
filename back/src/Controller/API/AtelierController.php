@@ -5,6 +5,7 @@ namespace App\Controller\API;
 use App\Entity\AtelierContent;
 use App\Repository\AtelierContentRepository;
 use App\Repository\ProductRepository;
+use App\Repository\UserRepository;
 use App\Trait\ApiResponseTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -90,13 +91,17 @@ class AtelierController extends AbstractController
         return $this->createApiResponse($ateliersArray, Response::HTTP_OK);
     }
 
-    #[Route('/one/{id}', name: 'get_atelier_content_by_id', methods: ['GET'])]
-    public function oneAtelier(int $id, EntityManagerInterface $entityManager): Response
+    #[Route('/one/{idAtelier}/{idUser}', name: 'get_atelier_content_by_id_user', methods: ['GET'])]
+    public function oneAtelier(int $idAtelier, int $idUser, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
     {
-        $atelierContent = $entityManager->getRepository(AtelierContent::class)->find($id);
-
+        $atelierContent = $entityManager->getRepository(AtelierContent::class)->find($idAtelier);
         if (!$atelierContent) {
             throw new NotFoundHttpException('AtelierContent not found.');
+        }
+
+        $user = $userRepository->find($idUser);
+        if (!$user) {
+            return $this->createApiResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
         }
 
         $productDetails = [];
@@ -109,12 +114,22 @@ class AtelierController extends AbstractController
 
         $ateliers = [];
         foreach ($atelierContent->getAteliers() as $atelier) {
-            $ateliers[] = [
-                'id' => $atelier->getId(),
-                'date_debut' => $atelier->getDateDebut() ? $atelier->getDateDebut()->format('Y-m-d H:i:s') : null,
-                'date_fin' => $atelier->getDateFin() ? $atelier->getDateFin()->format('Y-m-d H:i:s') : null,
-                'localisation' => $atelier->getLocalisation()
-            ];
+            $isUserRegistered = false;
+            foreach ($atelier->getReservations() as $reservation) {
+                if (!$reservation->getUser()->contains($user)) {
+                    $isUserRegistered = true;
+                    break;
+                }
+            }
+
+            if ($isUserRegistered) {
+                $ateliers[] = [
+                    'id' => $atelier->getId(),
+                    'date_debut' => $atelier->getDateDebut() ? $atelier->getDateDebut()->format('Y-m-d H:i:s') : null,
+                    'date_fin' => $atelier->getDateFin() ? $atelier->getDateFin()->format('Y-m-d H:i:s') : null,
+                    'localisation' => $atelier->getLocalisation()
+                ];
+            }
         }
 
         $response = [
@@ -124,11 +139,12 @@ class AtelierController extends AbstractController
             'nom' => $atelierContent->getNom(),
             'description' => $atelierContent->getDescription(),
             'prix' => $atelierContent->getPrix(),
-            'ateliers' => $ateliers // Including associated Ateliers
+            'ateliers' => $ateliers
         ];
 
         return $this->createApiResponse($response, Response::HTTP_OK);
     }
+
 
 
     #[Route('/delete/{id}', name: 'delete_atelier_by_id', methods: ['DELETE'])]
