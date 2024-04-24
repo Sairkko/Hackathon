@@ -8,6 +8,7 @@ import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 import { pinia } from './store';
 import Toast from 'primevue/toast';
+import ToastService from 'primevue/toastservice';
 import './assets/tailwind.css';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {fas} from "@fortawesome/free-solid-svg-icons"
@@ -20,6 +21,7 @@ createApp(App)
     .use(router)
     .use(PrimeVue)
     .use(pinia)
+    .use(ToastService)
     .component('Toast',Toast)
     .component("font-awesome-icon", FontAwesomeIcon)
     .mount('#app')

@@ -35,7 +35,7 @@ export default defineComponent({
     //   }
     // })
 
-    if (user && user.token == "" && localStorage.getItem("user")) {
+    if (!user && localStorage.getItem("user")) {
       userStore.setUser(JSON.parse(localStorage.getItem("appUser")!))
     }
     
