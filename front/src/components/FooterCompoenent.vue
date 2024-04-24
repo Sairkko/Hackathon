@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <footer class="bg-red text-white p-4 md:p-6 ">
+  <footer class="bg-red text-white p-4 md:p-6 inset-x-0 bottom-0">
     <div class="max-w-6xl mx-20 flex flex-col md:flex-row justify-between items-center">
       <div class="flex justify-center md:justify-start items-center mb-4 space-x-2">
         <div class="bg-white p-2 rounded my-4">
@@ -10,11 +10,11 @@
         </div>
       </div>
       <div class="flex flex-col font-bold">
-        <div class="md:flex flex flex-wrap md:px-4 md:gap-6  justify-around mb-4">
+        <div class="flex md:flex-wrap md:px-4 md:gap-6  justify-around mb-4">
           <a href="#" class="block md:inline hover:text-gray-200 mx-2">Procédé de vinification</a>
           <a href="#" class="block md:inline hover:text-gray-200 mx-2">Les ateliers</a>
         </div>
-        <div class="md:flex flex flex-wrap md:px-4 md:gap-10 gap-2 justify-around mb-4">
+        <div class="flex md:flex-wrap md:px-4 md:gap-10 gap-2 justify-around mb-4">
           <a href="#" class="block md:inline hover:text-gray-200 mx-2">Mes réservations</a>
           <a href="#" class="block lg:inline hover:text-gray-200 mx-2">À propos</a>
         </div>
