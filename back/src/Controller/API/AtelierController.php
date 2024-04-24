@@ -2,28 +2,17 @@
 
 namespace App\Controller\API;
 
-use App\Entity\Atelier;
 use App\Entity\AtelierContent;
-use App\Entity\Reservation;
-use App\Entity\User;
 use App\Repository\AtelierContentRepository;
-use App\Repository\AtelierRepository;
-use App\Repository\EcoleRepository;
 use App\Repository\ProductRepository;
-use App\Repository\UserRepository;
 use App\Trait\ApiResponseTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/atelier', name: 'app_atelier_')]
 class AtelierController extends AbstractController
