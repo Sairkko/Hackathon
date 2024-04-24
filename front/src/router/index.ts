@@ -3,6 +3,7 @@ import LoginPage from '../views/LoginPage.vue';
 import RegisterPage from '../views/RegisterPage.vue';
 import HomePage from '../views/HomePage.vue';
 import VignificationComponent from "@/components/VignificationComponent.vue";
+import MyReservation from "@/views/MyReservation.vue";
 import AtelierComponent from "@/components/AtelierComponent.vue";
 import ProposComponent from "@/components/ProposComponent.vue";
 import ProposPage from "@/views/ProposPage.vue";
@@ -32,6 +33,22 @@ const routes: RouteRecordRaw[] = [
     path: '/home',
     name: 'HomePage',
     component: HomePage,
+    meta: {
+      layout: 'PageLayout'
+    }
+  },
+  {
+    path: '/my-reservation',
+    name: 'MyReservation',
+    component: MyReservation,
+    meta: {
+      layout: 'PageLayout'
+    }
+  },
+  {
+    path: '/vini',
+    name: 'Vini',
+    component: VignificationComponent,
     meta: {
       layout: 'PageLayout'
     }

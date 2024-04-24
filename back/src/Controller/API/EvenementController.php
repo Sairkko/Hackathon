@@ -254,6 +254,7 @@ class EvenementController extends AbstractController
         }
 
         $ateliers = [];
+        $reservationsArray = [];
         foreach ($reservations as $reservation) {
             foreach ($reservation->getAteliers() as $atelier) {
                 $atelierContent = $atelier->getAtelierContent();

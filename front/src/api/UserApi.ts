@@ -13,6 +13,10 @@ class UserApi {
   atelier() {
     return apiClient.get("/atelier/all");
   }
+
+  getEvenementByUser(userId :any) {
+    return apiClient.get(`/evenement/all/user/${userId}`);
+  }
 }
 
 export default new UserApi();
