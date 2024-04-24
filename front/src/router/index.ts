@@ -4,6 +4,7 @@ import RegisterPage from '../views/RegisterPage.vue';
 import HomePage from '../views/HomePage.vue';
 import VignificationComponent from "@/components/VignificationComponent.vue";
 import AtelierComponent from "@/components/AtelierComponent.vue";
+import WineInventoryPage from "@/views/WineInventoryPage.vue";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -38,6 +39,14 @@ const routes: RouteRecordRaw[] = [
     path: '/atelier',
     name: 'atelier',
     component: AtelierComponent,
+    meta: {
+      layout: 'PageLayout'
+    }
+  },
+  {
+    path: '/admin/inventaire',
+    name: 'inventaire',
+    component: WineInventoryPage,
     meta: {
       layout: 'PageLayout'
     }
