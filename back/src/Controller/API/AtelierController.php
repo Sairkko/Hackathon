@@ -90,6 +90,47 @@ class AtelierController extends AbstractController
         return $this->createApiResponse($ateliersArray, Response::HTTP_OK);
     }
 
+    #[Route('/one/{id}', name: 'get_atelier_content_by_id', methods: ['GET'])]
+    public function oneAtelier(int $id, EntityManagerInterface $entityManager): Response
+    {
+        $atelierContent = $entityManager->getRepository(AtelierContent::class)->find($id);
+
+        if (!$atelierContent) {
+            throw new NotFoundHttpException('AtelierContent not found.');
+        }
+
+        $productDetails = [];
+        foreach ($atelierContent->getProducts() as $product) {
+            $productDetails[] = [
+                'nom' => $product->getNom(),
+                'cepage' => $product->getCepage()
+            ];
+        }
+
+        $ateliers = [];
+        foreach ($atelierContent->getAteliers() as $atelier) {
+            $ateliers[] = [
+                'id' => $atelier->getId(),
+                'date_debut' => $atelier->getDateDebut() ? $atelier->getDateDebut()->format('Y-m-d H:i:s') : null,
+                'date_fin' => $atelier->getDateFin() ? $atelier->getDateFin()->format('Y-m-d H:i:s') : null,
+                'localisation' => $atelier->getLocalisation()
+            ];
+        }
+
+        $response = [
+            'id' => $atelierContent->getId(),
+            'thematique' => $atelierContent->getThematique(),
+            'products' => $productDetails,
+            'nom' => $atelierContent->getNom(),
+            'description' => $atelierContent->getDescription(),
+            'prix' => $atelierContent->getPrix(),
+            'ateliers' => $ateliers // Including associated Ateliers
+        ];
+
+        return $this->createApiResponse($response, Response::HTTP_OK);
+    }
+
+
     #[Route('/delete/{id}', name: 'delete_atelier_by_id', methods: ['DELETE'])]
     public function deleteOneAtelier(int $id, EntityManagerInterface $entityManager): Response
     {
