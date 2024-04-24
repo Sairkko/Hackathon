@@ -3,10 +3,13 @@
 namespace App\Controller\API;
 
 use App\Entity\Atelier;
+use App\Entity\AtelierContent;
 use App\Entity\Reservation;
 use App\Entity\User;
+use App\Repository\AtelierContentRepository;
 use App\Repository\AtelierRepository;
 use App\Repository\EcoleRepository;
+use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use App\Trait\ApiResponseTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,39 +38,34 @@ class AtelierController extends AbstractController
      * @throws Exception
      */
     #[Route('/new', name: 'new', methods: ['POST'])]
-    public function atelier(EcoleRepository $ecoleRepository ,Request $request, EntityManagerInterface $entityManager): Response
+    public function atelier(ProductRepository $productRepository ,Request $request, EntityManagerInterface $entityManager): Response
     {
         $data = json_decode($request->getContent(), true);
 
-        $requiredFields = ['date_debut', 'date_fin', 'limite_participant'];
+        $requiredFields = ['prix', 'nom', 'description'];
         foreach ($requiredFields as $field) {
             if (empty($data[$field])) {
                 return $this->json(['message' => sprintf('Missing required field: %s.', $field)], Response::HTTP_BAD_REQUEST);
             }
         }
 
-        $atelier = new Atelier();
-        $atelier->setDateDebut(new \DateTime($data['date_debut']));
-        $atelier->setDateFin(new \DateTime($data['date_fin']));
-        $atelier->setLimiteParticipant($data['limite_participant']);
-        $atelier->setLocalisation($data['localisation'] ?? null);
+        $atelier = new AtelierContent();
+        $atelier->setNom($data['nom']);
+        $atelier->setDescription($data['description']);
+        $atelier->setPrix($data['prix']);
         $atelier->setThematique($data['thematique'] ?? null);
-        if (!empty($data['date_inscription_maximum'])) {
-            $dateInscriptionMaximum = new \DateTime($data['date_inscription_maximum']);
-        } else {
-            $dateInscriptionMaximum = (clone new \DateTime($data['date_debut']))->modify('-1 week');
-        }
-        $atelier->setDateInscriptionMaximum($dateInscriptionMaximum);
 
-        if (isset($data['school'])) {
-            $ecole = $ecoleRepository->find($data['school']);
-            if (!$ecole) {
-                return $this->createApiResponse([], 'Ecole not found', Response::HTTP_BAD_REQUEST);
+        if (!empty($data['products']) && is_array($data['products'])) {
+            foreach ($data['products'] as $productId) {
+                $product = $productRepository->find($productId);
+                if ($product) {
+                    $atelier->addProduct($product);
+                } else {
+                    return $this->json(['message' => sprintf('Product with ID %d not found.', $productId)], Response::HTTP_NOT_FOUND);
+                }
             }
-            $atelier->setEcole($ecole);
-        } else {
-            $atelier->setEcole(null);
         }
+
 
         $entityManager->persist($atelier);
         $entityManager->flush();
@@ -78,60 +76,35 @@ class AtelierController extends AbstractController
     #[Route('/all', name: 'all', methods: ['GET'])]
     public function allAtelier(EntityManagerInterface $entityManager): Response
     {
-        $ateliers = $entityManager->getRepository(Atelier::class)->findAll();
+        $ateliers = $entityManager->getRepository(AtelierContent::class)->findAll();
 
         $ateliersArray = [];
         foreach ($ateliers as $atelier) {
-            $ecoleData = $atelier->getEcole();
+            $productDetails = [];
+            foreach ($atelier->getProducts() as $product) {
+                $productDetails[] = [
+                    'nom' => $product->getNom(),
+                    'cepage' => $product->getCepage()
+                ];
+            }
+
             $ateliersArray[] = [
                 'id' => $atelier->getId(),
-                'date_debut' => $atelier->getDateDebut()->format('Y-m-d H:i:s'),
-                'date_fin' => $atelier->getDateFin()->format('Y-m-d H:i:s'),
-                'date_inscription_maximum' => $atelier->getDateInscriptionMaximum()?->format('Y-m-d H:i:s'),
-                'limite_participant' => $atelier->getLimiteParticipant(),
-                'localisation' => $atelier->getLocalisation(),
                 'thematique' => $atelier->getThematique(),
-                'ecole' => $ecoleData ? [
-                    'id' => $ecoleData->getId(),
-                    'nom' => $ecoleData->getNom()
-                ] : null,
+                'products' => $productDetails,
+                'nom' => $atelier->getNom(),
+                'description' => $atelier->getDescription(),
+                'prix' => $atelier->getPrix(),
             ];
         }
 
         return $this->createApiResponse($ateliersArray, Response::HTTP_OK);
     }
 
-    #[Route('/one/{id}', name: 'get_atelier_by_id', methods: ['GET'])]
-    public function getOneAtelier(int $id, EntityManagerInterface $entityManager): Response
-    {
-        $atelier = $entityManager->getRepository(Atelier::class)->find($id);
-
-        if (!$atelier) {
-            throw new NotFoundHttpException('Atelier not found.');
-        }
-
-        $ecoleData = $atelier->getEcole();
-        $atelierArray = [
-            'id' => $atelier->getId(),
-            'date_debut' => $atelier->getDateDebut()->format('Y-m-d H:i:s'),
-            'date_fin' => $atelier->getDateFin()->format('Y-m-d H:i:s'),
-            'date_inscription_maximum' => $atelier->getDateInscriptionMaximum()->format('Y-m-d H:i:s'),
-            'limite_participant' => $atelier->getLimiteParticipant(),
-            'localisation' => $atelier->getLocalisation(),
-            'thematique' => $atelier->getThematique(),
-            'ecole' => $ecoleData ? [
-                'id' => $ecoleData->getId(),
-                'nom' => $ecoleData->getNom()
-            ] : null,
-        ];
-
-        return $this->createApiResponse($atelierArray, Response::HTTP_OK);
-    }
-
     #[Route('/delete/{id}', name: 'delete_atelier_by_id', methods: ['DELETE'])]
     public function deleteOneAtelier(int $id, EntityManagerInterface $entityManager): Response
     {
-        $atelier = $entityManager->getRepository(Atelier::class)->find($id);
+        $atelier = $entityManager->getRepository(AtelierContent::class)->find($id);
 
         if (!$atelier) {
             throw new NotFoundHttpException('Atelier not found.');
@@ -148,7 +121,7 @@ class AtelierController extends AbstractController
      */
 
     #[Route('/edit/{id}', name: 'edit_atelier', methods: ['PUT'])]
-    public function editProduct(EcoleRepository $ecoleRepository, int $id, Request $request, AtelierRepository $atelierRepository, EntityManagerInterface $entityManager): Response
+    public function editProduct(ProductRepository $productRepository, int $id, Request $request, AtelierContentRepository $atelierRepository, EntityManagerInterface $entityManager): Response
     {
         $atelier = $atelierRepository->find($id);
 
@@ -158,82 +131,29 @@ class AtelierController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
 
-        $dateDebut = !empty($data['date_debut']) ? new \DateTime($data['date_debut']) : $atelier->getDateDebut();
-        $dateFin = !empty($data['date_fin']) ? new \DateTime($data['date_fin']) : $atelier->getDateFin();
-
-        if ($dateDebut > $dateFin) {
-            return $this->createApiResponse([], 'erreur : Date de fin avant date de debut.', Response::HTTP_BAD_REQUEST);
-        }
-
-        if (!empty($data['date_debut'])) {
-            $atelier->setDateDebut(new \DateTime($data['date_debut']));
-            $atelier->setDateInscriptionMaximum((clone new \DateTime($data['date_debut']))->modify('-1 week'));
-        }
-
-        if (!empty($data['date_fin'])) {
-            $atelier->setDateFin(new \DateTime($data['date_fin']));
-        }
-
-        if (!empty($data['date_inscription_maximum'])) {
-            $atelier->setDateInscriptionMaximum(new \DateTime($data['date_inscription_maximum']));
-        }
-
-        $atelier->setLimiteParticipant($data['limite_participant'] ?? $atelier->getLimiteParticipant());
-        $atelier->setLocalisation($data['localisation'] ?? $atelier->getLocalisation());
         $atelier->setThematique($data['thematique'] ?? $atelier->getThematique());
+        $atelier->setNom($data['nom'] ?? $atelier->getNom());
+        $atelier->setDescription($data['description'] ?? $atelier->getDescription());
+        $atelier->setPrix($data['prix'] ?? $atelier->getPrix());
 
-        if (isset($data['school'])) {
-            $ecole = $ecoleRepository->find($data['school']);
-            if (!$ecole) {
-                return $this->createApiResponse([], 'Ecole not found', Response::HTTP_BAD_REQUEST);
+        if (isset($data['products']) && is_array($data['products'])) {
+            $currentProducts = $atelier->getProducts();
+            foreach ($currentProducts as $product) {
+                $atelier->removeProduct($product);
             }
-            $atelier->setEcole($ecole);
-        } else {
-            $atelier->setEcole(null);
+
+            foreach ($data['products'] as $productId) {
+                $product = $productRepository->find($productId);
+                if ($product) {
+                    $atelier->addProduct($product);
+                } else {
+                    return $this->createApiResponse(['message' => sprintf('Product with ID %d not found.', $productId)], Response::HTTP_NOT_FOUND);
+                }
+            }
         }
 
         $entityManager->flush();
 
         return $this->createApiResponse(['message'=> 'Atelier updated successfully'],  Response::HTTP_OK);
-    }
-
-    #[Route('/all/user/{userId}', name: 'get_atelier_by_user', methods: ['GET'])]
-    public function getUserAteliers(int $userId, EntityManagerInterface $entityManager): Response
-    {
-        $user = $entityManager->getRepository(User::class)->find($userId);
-        if (!$user) {
-            throw new NotFoundHttpException('User not found.');
-        }
-
-        $reservations = $user->getReservations();
-
-        if ($reservations->isEmpty()) {
-            throw new NotFoundHttpException('No reservations found for this user.');
-        }
-
-        $ateliers = [];
-        foreach ($reservations as $reservation) {
-            foreach ($reservation->getAteliers() as $atelier) {
-                $ateliers[] = [
-                    'id' => $atelier->getId(),
-                    'date_debut' => $atelier->getDateDebut() ? $atelier->getDateDebut()->format('Y-m-d H:i:s') : null,
-                    'date_fin' => $atelier->getDateFin() ? $atelier->getDateFin()->format('Y-m-d H:i:s') : null,
-                    'date_inscription_maximum' => $atelier->getDateInscriptionMaximum() ? $atelier->getDateInscriptionMaximum()->format('Y-m-d H:i:s') : null,
-                    'limite_participant' => $atelier->getLimiteParticipant(),
-                    'localisation' => $atelier->getLocalisation(),
-                    'thematique' => $atelier->getThematique(),
-                    'ecole' => $atelier->getEcole() ? [
-                        'id' => $atelier->getEcole()->getId(),
-                        'nom' => $atelier->getEcole()->getNom()
-                    ] : null,
-                ];
-            }
-        }
-
-        if (empty($ateliers)) {
-            throw new NotFoundHttpException('No ateliers found associated with the user\'s reservations.');
-        }
-
-        return $this->createApiResponse($ateliers, Response::HTTP_OK);
     }
 }

@@ -25,15 +25,6 @@ class Atelier
     #[ORM\Column]
     private ?int $limite_participant = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $localisation = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $thematique = null;
-
-    #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'ateliers')]
-    private Collection $products;
-
     #[ORM\ManyToMany(targetEntity: Reservation::class, mappedBy: 'ateliers')]
     private Collection $reservations;
 
@@ -42,6 +33,12 @@ class Atelier
 
     #[ORM\ManyToOne(inversedBy: 'ateliers')]
     private ?Ecole $ecole = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $localisation = null;
+
+    #[ORM\ManyToOne(inversedBy: 'ateliers')]
+    private ?AtelierContent $atelierContent = null;
 
     public function __construct()
     {
@@ -86,54 +83,6 @@ class Atelier
     public function setLimiteParticipant(int $limite_participant): static
     {
         $this->limite_participant = $limite_participant;
-
-        return $this;
-    }
-
-    public function getLocalisation(): ?string
-    {
-        return $this->localisation;
-    }
-
-    public function setLocalisation(?string $localisation): static
-    {
-        $this->localisation = $localisation;
-
-        return $this;
-    }
-
-    public function getThematique(): ?string
-    {
-        return $this->thematique;
-    }
-
-    public function setThematique(?string $thematique): static
-    {
-        $this->thematique = $thematique;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Product>
-     */
-    public function getProducts(): Collection
-    {
-        return $this->products;
-    }
-
-    public function addProduct(Product $product): static
-    {
-        if (!$this->products->contains($product)) {
-            $this->products->add($product);
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(Product $product): static
-    {
-        $this->products->removeElement($product);
 
         return $this;
     }
@@ -185,6 +134,30 @@ class Atelier
     public function setEcole(?Ecole $ecole): static
     {
         $this->ecole = $ecole;
+
+        return $this;
+    }
+
+    public function getLocalisation(): ?string
+    {
+        return $this->localisation;
+    }
+
+    public function setLocalisation(?string $localisation): static
+    {
+        $this->localisation = $localisation;
+
+        return $this;
+    }
+
+    public function getAtelierContent(): ?AtelierContent
+    {
+        return $this->atelierContent;
+    }
+
+    public function setAtelierContent(?AtelierContent $atelierContent): static
+    {
+        $this->atelierContent = $atelierContent;
 
         return $this;
     }
