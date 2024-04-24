@@ -3,6 +3,7 @@ import LoginPage from '../views/LoginPage.vue';
 import RegisterPage from '../views/RegisterPage.vue';
 import HomePage from '../views/HomePage.vue';
 import VignificationComponent from "@/components/VignificationComponent.vue";
+import MyReservation from "@/views/MyReservation.vue";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -29,6 +30,14 @@ const routes: RouteRecordRaw[] = [
     path: '/home',
     name: 'HomePage',
     component: HomePage,
+    meta: {
+      layout: 'PageLayout'
+    }
+  },
+  {
+    path: '/my-reservation',
+    name: 'MyReservation',
+    component: MyReservation,
     meta: {
       layout: 'PageLayout'
     }

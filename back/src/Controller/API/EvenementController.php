@@ -256,18 +256,30 @@ class EvenementController extends AbstractController
         }
 
         $ateliers = [];
+        $reservationsArray = [];
         foreach ($reservations as $reservation) {
             foreach ($reservation->getAteliers() as $atelier) {
-                $ateliers[] = [
+                $atelierContentData = $atelier->getAtelierContent();
+
+                $reservationsArray[] = [
+                    'id' => $reservation->getId(),
+                    'classe' => $reservation->getClasse(),
+                    'nombre' => $reservation->getNombre(),
+                    'isPaid' => $reservation->isIsPaid(),
+                ];
+
+                $ateliers = [
                     'id' => $atelier->getId(),
-                    'date_debut' => $atelier->getDateDebut() ? $atelier->getDateDebut()->format('Y-m-d H:i:s') : null,
-                    'date_fin' => $atelier->getDateFin() ? $atelier->getDateFin()->format('Y-m-d H:i:s') : null,
-                    'date_inscription_maximum' => $atelier->getDateInscriptionMaximum() ? $atelier->getDateInscriptionMaximum()->format('Y-m-d H:i:s') : null,
+                    'date_debut' => $atelier->getDateDebut()->format('Y-m-d H:i:s'),
+                    'date_fin' => $atelier->getDateFin()->format('Y-m-d H:i:s'),
+                    'date_inscription_maximum' => $atelier->getDateInscriptionMaximum()->format('Y-m-d H:i:s'),
+                    'limite_participant' => $atelier->getLimiteParticipant(),
                     'localisation' => $atelier->getLocalisation(),
-                    'ecole' => $atelier->getEcole() ? [
-                        'id' => $atelier->getEcole()->getId(),
-                        'nom' => $atelier->getEcole()->getNom()
+                    'atelierContent' => $atelierContentData ? [
+                        'id' => $atelierContentData->getId(),
+                        'nom' => $atelierContentData->getNom()
                     ] : null,
+                    'reservations' => $reservationsArray
                 ];
             }
         }
