@@ -9,6 +9,10 @@ class UserApi {
   login(user: User) {
     return apiClient.post("/login", user);
   }
+
+  atelier() {
+    return apiClient.get("/atelier/all");
+  }
 }
 
 export default new UserApi();
