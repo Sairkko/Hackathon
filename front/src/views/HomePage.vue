@@ -34,7 +34,7 @@
                 <div class="text-center bg-white rounded p-4">
                   <h4 class="text-xl font-bold text-dark-red"><span class="text-red">Exploration Terrestre : </span>Plongée dans les Saveurs Vinicoles</h4>
                   <p class="my-4 hidden lg:block">Explorez les secrets des vins régionaux, des blancs subtils aux rouges profonds, en passant par les spécialités uniques.</p>
-                  <a href="#" class="mt-4 bg-red hover:bg-hover-red text-white py-2 px-4 rounded">
+                  <a href="#" class="bg-red hover:bg-hover-red text-white py-2 px-4 rounded">
                     Réserver
                   </a>
                 </div>
