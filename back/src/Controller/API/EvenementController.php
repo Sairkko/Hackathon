@@ -240,7 +240,6 @@ class EvenementController extends AbstractController
         return $this->createApiResponse(['message'=> 'Atelier updated successfully'], Response::HTTP_OK);
     }
 
-
     #[Route('/all/user/{userId}', name: 'get_evenement_by_user', methods: ['GET'])]
     public function getUserAteliers(int $userId, EntityManagerInterface $entityManager): Response
     {
@@ -250,7 +249,6 @@ class EvenementController extends AbstractController
         }
 
         $reservations = $user->getReservations();
-
         if ($reservations->isEmpty()) {
             throw new NotFoundHttpException('No reservations found for this user.');
         }
@@ -258,6 +256,7 @@ class EvenementController extends AbstractController
         $ateliers = [];
         foreach ($reservations as $reservation) {
             foreach ($reservation->getAteliers() as $atelier) {
+                $atelierContent = $atelier->getAtelierContent();
                 $ateliers[] = [
                     'id' => $atelier->getId(),
                     'date_debut' => $atelier->getDateDebut() ? $atelier->getDateDebut()->format('Y-m-d H:i:s') : null,
@@ -268,6 +267,14 @@ class EvenementController extends AbstractController
                         'id' => $atelier->getEcole()->getId(),
                         'nom' => $atelier->getEcole()->getNom()
                     ] : null,
+                    'atelier_content' => $atelierContent ? [
+                        'id' => $atelierContent->getId(),
+                        'nom' => $atelierContent->getNom()
+                    ] : null,
+                    'reservation' => [
+                        'id' => $reservation->getId(),
+                        'is_paid' => $reservation->isIsPaid(),
+                    ]
                 ];
             }
         }
