@@ -33,6 +33,14 @@ const routes: RouteRecordRaw[] = [
     meta: {
       layout: 'PageLayout'
     }
+  },
+  {
+    path: '/atelier',
+    name: 'atelier',
+    component: AtelierComponent,
+    meta: {
+      layout: 'PageLayout'
+    }
   }
 ];
 

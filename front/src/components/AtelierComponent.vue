@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
+import Atelier from '../models/Atelier';
 
-const ateliers = ref([]);
+const ateliers = ref<Atelier[]>([]);
 
 onMounted(async () => {
   try {
