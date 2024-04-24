@@ -1,19 +1,16 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import Atelier from '../models/Atelier';
+import UserApi from '@/api/UserApi'; // Assure-toi que le chemin est correct
 
 const ateliers = ref<Atelier[]>([]);
 
 onMounted(async () => {
   try {
-    const response = await fetch('https://127.0.0.1:8000/atelier/all');
-    if (!response.ok) {
-      throw new Error('Network response was not ok ' + response.statusText);
-    }
-    const data = await response.json();
-    ateliers.value = data.data;
+    const response = await UserApi.atelier();
+    ateliers.value = response.data.data;
   } catch (error) {
-    console.error('There has been a problem with your fetch operation:', error);
+    console.error('There has been a problem with your operation:', error);
   }
 });
 </script>
