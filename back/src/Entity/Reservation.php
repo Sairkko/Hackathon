@@ -27,6 +27,9 @@ class Reservation
     #[ORM\Column]
     private ?int $nombre = null;
 
+    #[ORM\Column]
+    private ?bool $isPaid = null;
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
@@ -106,6 +109,18 @@ class Reservation
     public function setNombre(int $nombre): static
     {
         $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    public function isIsPaid(): ?bool
+    {
+        return $this->isPaid;
+    }
+
+    public function setIsPaid(bool $isPaid): static
+    {
+        $this->isPaid = $isPaid;
 
         return $this;
     }
