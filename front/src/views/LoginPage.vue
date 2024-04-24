@@ -7,7 +7,6 @@
         <Card class="p-card-no-padding">
             <template #title>
                 Connexion
-                
             </template>
             <template #content>
                 <div class="px-8">
@@ -70,6 +69,7 @@ import userApi from "../api/UserApi"
 import User from "../models/User"
 import Card from "primevue/card"
 import router from "../router";
+import { useToast } from 'primevue/usetoast';
 
 export default defineComponent({
   name: "LoginPage",
@@ -81,6 +81,7 @@ export default defineComponent({
   setup() {
     const usersStore = useUserStore();
     const user = ref<User>(new User())
+    const toast = useToast();
 
     const appUser = computed(() => {
       return usersStore.getUser;
@@ -88,12 +89,19 @@ export default defineComponent({
 
 
     const onClick = () => {
-     userApi.login(user.value).then(response => {
-        console.log(response.data)
-        const el = Object.assign(new User(),response.data.data)
-        usersStore.setUser(el)
-        localStorage.setItem("user", JSON.stringify(response.data.data))
-        router.push({path: "/"})
+      userApi.login(user.value).then(response => {
+        if(response.data.statusCode !== 200){
+            toast.add({
+            severity:'error',
+            summary: response.data.message,
+            life: 3000});
+        }else{
+          const el = Object.assign(new User(),response.data.data)
+          usersStore.setUser(el)
+          localStorage.setItem("user", JSON.stringify(response.data.data))
+          router.push({path: "/"})
+        }
+        
      })
     };
 

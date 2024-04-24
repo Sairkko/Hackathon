@@ -34,8 +34,8 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
-    path: '/vini',
-    name: 'Vini',
+    path: '/vignification',
+    name: 'VignificationComponent',
     component: VignificationComponent,
     meta: {
       layout: 'PageLayout'

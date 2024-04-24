@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
-    @apply text-dark-red;
-}
-
 .p-card{
 border-radius: 20px;
 }
