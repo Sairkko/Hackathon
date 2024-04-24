@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <footer class="bg-red text-white p-4 md:p-6 fixed inset-x-0 bottom-0">
+  <footer class="bg-red text-white p-4 md:p-6 ">
     <div class="max-w-6xl mx-20 flex flex-col md:flex-row justify-between items-center">
       <div class="flex justify-center md:justify-start items-center mb-4 space-x-2">
         <div class="bg-white p-2 rounded my-4">
