@@ -128,7 +128,8 @@ class AtelierController extends AbstractController
                     'id' => $atelier->getId(),
                     'date_debut' => $atelier->getDateDebut() ? $atelier->getDateDebut()->format('Y-m-d H:i:s') : null,
                     'date_fin' => $atelier->getDateFin() ? $atelier->getDateFin()->format('Y-m-d H:i:s') : null,
-                    'localisation' => $atelier->getLocalisation()
+                    'localisation' => $atelier->getLocalisation(),
+                    'ecole' => $atelier->getEcole()
                 ];
             }
         }
