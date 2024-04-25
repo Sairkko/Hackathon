@@ -101,9 +101,9 @@ class EvenementController extends AbstractController
             $atelierData = $atelier->getAtelierContent();
             $ateliersArray[] = [
                 'id' => $atelier->getId(),
-                'date_debut' => $atelier->getDateDebut()->format('Y-m-d H:i:s'),
-                'date_fin' => $atelier->getDateFin()->format('Y-m-d H:i:s'),
-                'date_inscription_maximum' => $atelier->getDateInscriptionMaximum()->format('Y-m-d H:i:s'),
+                'date_debut' => $atelier->getDateDebut(),
+                'date_fin' => $atelier->getDateFin(),
+                'date_inscription_maximum' => $atelier->getDateInscriptionMaximum(),
                 'limite_participant' => $atelier->getLimiteParticipant(),
                 'localisation' => $atelier->getLocalisation(),
                 'ecole' => $ecoleData ? [
