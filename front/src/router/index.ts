@@ -2,11 +2,11 @@ import { createWebHistory, createRouter, RouteRecordRaw } from 'vue-router';
 import LoginPage from '../views/LoginPage.vue';
 import RegisterPage from '../views/RegisterPage.vue';
 import HomePage from '../views/HomePage.vue';
-import VignificationComponent from "@/components/VignificationComponent.vue";
 import MyReservation from "@/views/MyReservation.vue";
 import AtelierComponent from "@/components/AtelierComponent.vue";
 import ProposComponent from "@/components/ProposComponent.vue";
 import ProposPage from "@/views/ProposPage.vue";
+import VignificationPage from "@/views/VignificationPage.vue";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -46,9 +46,9 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
-    path: '/vini',
-    name: 'Vini',
-    component: VignificationComponent,
+    path: '/vignification',
+    name: 'vignification',
+    component: VignificationPage,
     meta: {
       layout: 'PageLayout'
     }
@@ -69,14 +69,6 @@ const routes: RouteRecordRaw[] = [
       layout: 'PageLayout'
     }
   },
-  {
-    path: '/vignification',
-    name: 'VignificationComponent',
-    component: VignificationComponent,
-    meta: {
-      layout: 'PageLayout'
-    }
-  }
 ];
 
 const router = createRouter({
