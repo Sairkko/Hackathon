@@ -62,7 +62,7 @@
                         </span>
                         <router-link :to="{path: '/login'}">
                           <a
-                              class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800"
+                              class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800 pb-4"
                               href="#"
                           >
                               Connectez vous !
