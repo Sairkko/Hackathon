@@ -51,7 +51,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/my-reservation',
-    name: 'MyReservation',
+    name: 'myReservation',
     component: MyReservation,
     meta: {
       layout: 'PageLayout'
@@ -74,8 +74,8 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
-    path: '/gestion-propos',
-    name: 'gestion-propos',
+    path: '/admin/propos',
+    name: 'propos_Admin',
     component: GestionProposPage,
     meta: {
       layout: 'PageLayout'
@@ -90,8 +90,8 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
-    path: '/atelier-admin',
-    name: 'atelier-admin',
+    path: '/admin/atelier',
+    name: 'atelier_Admin',
     component: AdminAtelierPage,
     meta: {
       layout: 'PageLayout'
@@ -99,7 +99,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/vignification',
-    name: 'VignificationComponent',
+    name: 'vignification',
     component: VignificationComponent,
     meta: {
       layout: 'PageLayout'
@@ -107,8 +107,8 @@ const routes: RouteRecordRaw[] = [
   },
 
   {
-    path: '/calendrier',
-    name: 'CalendrierPage',
+    path: '/admin/calendrier',
+    name: 'calendrierPage',
     component: CalendrierPage,
     meta: {
       layout: 'PageLayout'

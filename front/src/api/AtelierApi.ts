@@ -1,4 +1,5 @@
 import apiClient from './apiClient';
+import Atelier from "@/models/Atelier";
 
 class AtelierApi {
     atelier() {
@@ -13,24 +14,12 @@ class AtelierApi {
         return apiClient.get("/product/all");
     }
 
-    atelierById(id: string, thematique?: string, products?: string[], nom?: string, description?: string, prix?: number) {
-        return apiClient.put(`/atelier/edit/${id}`, {
-            thematique: thematique,
-            products: products,
-            nom: nom,
-            description: description,
-            prix: prix
-        })
+    atelierById(id: string, data: Atelier) {
+        return apiClient.put(`/atelier/edit/${id}`, data);
     }
 
-    postAtelier(thematique?: string, products?: string[], nom?: string, description?: string, prix?: number) {
-        return apiClient.post('/atelier/new', {
-            thematique: thematique,
-            products: products,
-            nom: nom,
-            description: description,
-            prix: prix
-        })
+    postAtelier(data: Atelier) {
+        return apiClient.post('/atelier/new', data);
     }
 }
 export default new AtelierApi();

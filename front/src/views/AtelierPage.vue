@@ -40,6 +40,9 @@ onMounted(async () => {
     }, 500);
   } catch (error) {
     console.error('There has been a problem with your operation:', error);
+    setTimeout(() => {
+      isLoading.value = false;
+    }, 500);
   }
 });
 

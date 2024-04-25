@@ -23,6 +23,10 @@ const allProducts = ref<{ label: string, value: string }[]>([]);
 const selectedProducts: any = ref<Product[]>([]);
 const atelierToDelete = ref<null | string>(null);
 const toast = useToast();
+const isValidNom = ref(true);
+const isValidDescription = ref(true);
+const isValidPrix = ref(true);
+
 
 const thematiqueOptionsDropdown = computed(() => [
   { label: 'Exploration Terrestre', value: 'Exploration Terrestre' },
@@ -42,6 +46,15 @@ const filteredAteliers = computed(() => {
   }
   return { [selectedThematique.value]: ateliersParThematique.value[selectedThematique.value] || [] };
 });
+
+function validateForm() {
+  isValidNom.value = !!selectedAtelier.value.nom && selectedAtelier.value.nom.trim().length > 0;
+  isValidDescription.value = !!selectedAtelier.value.description && selectedAtelier.value.description.trim().length > 0;
+  isValidPrix.value = !!selectedAtelier.value.prix && !isNaN(Number(selectedAtelier.value.prix)) && Number(selectedAtelier.value.prix) > 0;
+
+  return isValidNom.value && isValidDescription.value && isValidPrix.value;
+}
+
 
 onMounted(async () => {
   isLoading.value = true;
@@ -126,26 +139,31 @@ function openEditModal(atelier: Atelier) {
 }
 
 async function saveAtelier() {
+  if (!validateForm()) {
+    toast.add({ severity: 'error', summary: 'Entrée invalide', detail: 'Veuillez remplir correctement tous les champs obligatoires.', life: 3000 });
+    return;
+  }
   isLoading.value = true;
   try {
+    const dataSelectedAtelier: Atelier = {
+      thematique : selectedAtelier.value.thematique,
+      products: selectedProducts.value,
+      nom: selectedAtelier.value.nom,
+      description: selectedAtelier.value.description,
+      prix: selectedAtelier.value.prix
+    };
     if (isEditMode.value && selectedAtelier.value?.id) {
-      await AtelierApi.atelierById(
-          selectedAtelier.value.id,
-          selectedAtelier.value.thematique,
-          selectedProducts.value,
-          selectedAtelier.value.nom,
-          selectedAtelier.value.description,
-          selectedAtelier.value.prix
-      );
+      await AtelierApi.atelierById(selectedAtelier.value.id, dataSelectedAtelier);
       toast.add({severity: 'success', summary: 'Atelier mis à jour', detail: 'L\'atelier a été mis à jour avec succès.', life: 3000});
     } else {
-      await AtelierApi.postAtelier(
-          selectedAtelier.value?.thematique,
-          selectedProducts.value,
-          selectedAtelier.value?.nom,
-          selectedAtelier.value?.description,
-          selectedAtelier.value?.prix
-      );
+      const dataSelectedAtelierPost: Atelier = {
+        thematique : selectedAtelier.value.thematique,
+        products: selectedProducts.value,
+        nom: selectedAtelier.value.nom,
+        description: selectedAtelier.value.description,
+        prix: selectedAtelier.value.prix
+      }
+      await AtelierApi.postAtelier(dataSelectedAtelierPost);
       toast.add({severity: 'success', summary: 'Atelier ajouté', detail: 'Un nouvel atelier a été ajouté avec succès.', life: 3000});
     }
     await loadAteliers();
@@ -155,6 +173,9 @@ async function saveAtelier() {
     }, 500);
   } catch (error) {
     console.error('Failed to save the atelier:', error);
+    setTimeout(() => {
+      isLoading.value = false;
+    }, 500);
     toast.add({severity: 'error', summary: 'Échec de la sauvegarde', detail: 'Échec de la sauvegarde de l\'atelier.', life: 3000});
   }
 }
@@ -218,8 +239,8 @@ async function saveAtelier() {
       </section>
       <Dialog v-model:visible="displayModal" style="width: 450px" :modal="true" :header="isEditMode ? 'Modifier l\'atelier' : 'Ajouter un atelier'">
         <div class="flex flex-col gap-4 py-2">
-          <label for="nom-atelier" class="block text-sm font-medium text-black">Nom de l'atelier</label>
-          <InputText id="nom-atelier" v-model="selectedAtelier.nom" placeholder="Entrez le nom de l'atelier" class="mt-1 block w-full px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+          <label for="nom-atelier" class="block text-sm font-medium text-black">Nom de l'atelier <span class="text-danger">*</span></label>
+          <InputText :class="{'border-danger': !isValidNom}" id="nom-atelier" v-model="selectedAtelier.nom" placeholder="Entrez le nom de l'atelier" class="mt-1 block w-full px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required/>
           <label for="thematique-atelier" class="block text-sm font-medium text-black">Thématique</label>
           <Dropdown
               v-model="selectedAtelier.thematique"
@@ -229,10 +250,10 @@ async function saveAtelier() {
               placeholder="Sélectionnez une thématique"
               class="mt-1 w-full px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
-          <label for="description-atelier" class="block text-sm font-medium text-black">Description</label>
-          <InputText id="description-atelier" v-model="selectedAtelier.description" placeholder="Entrez la description de l'atelier" class="mt-1 block w-full px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
-          <label for="prix-atelier" class="block text-sm font-medium text-black">Prix</label>
-          <InputText id="prix-atelier" type="number" v-model="selectedAtelier.prix" placeholder="Entrez la description de l'atelier" class="mt-1 block w-full px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+          <label for="description-atelier" class="block text-sm font-medium text-black">Description <span class="text-danger">*</span></label>
+          <InputText :class="{'border-danger': !isValidDescription}" id="description-atelier" v-model="selectedAtelier.description" placeholder="Entrez la description de l'atelier" class="mt-1 block w-full px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required/>
+          <label for="prix-atelier" class="block text-sm font-medium text-black">Prix <span class="text-danger">*</span></label>
+          <InputText :class="{'border-danger': !isValidPrix}" id="prix-atelier" type="number" v-model="selectedAtelier.prix" placeholder="Entrez la description de l'atelier" class="mt-1 block w-full px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required/>
           <label for="product-atelier" class="block text-sm font-medium text-black">Sélectionner des produits</label>
           <MultiSelect
           v-model="selectedProducts"
