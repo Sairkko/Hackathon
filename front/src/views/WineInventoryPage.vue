@@ -14,13 +14,13 @@ const options = ref([
 
 const visible = ref(false);
 
-const new_wine_name = ref('');
+const new_wine_nom = ref('');
 const new_wine_region = ref('');
 const new_wine_volume = ref('');
-const new_wine_age = ref('');
+const new_wine_millesime = ref('');
 const new_wine_type = ref('');
 const new_wine_cepage = ref('');
-const new_wine_note = ref('');
+const new_wine_description = ref('');
 const new_wine_stock = ref('');
 
 const allWine = ref([]);
@@ -32,19 +32,24 @@ onMounted(async () => {
 });
 
 function deleteComponent(identifiant) {
-  allWine.value.splice(allWine.value.findIndex(el => el.id === identifiant), 1)
+  allWine.value.splice(allWine.value.findIndex(el => el.id === identifiant), 1);
+}
+
+function updateComponent(newData, id) {
+  const index = allWine.value.findIndex(el => el.id === id);
+    allWine.value[index] = newData;
 }
 
 async function addProduct() {
   const data = {
     region: new_wine_region.value,
-    millesime: new_wine_age.value,
+    millesime: new_wine_millesime.value,
     cepage: new_wine_cepage.value,
-    name: new_wine_name.value,
+    nom: new_wine_nom.value,
     type: new_wine_type.value,
     volume: new_wine_volume.value,
     stock: new_wine_stock.value,
-    description: new_wine_note.value
+    description: new_wine_description.value
   };
   await ProductApi.addProduct(data);
   visible.value = false;
@@ -60,7 +65,7 @@ async function addProduct() {
       <div class="flex gap-8 bg-[#F3F2F2] p-2 w-min">
         <div class="flex gap-2 items-center mx-2 justify-center">
           <label class="text-sm">Affichage</label>
-          <Dropdown v-model="selectedFilter" :options="options" optionLabel="name"
+          <Dropdown v-model="selectedFilter" :options="options" optionLabel="nom"
                     placeholder="Sélectionner un affichage" class="w-full md:w-[14rem]"/>
         </div>
         <InputGroup class="flex gap-1">
@@ -74,14 +79,8 @@ async function addProduct() {
     </div>
     <div class="flex flex-wrap gap-x-5">
       <div v-for="item in allWine" :key="item">
-        <WineCardComponent @deleteOne="deleteComponent"
-                           :id=item.id
-                           :title="`${item.name}, ${item.region}`"
-                           :type="item.type"
-                           :millesime=item.millesime
-                           :cepage=item.cepage
-                           :note=item.description
-                           :stock=item.stock
+        <WineCardComponent @deleteOne="deleteComponent" @updateOne="updateComponent"
+                           :data=item
                            image="../assets/winApp.png"
         />
       </div>
@@ -90,16 +89,16 @@ async function addProduct() {
 
   <Dialog v-model:visible="visible" modal header="Ajout d'un nouveau vin" class="w-1/3">
     <div class="flex flex-col gap-2">
-      <label class="text-sm font-semibold" for="new_wine_name">Nom du vin</label>
-      <InputText id="new_wine_name" v-model="new_wine_name" placeholder="Nom du vin"/>
+      <label class="text-sm font-semibold" for="new_wine_nom">Nom du vin</label>
+      <InputText id="new_wine_nom" v-model="new_wine_nom" placeholder="Nom du vin"/>
     </div>
     <div class="flex flex-col gap-2">
       <label class="text-sm font-semibold" for="new_wine_region">Région</label>
       <InputText id="new_wine_region" v-model="new_wine_region" placeholder="Région"/>
     </div>
     <div class="flex flex-col gap-2">
-      <label class="text-sm font-semibold" for="new_wine_age">Milésime</label>
-      <InputText id="new_wine_age" v-model="new_wine_age" placeholder="Milésime"/>
+      <label class="text-sm font-semibold" for="new_wine_millesime">Milésime</label>
+      <InputText id="new_wine_millesime" v-model="new_wine_millesime" placeholder="Milésime"/>
     </div>
     <div class="flex flex-col gap-2">
       <label class="text-sm font-semibold" for="new_wine_volume">Volume</label>
@@ -118,8 +117,8 @@ async function addProduct() {
       <InputText id="new_wine_stock" v-model="new_wine_stock" placeholder="300"/>
     </div>
     <div class="flex flex-col gap-2">
-      <label class="text-sm font-semibold" for="new_wine_note">Note</label>
-      <Textarea class="bg-white" v-model="new_wine_note" variant="filled" rows="5" cols="30"
+      <label class="text-sm font-semibold" for="new_wine_description">Note</label>
+      <Textarea class="bg-white" v-model="new_wine_description" variant="filled" rows="5" cols="30"
                 placeholder="Une petite notation du vin..."/>
     </div>
 

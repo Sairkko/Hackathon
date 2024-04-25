@@ -62,7 +62,7 @@ class ProductController extends AbstractController
         $productData = array_map(function ($product) {
             return [
                 'id' => $product->getId(),
-                'name' => $product->getNom(),
+                'nom' => $product->getNom(),
                 'region' => $product->getRegion(),
                 'millesime' => $product->getMillesime(),
                 'cepage' => $product->getCepage(),
@@ -87,7 +87,7 @@ class ProductController extends AbstractController
 
         $productData = [
             'id' => $product->getId(),
-            'name' => $product->getNom(),
+            'nom' => $product->getNom(),
             'region' => $product->getRegion(),
             'millesime' => $product->getMillesime(),
             'cepage' => $product->getCepage(),
@@ -126,7 +126,7 @@ class ProductController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
 
-        $product->setNom($data['name'] ?? $product->getNom());
+        $product->setNom($data['nom'] ?? $product->getNom());
         $product->setVolume($data['volume'] ?? $product->getVolume());
         $product->setRegion($data['region'] ?? $product->getRegion());
         $product->setMillesime($data['millesime'] ?? $product->getMillesime());

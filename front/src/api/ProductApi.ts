@@ -8,5 +8,9 @@ class ProductApi {
     addProduct(data: object) {
         return apiClient.post('/product/new', data);
     }
+    editProduct(id: string, data: object) {
+        console.log(data)
+        return apiClient.put(`/product/edit/${id}`, data);
+    }
 }
 export default new ProductApi();
