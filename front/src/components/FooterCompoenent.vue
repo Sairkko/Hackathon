@@ -20,14 +20,14 @@
         </div>
       </div>
       <div class="flex justify-center md:justify-end items-center space-x-4">
-        <a href="#" aria-label="Facebook" class="hover:text-gray-200">
-          <font-awesome-icon :icon="['fab', 'facebook-f']" />
+        <a href="#" aria-label="Facebook" class="hover:text-gray-200 text-xl">
+          <font-awesome-icon :icon="['fab', 'facebook-f']" class="fa-lg" />
         </a>
-        <a href="#" aria-label="Twitter" class="hover:text-gray-200">
-          <font-awesome-icon :icon="['fab', 'x-twitter']" />
+        <a href="#" aria-label="Twitter" class="hover:text-gray-200 text-xl">
+            <font-awesome-icon :icon="['fab', 'x-twitter']" class="fa-lg" />
         </a>
-        <a href="#" aria-label="Instagram" class="hover:text-gray-200 bg-dark">
-          <font-awesome-icon :icon="['fab', 'instagram']" />
+        <a href="#" aria-label="Instagram" class="hover:text-gray-200 bg-dark text-xl">
+          <font-awesome-icon :icon="['fab', 'instagram']" class="fa-lg" />
         </a>
       </div>
     </div>

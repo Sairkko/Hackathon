@@ -5,6 +5,7 @@ namespace App\Controller\API;
 use App\Entity\AtelierContent;
 use App\Repository\AtelierContentRepository;
 use App\Repository\ProductRepository;
+use App\Repository\UserRepository;
 use App\Trait\ApiResponseTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -72,7 +73,8 @@ class AtelierController extends AbstractController
             $productDetails = [];
             foreach ($atelier->getProducts() as $product) {
                 $productDetails[] = [
-                    'nom' => $product->getNom(),
+                    'id' => $product->getId(),
+                    'name' => $product->getNom(),
                     'cepage' => $product->getCepage()
                 ];
             }
@@ -90,6 +92,62 @@ class AtelierController extends AbstractController
         return $this->createApiResponse($ateliersArray, Response::HTTP_OK);
     }
 
+    #[Route('/one/{idAtelier}/{idUser}', name: 'get_atelier_content_by_id_user', methods: ['GET'])]
+    public function oneAtelier(int $idAtelier, int $idUser, EntityManagerInterface $entityManager, UserRepository $userRepository): Response
+    {
+        $atelierContent = $entityManager->getRepository(AtelierContent::class)->find($idAtelier);
+        if (!$atelierContent) {
+            throw new NotFoundHttpException('AtelierContent not found.');
+        }
+
+        $user = $userRepository->find($idUser);
+        if (!$user) {
+            return $this->createApiResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $productDetails = [];
+        foreach ($atelierContent->getProducts() as $product) {
+            $productDetails[] = [
+                'nom' => $product->getNom(),
+                'cepage' => $product->getCepage()
+            ];
+        }
+
+        $ateliers = [];
+        foreach ($atelierContent->getAteliers() as $atelier) {
+            $isUserRegistered = false;
+            foreach ($atelier->getReservations() as $reservation) {
+                if (!$reservation->getUser()->contains($user)) {
+                    $isUserRegistered = true;
+                    break;
+                }
+            }
+
+            if ($isUserRegistered) {
+                $ateliers[] = [
+                    'id' => $atelier->getId(),
+                    'date_debut' => $atelier->getDateDebut() ? $atelier->getDateDebut()->format('Y-m-d H:i:s') : null,
+                    'date_fin' => $atelier->getDateFin() ? $atelier->getDateFin()->format('Y-m-d H:i:s') : null,
+                    'localisation' => $atelier->getLocalisation()
+                ];
+            }
+        }
+
+        $response = [
+            'id' => $atelierContent->getId(),
+            'thematique' => $atelierContent->getThematique(),
+            'products' => $productDetails,
+            'nom' => $atelierContent->getNom(),
+            'description' => $atelierContent->getDescription(),
+            'prix' => $atelierContent->getPrix(),
+            'ateliers' => $ateliers
+        ];
+
+        return $this->createApiResponse($response, Response::HTTP_OK);
+    }
+
+
+
     #[Route('/delete/{id}', name: 'delete_atelier_by_id', methods: ['DELETE'])]
     public function deleteOneAtelier(int $id, EntityManagerInterface $entityManager): Response
     {
@@ -97,6 +155,10 @@ class AtelierController extends AbstractController
 
         if (!$atelier) {
             throw new NotFoundHttpException('Atelier not found.');
+        }
+
+        foreach ($atelier->getAteliers() as $ateliers) {
+            $entityManager->remove($ateliers);
         }
 
         $entityManager->remove($atelier);
