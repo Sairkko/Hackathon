@@ -11,6 +11,7 @@ import AdminAtelierPage from "@/views/AdminAtelierPage.vue";
 import AtelierPage from "@/views/AtelierPage.vue";
 import VignificationPage from "@/views/VignificationPage.vue";
 import CalendrierPage from "@/views/CalendrierPage.vue"
+import WineInventoryPage from "@/views/WineInventoryPage.vue";
 
 
 const routes: RouteRecordRaw[] = [
@@ -87,11 +88,19 @@ const routes: RouteRecordRaw[] = [
       layout: 'PageLayout'
     }
   },
-  
+
   {
     path: '/calendrier',
     name: 'CalendrierPage',
     component: CalendrierPage,
+    meta: {
+      layout: 'PageLayout'
+    }
+  },
+  {
+    path: '/admin/inventaire',
+    name: 'inventaire',
+    component: WineInventoryPage,
     meta: {
       layout: 'PageLayout'
     }

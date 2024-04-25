@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .p-card{
-border-radius: 20px;
+border-radius: 0.5rem;
 }
 
 .p-card-title{
@@ -14,20 +14,25 @@ border-radius: 20px;
     color: white;
     font-weight: 500;
 }
-.p-card-body {
+.p-card-body, .p-card-content {
     padding: 0 !important;
 }
 .p-button {
     color: white;
 }
 .p-inputtext {
-    @apply mb-3;
+    /*@apply mb-3;*/
     padding: 5px;
-    border: rgb(160, 160, 160) solid 1px;
+    /*border: rgb(160, 160, 160) solid 1px;*/
 }
 
 .p-inputtext.p-invalid{
     border: rgb(251, 115, 115) solid 1px;
+}
+
+.p-dialog-content{
+    padding-left: 3rem;
+
 }
 
 .fc-button {
@@ -35,7 +40,7 @@ border-radius: 20px;
     color: white !important;
     border: none !important;
   }
-  
+
   .fc-button:hover {
     background-color: #9A0034 !important;
   }

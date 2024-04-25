@@ -1,13 +1,21 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router/index'
-import PrimeVue from 'primevue/config';
+import PrimeVue from 'primevue/config'
 
 import 'primevue/resources/themes/saga-blue/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 import { pinia } from './store';
 import Toast from 'primevue/toast';
+import Card from 'primevue/card';
+import Button from 'primevue/button';
+import InputText from "primevue/inputtext";
+import Dialog from 'primevue/dialog';
+import Textarea from "primevue/textarea";
+import Dropdown from "primevue/dropdown";
+import InputGroup from "primevue/inputgroup";
+
 import ToastService from 'primevue/toastservice';
 import './assets/tailwind.css';
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -23,5 +31,12 @@ createApp(App)
     .use(pinia)
     .use(ToastService)
     .component('Toast',Toast)
+    .component('Card',Card)
+    .component('Button', Button)
+    .component('InputText', InputText)
+    .component('Dialog', Dialog)
+    .component('Textarea', Textarea)
+    .component('Dropdown', Dropdown)
+    .component('ImputGroup', InputGroup)
     .component("font-awesome-icon", FontAwesomeIcon)
     .mount('#app')
