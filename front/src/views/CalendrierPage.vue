@@ -2,11 +2,11 @@
   <div id="calendrier-page" class="p-10">
     <h2 class="text-2xl font-bold">Calendrier des ateliers</h2>
     <FullCalendar :options="calendarOptions" />
-    <Sidebar v-model:visible="visibleRight" header="Création d'un nouvel évènement" position="right" class="w-1/3">
+    <Sidebar v-model:visible="visibleRight" :header="event.id ? 'Détail d\'un évènement' : 'Création d\'un nouvel évènement'" position="right" class="w-1/3">
       <div class="p-fluid p-grid">
         <div class="mb-2">
           <label for="atelier">Choix de l'atelier</label>
-          <InputText id="atelier" v-model="event.atelier" />
+          <Dropdown id="atelier" v-model="event.atelier" :options="ateliers" optionValue="id" optionLabel="nom"/>
         </div>
         <div class="md:flex gap-2">
           <div class="mb-2 w-full md:w-2/4">
@@ -59,6 +59,9 @@ import InputText from 'primevue/inputtext'
 import StrokeButton from "../components/StrokeButton.vue";
 import EventApi from "../api/EventApi"
 import Event from "../models/Event"
+import AtelierApi from "../api/AtelierApi"
+import Atelier from "../models/Atelier";
+import Dropdown from "primevue/dropdown"
 
 export default defineComponent({
   name: "LoginPage",
@@ -68,7 +71,8 @@ export default defineComponent({
     Calendar,
     InputText,
     // Button,
-    StrokeButton
+    StrokeButton,
+    Dropdown
   },
   setup() {
     const usersStore = useUserStore();
@@ -76,12 +80,31 @@ export default defineComponent({
     const visibleRight = ref<boolean>(false)
     const event = ref<any>({})
     const events = ref<Event[]>([])
+    const ateliers = ref<Atelier[]>([])
 
     const appUser = computed(() => {
       return usersStore.getUser;
     });
 
-    const calendarOptions = {
+    EventApi.getEvents().then(response => {
+      events.value = response.data.data.map((event: Event) => Object.assign(new Event(), event))
+      calendarOptions.value.events = events.value
+    })
+
+    AtelierApi.atelier().then(response => {
+      ateliers.value = response.data.data.map((atelier: Atelier) => Object.assign(new Atelier(), atelier))
+    })
+
+
+    const handleEventClick = (clickInfo: any) => {
+      console.log(clickInfo.event)
+      event.value = Object.assign(new Event(), clickInfo.event._def.extendedProps);
+      event.value.id = clickInfo.event.id
+      event.value.atelier = 
+      visibleRight.value = true;
+    };
+
+    const calendarOptions = ref<any>({
         plugins: [ dayGridPlugin, interactionPlugin, timeGridWeek ],
         initialView: 'dayGridMonth',
         locale: 'fr',
@@ -96,6 +119,9 @@ export default defineComponent({
             color: "#C10041",
             text: 'Ajouter un Atelier',
             click: function() {
+              if(event.value.id){
+                event.value = new Event()
+              }
               visibleRight.value = !visibleRight.value
             }
           }
@@ -104,17 +130,16 @@ export default defineComponent({
           center: 'addButton',
           right: 'dayGridMonth,timeGridWeek'
         },
-      }
-
-      EventApi.getEvents().then(data => {
-        events.value = data.data.map((event: Event) => Object.assign(new Event(), event))
+        events: [],
+        eventClick: handleEventClick 
       })
 
     return {
       appUser,
       calendarOptions,
       visibleRight,
-      event
+      event,
+      ateliers
     };
   },
 });
