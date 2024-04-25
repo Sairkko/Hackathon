@@ -1,6 +1,7 @@
 <script setup>
 import WineCardComponent from "@/components/WineCardComponent.vue";
-import { ref } from "vue";
+import {onMounted, ref} from "vue";
+import AtelierApi from "@/api/AtelierApi";
 
 const selectedFilter = ref();
 const options = ref([
@@ -18,6 +19,13 @@ const new_wine_type = ref('');
 const new_wine_cepage = ref('');
 const new_wine_note = ref('');
 const new_wine_stock = ref('');
+
+onMounted(async () => {
+  const allWine = await AtelierApi.product();
+  console.log(allWine);
+});
+
+
 
 </script>
 
