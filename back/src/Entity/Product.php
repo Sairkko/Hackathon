@@ -33,9 +33,6 @@ class Product
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
-    #[ORM\ManyToMany(targetEntity: Atelier::class, mappedBy: 'products')]
-    private Collection $ateliers;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
@@ -124,33 +121,6 @@ class Product
     public function setType(string $type): static
     {
         $this->type = $type;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Atelier>
-     */
-    public function getAteliers(): Collection
-    {
-        return $this->ateliers;
-    }
-
-    public function addAtelier(Atelier $atelier): static
-    {
-        if (!$this->ateliers->contains($atelier)) {
-            $this->ateliers->add($atelier);
-            $atelier->addProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAtelier(Atelier $atelier): static
-    {
-        if ($this->ateliers->removeElement($atelier)) {
-            $atelier->removeProduct($this);
-        }
 
         return $this;
     }
