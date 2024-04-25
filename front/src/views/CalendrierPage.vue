@@ -100,7 +100,7 @@ export default defineComponent({
       console.log(clickInfo.event)
       event.value = Object.assign(new Event(), clickInfo.event._def.extendedProps);
       event.value.id = clickInfo.event.id
-      event.value.atelier = 
+      event.value.atelier = {};
       visibleRight.value = true;
     };
 
