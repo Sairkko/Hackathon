@@ -22,6 +22,7 @@ import {fas} from "@fortawesome/free-solid-svg-icons"
 import { faXTwitter, faInstagram, faFacebookF, faTwitter } from '@fortawesome/free-brands-svg-icons';
 
 
+
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 library.add(fas, faXTwitter, faInstagram, faFacebookF, faTwitter)
