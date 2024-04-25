@@ -46,7 +46,7 @@ class ProductController extends AbstractController
         $product->setCepage($data['cepage']);
         $product->setMillesime($data['millesime']);
         $product->setType($data['type']);
-        $product->setDescription($data['type'] ?? "");
+        $product->setDescription($data['description'] ?? "");
 
         $entityManager->persist($product);
         $entityManager->flush();

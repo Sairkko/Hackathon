@@ -1,6 +1,6 @@
 <script setup>
-import {defineProps, ref} from 'vue';
-import axios from "axios";
+import {defineProps, defineEmits, ref} from 'vue';
+import ProductApi from "@/api/ProductApi";
 
 const props = defineProps({
   id: Number,
@@ -12,6 +12,8 @@ const props = defineProps({
   stock: Number,
   image: String
 });
+
+const emit = defineEmits(["deleteOne"])
 
 const visible = ref(false);
 const isEdit = ref(null)
@@ -40,14 +42,20 @@ function prepareForDeletion(){
 }
 
 async function deleteProduct() {
-  try {
-    const response = await axios.delete(`/product/delete/${props.id}`);
-    console.log(response.data.message);
-    visible.value=false;
-  } catch (error) {
-    console.error('Error deleting product:', error.response.data);
-  }
+  const requ = await ProductApi.removeProduct(props.id);
+  console.log(requ);
+  visible.value = false;
+  emit("deleteOne", props.id)
 }
+
+// async function addProduct() {
+//   // const requ = await ProductApi.removeProduct(props.id);
+//   // console.log(requ);
+//   // visible.value = false;
+//   // emit("deleteOne", props.id)
+// }
+//
+//
 
 </script>
 
