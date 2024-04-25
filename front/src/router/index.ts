@@ -75,6 +75,14 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/atelier',
     name: 'atelier',
+    component: AtelierPage,
+    meta: {
+      layout: 'PageLayout'
+    }
+  },
+  {
+    path: '/atelier-admin',
+    name: 'atelier-admin',
     component: AdminAtelierPage,
     meta: {
       layout: 'PageLayout'

@@ -22,6 +22,16 @@ class AtelierApi {
             prix: prix
         })
     }
+
+    postAtelier(thematique?: string, products?: string[], nom?: string, description?: string, prix?: number) {
+        return apiClient.post('/atelier/new', {
+            thematique: thematique,
+            products: products,
+            nom: nom,
+            description: description,
+            prix: prix
+        })
+    }
 }
 export default new AtelierApi();
 
