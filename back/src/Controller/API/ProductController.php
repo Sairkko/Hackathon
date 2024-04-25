@@ -2,6 +2,7 @@
 
 namespace App\Controller\API;
 
+use App\Entity\AtelierContent;
 use App\Entity\Product;
 use App\Entity\User;
 use App\Repository\ProductRepository;
@@ -102,7 +103,7 @@ class ProductController extends AbstractController
     #[Route('/delete/{id}', name: 'delete_product', methods: ['DELETE'])]
     public function deleteProduct(int $id, ProductRepository $productRepository, EntityManagerInterface $entityManager): Response
     {
-        $product = $productRepository->find($id);
+        $product = $entityManager->getRepository(Product::class)->find($id);
 
         if (!$product) {
             return $this->createApiResponse([], 'Product not Found.', Response::HTTP_BAD_REQUEST);
