@@ -18,6 +18,7 @@ module.exports = {
       "lite-grey": "#E8E8E8",
       'hover-red': '#9A0034',
       'white' : '#ffffff',
+      'blue-cyan' : '#2A8DA3',
       'green' : '#309A1F'
     },
     extend: {},

@@ -73,7 +73,8 @@ class AtelierController extends AbstractController
             $productDetails = [];
             foreach ($atelier->getProducts() as $product) {
                 $productDetails[] = [
-                    'nom' => $product->getNom(),
+                    'id' => $product->getId(),
+                    'name' => $product->getNom(),
                     'cepage' => $product->getCepage()
                 ];
             }
@@ -154,6 +155,10 @@ class AtelierController extends AbstractController
 
         if (!$atelier) {
             throw new NotFoundHttpException('Atelier not found.');
+        }
+
+        foreach ($atelier->getAteliers() as $ateliers) {
+            $entityManager->remove($ateliers);
         }
 
         $entityManager->remove($atelier);

@@ -6,6 +6,8 @@ import MyReservation from "@/views/MyReservation.vue";
 import VignificationComponent from "@/views/VignificationPage.vue";
 import AtelierComponent from "@/components/AtelierComponent.vue";
 import ProposPage from "@/views/ProposPage.vue";
+import AdminAtelierPage from "@/views/AdminAtelierPage.vue";
+import AtelierPage from "@/views/AtelierPage.vue";
 import VignificationPage from "@/views/VignificationPage.vue";
 import CalendrierPage from "@/views/CalendrierPage.vue"
 
@@ -65,7 +67,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/atelier',
     name: 'atelier',
-    component: AtelierComponent,
+    component: AdminAtelierPage,
     meta: {
       layout: 'PageLayout'
     }
