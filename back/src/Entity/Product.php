@@ -18,8 +18,8 @@ class Product
     #[ORM\Column(length: 255)]
     private ?string $region = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $millesime = null;
+    #[ORM\Column]
+    private ?int $millesime = null;
 
     #[ORM\Column(length: 255)]
     private ?string $cepage = null;
@@ -68,12 +68,12 @@ class Product
         return $this;
     }
 
-    public function getMillesime(): ?string
+    public function getMillesime(): ?int
     {
         return $this->millesime;
     }
 
-    public function setMillesime(string $millesime): static
+    public function setMillesime(int $millesime): static
     {
         $this->millesime = $millesime;
 

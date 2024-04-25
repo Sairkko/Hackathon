@@ -22,6 +22,14 @@ class AppFixtures extends Fixture
         $this->passwordHasher = $passwordHasher;
     }
 
+    private array $descriptions = [
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+        "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    ];
+
     public function load(ObjectManager $manager): void
     {
         $users = [];
@@ -52,12 +60,14 @@ class AppFixtures extends Fixture
         for ($i = 0; $i < 10; ++$i) {
             $product = new Product();
             $product->setRegion('Region '.$i)
-                ->setMillesime('Millesime '.$i)
+                ->setMillesime(rand(1900, 2020))
                 ->setCepage('Cepage '.$i)
                 ->setNom('Vin '.$i)
                 ->setStock(rand(50, 200))
                 ->setType('Type '.$i)
-                ->setVolume(rand(750, 1500));
+                ->setVolume(rand(750, 1500))
+                ->setDescription($this->getRandomDescription())
+            ;
             $manager->persist($product);
             $products[] = $product;
         }
@@ -109,5 +119,10 @@ class AppFixtures extends Fixture
         $manager->persist($aboutPage);
 
         $manager->flush();
+    }
+
+    private function getRandomDescription(): string
+    {
+        return $this->descriptions[array_rand($this->descriptions)];
     }
 }
