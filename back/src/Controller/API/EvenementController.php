@@ -153,9 +153,9 @@ class EvenementController extends AbstractController
 
         $atelierArray = [
             'id' => $atelier->getId(),
-            'date_debut' => $atelier->getDateDebut()->format('Y-m-d H:i:s'),
-            'date_fin' => $atelier->getDateFin()->format('Y-m-d H:i:s'),
-            'date_inscription_maximum' => $atelier->getDateInscriptionMaximum()->format('Y-m-d H:i:s'),
+            'date_debut' => $atelier->getDateDebut(),
+            'date_fin' => $atelier->getDateFin(),
+            'date_inscription_maximum' => $atelier->getDateInscriptionMaximum(),
             'limite_participant' => $atelier->getLimiteParticipant(),
             'localisation' => $atelier->getLocalisation(),
             'ecole' => $ecoleData ? [
@@ -260,9 +260,9 @@ class EvenementController extends AbstractController
                 $atelierContent = $atelier->getAtelierContent();
                 $ateliers[] = [
                     'id' => $atelier->getId(),
-                    'date_debut' => $atelier->getDateDebut() ? $atelier->getDateDebut()->format('Y-m-d H:i:s') : null,
-                    'date_fin' => $atelier->getDateFin() ? $atelier->getDateFin()->format('Y-m-d H:i:s') : null,
-                    'date_inscription_maximum' => $atelier->getDateInscriptionMaximum() ? $atelier->getDateInscriptionMaximum()->format('Y-m-d H:i:s') : null,
+                    'date_debut' => $atelier->getDateDebut() ? $atelier->getDateDebut() : null,
+                    'date_fin' => $atelier->getDateFin() ? $atelier->getDateFin() : null,
+                    'date_inscription_maximum' => $atelier->getDateInscriptionMaximum() ? $atelier->getDateInscriptionMaximum() : null,
                     'localisation' => $atelier->getLocalisation(),
                     'ecole' => $atelier->getEcole() ? [
                         'id' => $atelier->getEcole()->getId(),

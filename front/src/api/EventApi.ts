@@ -11,7 +11,7 @@ class EventApi {
     }
 
     getEvent(evenement: Event) {
-        return apiClient.put(`/evenement/one/${evenement.id}`)
+        return apiClient.get(`/evenement/one/${evenement.id}`)
     }
 
     createEvent(evenement: Event) {
