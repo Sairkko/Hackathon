@@ -3,6 +3,15 @@ import LoginPage from '../views/LoginPage.vue';
 import RegisterPage from '../views/RegisterPage.vue';
 import HomePage from '../views/HomePage.vue';
 import WorkshopDetailsPage from '../views/WorkshopDetailsPages.vue';
+import MyReservation from "@/views/MyReservation.vue";
+import VignificationComponent from "@/views/VignificationPage.vue";
+import AtelierComponent from "@/components/AtelierComponent.vue";
+import ProposPage from "@/views/ProposPage.vue";
+import AdminAtelierPage from "@/views/AdminAtelierPage.vue";
+import AtelierPage from "@/views/AtelierPage.vue";
+import VignificationPage from "@/views/VignificationPage.vue";
+import CalendrierPage from "@/views/CalendrierPage.vue"
+
 
 const routes: RouteRecordRaw[] = [
   {
@@ -37,6 +46,52 @@ const routes: RouteRecordRaw[] = [
     path: '/detail',
     name: 'WorkshopDetailsPage',
     component: WorkshopDetailsPage,
+  },
+  {
+    path: '/my-reservation',
+    name: 'MyReservation',
+    component: MyReservation,
+    meta: {
+      layout: 'PageLayout'
+    }
+  },
+  {
+    path: '/vignification',
+    name: 'vignification',
+    component: VignificationPage,
+    meta: {
+      layout: 'PageLayout'
+    }
+  },
+  {
+    path: '/propos',
+    name: 'propos',
+    component: ProposPage,
+    meta: {
+      layout: 'PageLayout'
+    }
+  },
+  {
+    path: '/atelier',
+    name: 'atelier',
+    component: AdminAtelierPage,
+    meta: {
+      layout: 'PageLayout'
+    }
+  },
+  {
+    path: '/vignification',
+    name: 'VignificationComponent',
+    component: VignificationComponent,
+    meta: {
+      layout: 'PageLayout'
+    }
+  },
+  
+  {
+    path: '/calendrier',
+    name: 'CalendrierPage',
+    component: CalendrierPage,
     meta: {
       layout: 'PageLayout'
     }

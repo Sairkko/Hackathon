@@ -39,9 +39,16 @@ class Product
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\Column]
+    private ?int $volume = null;
+
+    #[ORM\ManyToMany(targetEntity: AtelierContent::class, mappedBy: 'products')]
+    private Collection $atelierContents;
+
     public function __construct()
     {
         $this->ateliers = new ArrayCollection();
+        $this->atelierContents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -156,6 +163,45 @@ class Product
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getVolume(): ?int
+    {
+        return $this->volume;
+    }
+
+    public function setVolume(int $volume): static
+    {
+        $this->volume = $volume;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AtelierContent>
+     */
+    public function getAtelierContents(): Collection
+    {
+        return $this->atelierContents;
+    }
+
+    public function addAtelierContent(AtelierContent $atelierContent): static
+    {
+        if (!$this->atelierContents->contains($atelierContent)) {
+            $this->atelierContents->add($atelierContent);
+            $atelierContent->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAtelierContent(AtelierContent $atelierContent): static
+    {
+        if ($this->atelierContents->removeElement($atelierContent)) {
+            $atelierContent->removeProduct($this);
+        }
 
         return $this;
     }

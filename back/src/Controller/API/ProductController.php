@@ -30,7 +30,7 @@ class ProductController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        $requiredFields = ['region', 'millesime', 'cepage', 'nom', 'type'];
+        $requiredFields = ['region', 'millesime', 'cepage', 'nom', 'type', 'volume'];
         foreach ($requiredFields as $field) {
             if (empty($data[$field])) {
                 return $this->createApiResponse([], sprintf('Missing required field: %s.', $field), Response::HTTP_BAD_REQUEST);
@@ -40,6 +40,7 @@ class ProductController extends AbstractController
         $product = new Product();
         $product->setRegion($data['region']);
         $product->setNom($data['nom']);
+        $product->setVolume($data['volume']);
         $product->setStock($data['stock'] ?? 0);
         $product->setCepage($data['cepage']);
         $product->setMillesime($data['millesime']);
@@ -66,6 +67,7 @@ class ProductController extends AbstractController
                 'cepage' => $product->getCepage(),
                 'stock' => $product->getStock(),
                 'type' => $product->getType(),
+                'volume' => $product->getVolume(),
                 'description' => $product->getDescription(),
             ];
         }, $products);
@@ -89,6 +91,7 @@ class ProductController extends AbstractController
             'millesime' => $product->getMillesime(),
             'cepage' => $product->getCepage(),
             'stock' => $product->getStock(),
+            'volume' => $product->getVolume(),
             'type' => $product->getType(),
             'description' => $product->getDescription(),
         ];
@@ -123,6 +126,7 @@ class ProductController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         $product->setNom($data['name'] ?? $product->getNom());
+        $product->setVolume($data['volume'] ?? $product->getVolume());
         $product->setRegion($data['region'] ?? $product->getRegion());
         $product->setMillesime($data['millesime'] ?? $product->getMillesime());
         $product->setCepage($data['cepage'] ?? $product->getCepage());

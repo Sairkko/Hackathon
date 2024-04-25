@@ -9,8 +9,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, shallowRef, watch} from "vue";
+import { computed, defineComponent, shallowRef, watch} from "vue";
 import { useRoute } from "vue-router";
+import User from "../models/User";
 import { useUserStore } from '../store/UserStrore';
 import BaseLayout from "./BaseLayout.vue";
 import PageLayout from "./PageLayout.vue";
@@ -19,8 +20,10 @@ import PageLayout from "./PageLayout.vue";
 export default defineComponent({
   name: "AppLayout",
   setup() {
-    const userStore = useUserStore();
-    const user = userStore.getUser!
+    const usersStore = useUserStore();
+    const user = computed(() => {
+      return usersStore.getUser;
+    });
     const layout = shallowRef(PageLayout);
     const route = useRoute();
 
@@ -38,8 +41,8 @@ export default defineComponent({
     //   }
     // })
 
-    if (user && user.token == "" && localStorage.getItem("user")) {
-      userStore.setUser(JSON.parse(localStorage.getItem("appUser")!))
+    if (!user.value && localStorage.getItem("user")) {
+      usersStore.setUser(Object.assign(new User(),JSON.parse(localStorage.getItem("user")!)))
     }
     
     watch(
