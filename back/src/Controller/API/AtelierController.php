@@ -117,19 +117,22 @@ class AtelierController extends AbstractController
         foreach ($atelierContent->getAteliers() as $atelier) {
             $isUserRegistered = false;
             foreach ($atelier->getReservations() as $reservation) {
-                if (!$reservation->getUser()->contains($user)) {
+                if ($reservation->getUser()->contains($user)) {
                     $isUserRegistered = true;
                     break;
                 }
             }
 
-            if ($isUserRegistered) {
+            if (!$isUserRegistered) {
                 $ateliers[] = [
                     'id' => $atelier->getId(),
                     'date_debut' => $atelier->getDateDebut() ? $atelier->getDateDebut()->format('Y-m-d H:i:s') : null,
                     'date_fin' => $atelier->getDateFin() ? $atelier->getDateFin()->format('Y-m-d H:i:s') : null,
                     'localisation' => $atelier->getLocalisation(),
-                    'ecole' => $atelier->getEcole()
+                    'ecole' => $atelier->getEcole() ? [
+                        'id' => $atelier->getEcole()->getId(),
+                        'nom' => $atelier->getEcole()->getNom()
+                    ] : null,
                 ];
             }
         }

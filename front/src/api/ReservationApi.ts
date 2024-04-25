@@ -2,7 +2,7 @@ import User from '@/models/User';
 import apiClient from './apiClient';
 import Reservation from '@/models/Reservation';
 
-class UserApi {
+class ReservationApi {
   deleteOneReservation(reservationId :bigint, userId :bigint) {
     return apiClient.delete(`/reservation/delete/${reservationId}/${userId}`);
   }
@@ -20,7 +20,7 @@ class UserApi {
   }
 
   createReservation(reservation: Reservation) {
-    return apiClient.post('/reservation/new');
+    return apiClient.post('/reservation/new', reservation);
   }
 
   validPaiement(reservation: Reservation) {
@@ -28,4 +28,4 @@ class UserApi {
   }
 }
 
-export default new UserApi();
+export default new ReservationApi();

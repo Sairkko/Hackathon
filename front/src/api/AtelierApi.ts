@@ -6,7 +6,7 @@ class AtelierApi {
     }
 
     getAtelierDetail(idAtelier :bigint, idUser :bigint) {
-        return apiClient.get(`/atelier/${idAtelier}/${idUser}`);
+        return apiClient.get(`/atelier/one/${idAtelier}/${idUser}`);
     }
 
     removeAtelier(id: string){
