@@ -42,7 +42,7 @@ class UserController extends AbstractController
             $user->setPrenom($data['prenom']);
         }
         if (isset($data['mail'])) {
-            $user->setMail($data['mail']);
+            $user->setMail($data['email']);
         }
         if (isset($data['telephone'])) {
             $user->setNumeroTelephone($data['telephone']);
