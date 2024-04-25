@@ -19,7 +19,8 @@ module.exports = {
       'hover-red': '#9A0034',
       'white' : '#ffffff',
       'blue-cyan' : '#2A8DA3',
-      'green' : '#309A1F'
+      'green' : '#309A1F',
+      'danger': '#FF0000'
     },
     extend: {},
   },

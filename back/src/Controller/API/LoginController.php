@@ -87,11 +87,12 @@ class LoginController extends AbstractController
 
         $userData = [
             'id' => $user->getId(),
-            'nom' => $user->getNom(),
-            'prenom' => $user->getPrenom(),
+            'lastName' => $user->getNom(),
+            'firstName' => $user->getPrenom(),
             'token' => $user->getToken(),
             'telephone' => $user->getNumeroTelephone(),
             'mail' => $user->getMail(),
+            'role' => $user->getRole()
         ];
 
 
