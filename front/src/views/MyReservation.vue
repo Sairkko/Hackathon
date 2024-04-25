@@ -1,5 +1,9 @@
 <template>
     <div id="my-reservation">
+      <div v-if="isLoading" class="loading-overlay text-6xl">
+        <font-awesome-icon :icon="'wine-bottle'" class="loading-icon"/>
+      </div>
+      <div v-else>
         <section class="px-4 py-16">
             <h1 class="text-3xl font-bold text-center text-dark-red mb-10">Mes réservations en attentes de paiement</h1>
             <p class="mt-4 mx-16 mb-10 text-center font-semibold">
@@ -21,7 +25,7 @@
 
                         </div>
                         <div class="flex flex-col justify-center gap-4">
-                            <button @click="deleteOneReservation(event.reservation.id)" style="width: 160px" class="border text-white border-grey bg-grey py-2 px-4 rounded hover:bg-red-700 transition duration-300">Annuler</button>
+                            <button @click="confirmDelete(event.reservation.id)" style="width: 160px" class="border text-white border-grey bg-grey py-2 px-4 rounded hover:bg-red-700 transition duration-300">Annuler</button>
                             <a :href="`/atelier/${event.atelier_content.id}`" style="width: 160px" class="border text-white border-red bg-red py-2 px-4 rounded hover:bg-red-700 transition duration-300">Détails</a>
                         </div>
                     </div>
@@ -29,6 +33,13 @@
             </template>
             <p v-else class="text-center">Aucune réservation en attente de paiement.</p>
         </section>
+      <Dialog v-model:visible="showDialog" header="Confirmer la suppression" :modal="true">
+        <p>Voulez-vous vraiment annuler cette réservation ?</p>
+        <div class="flex justify-end gap-2">
+          <Button label="Annuler" @click="showDialog = false" class="p-button-text bg-grey text-white m-4 py-1 px-2" />
+          <Button label="Supprimer" class="p-button-danger bg-red text-white m-4 py-1 px-2" @click="deleteReservation" />
+        </div>
+      </Dialog>
 
         <section class="px-4 mb-10">
             <h2 class="text-3xl font-bold text-center text-dark-red mb-10">Mes réservations validées</h2>
@@ -54,19 +65,33 @@
             </template>
             <p v-else class="text-center">Aucune réservation validée.</p>
         </section>
+      </div>
     </div>
 </template>
 
-
-
 <script>
 import {ref, computed, onMounted} from 'vue';
+import Toast from 'primevue/toast';
+import Dialog from 'primevue/dialog';
+import Button from 'primevue/button';
 import userApi from "@/api/UserApi";
 import reservationApi from "@/api/ReservationApi";
 import {differenceInMinutes, format} from 'date-fns';
+import {useToast} from "primevue/usetoast";
 export default {
+  components: {
+    Dialog,
+    Button,
+    // eslint-disable-next-line vue/no-unused-components
+    Toast
+  },
     setup() {
-        const events = ref([]);
+      const toast = useToast();
+      const showDialog = ref(false);
+      const reservationToDelete = ref(null);
+      const isLoading = ref(false);
+
+      const events = ref([]);
 
         const paidReservations = computed(() =>
             events.value.filter(event => event.reservation && event.reservation.is_paid)
@@ -95,41 +120,76 @@ export default {
         const userId = user.id;
 
         onMounted(async () => {
-            fetchReservation()
+          isLoading.value = true;
+          await fetchReservation()
+          setTimeout(() => {
+            isLoading.value = false;
+          }, 500);
         })
 
-        const fetchReservation = () => {
-            if (userId) {
-                userApi.getEvenementByUser(userId).then(response => {
-                    events.value = response.data.data;
-                    console.log(events.value);
-                }).catch(error => {
-                    console.error('Error fetching events:', error);
-                });
-            } else {
-                console.error("No user found in localStorage");
-            }
-        }
+      const confirmDelete = (reservationId) => {
+        reservationToDelete.value = reservationId;
+        showDialog.value = true;
+      };
 
-        const deleteOneReservation = (reservationId) => {
-            const user = JSON.parse(userStr);
-            const userId = user.id;
-            reservationApi.deleteOneReservation(reservationId, userId)
-                .then(() => {
-                    fetchReservation()
-                })
-                .catch(error => {
-                    console.error('Error fetching events:', error);
-                });
+      const deleteReservation = async () => {
+        isLoading.value = true;
+        if (reservationToDelete.value) {
+          await deleteOneReservation(reservationToDelete.value); // Attendre que la suppression soit terminée
+          await fetchReservation();
+          showDialog.value = false; // Fermer le dialogue
+          setTimeout(() => {
+            isLoading.value = false;
+          }, 500);
+        } else {
+          setTimeout(() => {
+            isLoading.value = false;
+          }, 500);
         }
+      };
 
-        return {
+      const fetchReservation = async () => {
+        if (userId) {
+          try {
+            const response = await userApi.getEvenementByUser(userId);
+            events.value = response.data.data;
+            console.log("Reservations updated", events.value);
+          } catch (error) {
+            console.error('Error fetching events:', error);
+            events.value = [];
+          }
+        } else {
+          console.error("No user found in localStorage");
+          events.value = [];
+        }
+      }
+
+      const deleteOneReservation = async (reservationId) => {
+        const user = JSON.parse(userStr);
+        const userId = user.id;
+        try {
+          await reservationApi.deleteOneReservation(reservationId, userId);
+          toast.add({severity:'success', summary:'Supprimé', detail:'Réservation supprimée avec succès.', life: 3000});
+          await fetchReservation();
+        } catch (error) {
+          console.error('Error deleting reservation:', error);
+          toast.add({severity:'error', summary:'Erreur', detail:'Échec de la suppression de la réservation.', life: 3000});
+        }
+      };
+
+
+      return {
+            showDialog,
+            reservationToDelete,
+            confirmDelete,
+            deleteReservation,
             paidReservations,
             unpaidReservations,
             events,
             deleteOneReservation,
             formatDate,
-            calculateDuration
+            calculateDuration,
+            isLoading
         };
     }
 }
@@ -137,4 +197,21 @@ export default {
 
 
 <style>
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.loading-icon {
+  animation: spin 1s linear infinite;
+}
+
+.loading-overlay {
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.06);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>
