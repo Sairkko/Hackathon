@@ -12,6 +12,7 @@ import AtelierPage from "@/views/AtelierPage.vue";
 import VignificationPage from "@/views/VignificationPage.vue";
 import CalendrierPage from "@/views/CalendrierPage.vue"
 import WineInventoryPage from "@/views/WineInventoryPage.vue";
+import GestionProposPage from "@/views/GestionProposPage.vue";
 
 
 const routes: RouteRecordRaw[] = [
@@ -68,6 +69,14 @@ const routes: RouteRecordRaw[] = [
     path: '/propos',
     name: 'propos',
     component: ProposPage,
+    meta: {
+      layout: 'PageLayout'
+    }
+  },
+  {
+    path: '/gestion-propos',
+    name: 'gestion-propos',
+    component: GestionProposPage,
     meta: {
       layout: 'PageLayout'
     }
