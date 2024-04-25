@@ -2,6 +2,7 @@ import { createWebHistory, createRouter, RouteRecordRaw } from 'vue-router';
 import LoginPage from '../views/LoginPage.vue';
 import RegisterPage from '../views/RegisterPage.vue';
 import HomePage from '../views/HomePage.vue';
+import WorkshopDetailsPage from '../views/WorkshopDetailsPages.vue';
 import MyReservation from "@/views/MyReservation.vue";
 import VignificationComponent from "@/views/VignificationPage.vue";
 import AtelierComponent from "@/components/AtelierComponent.vue";
@@ -10,6 +11,7 @@ import AdminAtelierPage from "@/views/AdminAtelierPage.vue";
 import AtelierPage from "@/views/AtelierPage.vue";
 import VignificationPage from "@/views/VignificationPage.vue";
 import CalendrierPage from "@/views/CalendrierPage.vue"
+
 
 const routes: RouteRecordRaw[] = [
   {
@@ -39,6 +41,11 @@ const routes: RouteRecordRaw[] = [
     meta: {
       layout: 'PageLayout'
     }
+  },
+  {
+    path: '/detail',
+    name: 'WorkshopDetailsPage',
+    component: WorkshopDetailsPage,
   },
   {
     path: '/my-reservation',
