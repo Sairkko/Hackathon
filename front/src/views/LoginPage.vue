@@ -28,7 +28,7 @@
                         @blur="user.password === undefined ? user.password = '' : ''"
                         @keyup.enter="onClick"
                     />
-                    <div class="flex items-center flex-col justify-between gap-2">
+                    <div class="flex items-center flex-col justify-between gap-2 pt-4">
                         <!-- <router-link :to="{name: 'ResetPasswordPage'}">
                           <span class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800">
                             Mot de passe oublié?
@@ -40,7 +40,7 @@
                             Vous n'avez pas de compte ?
                         </span>
                         <router-link :to="{name: 'RegisterPage'}">
-                            <span class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800">
+                            <span class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800 pb-4">
                               Créez votre compte
                             </span>
                         </router-link>
