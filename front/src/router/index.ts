@@ -6,6 +6,8 @@ import VignificationComponent from "@/components/VignificationComponent.vue";
 import AtelierComponent from "@/components/AtelierComponent.vue";
 import ProposComponent from "@/components/ProposComponent.vue";
 import ProposPage from "@/views/ProposPage.vue";
+import AdminAtelierPage from "@/views/AdminAtelierPage.vue";
+import AtelierPage from "@/views/AtelierPage.vue";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -47,7 +49,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/atelier',
     name: 'atelier',
-    component: AtelierComponent,
+    component: AdminAtelierPage,
     meta: {
       layout: 'PageLayout'
     }
