@@ -3,10 +3,11 @@ import LoginPage from '../views/LoginPage.vue';
 import RegisterPage from '../views/RegisterPage.vue';
 import HomePage from '../views/HomePage.vue';
 import MyReservation from "@/views/MyReservation.vue";
+import VignificationComponent from "@/views/VignificationPage.vue";
 import AtelierComponent from "@/components/AtelierComponent.vue";
-import ProposComponent from "@/components/ProposComponent.vue";
 import ProposPage from "@/views/ProposPage.vue";
 import VignificationPage from "@/views/VignificationPage.vue";
+import CalendrierPage from "@/views/CalendrierPage.vue"
 
 const routes: RouteRecordRaw[] = [
   {
@@ -69,6 +70,23 @@ const routes: RouteRecordRaw[] = [
       layout: 'PageLayout'
     }
   },
+  {
+    path: '/vignification',
+    name: 'VignificationComponent',
+    component: VignificationComponent,
+    meta: {
+      layout: 'PageLayout'
+    }
+  },
+  
+  {
+    path: '/calendrier',
+    name: 'CalendrierPage',
+    component: CalendrierPage,
+    meta: {
+      layout: 'PageLayout'
+    }
+  }
 ];
 
 const router = createRouter({

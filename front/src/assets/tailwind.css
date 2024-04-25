@@ -29,3 +29,17 @@ border-radius: 20px;
 .p-inputtext.p-invalid{
     border: rgb(251, 115, 115) solid 1px;
 }
+
+.fc-button {
+    background-color: #C10041 !important;
+    color: white !important;
+    border: none !important;
+  }
+  
+  .fc-button:hover {
+    background-color: #9A0034 !important;
+  }
+
+  .p-sidebar-header-content{
+    @apply text-red
+  }
