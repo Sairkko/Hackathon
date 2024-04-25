@@ -9,17 +9,13 @@
           <Dropdown id="atelier" v-model="event.atelier" :options="ateliers" optionValue="id" optionLabel="nom"/>
         </div>
         <div class="md:flex gap-2">
-          <div class="mb-2 w-full md:w-2/4">
-            <label for="date">Date</label>
-            <Calendar id="date" v-model="event.date" />
-          </div>
-          <div class="mb-2 w-full md:w-1/4">
+          <div class="mb-2 w-full md:w-1/2">
             <label for="startTime">Début</label>
-            <Calendar id="startTime" v-model="event.startTime" timeOnly />
+            <Calendar id="startTime" v-model="event.date_debut" showTime />
           </div>
-          <div class="mb-2 w-full md:w-1/4">
+          <div class="mb-2 w-full md:w-1/2">
             <label for="endTime">Fin</label>
-            <Calendar id="endTime" v-model="event.endTime" timeOnly />
+            <Calendar id="endTime" v-model="event.date_fin" showTime  />
           </div>
         </div>
         <div class="mb-2">
@@ -97,11 +93,20 @@ export default defineComponent({
 
 
     const handleEventClick = (clickInfo: any) => {
-      console.log(clickInfo.event)
-      event.value = Object.assign(new Event(), clickInfo.event._def.extendedProps);
       event.value.id = clickInfo.event.id
-      event.value.atelier = 
-      visibleRight.value = true;
+      EventApi.getEvent(event.value).then(response => {
+        console.log(response)
+      })
+      // event.value = new Event()
+      // event.value.id = clickInfo.event.id
+      // event.value.atelier = clickInfo.event._def.extendedProps.atelier.id
+      // event.value.date_debut = new Date(clickInfo.event._def.extendedProps.date_debut.date)
+      // event.value.date_fin = new Date(clickInfo.event._def.extendedProps.date_fin.date)
+      // event.value.date_inscription_maximum = new Date(clickInfo.event._def.extendedProps.date_inscription_maximum.date)
+      // event.value.localisation = clickInfo.event._def.extendedProps.localisation
+      // visibleRight.value = true;
+      // ReservationApi.getReservations
+      // event.value.reservations = 
     };
 
     const calendarOptions = ref<any>({
@@ -131,7 +136,18 @@ export default defineComponent({
           right: 'dayGridMonth,timeGridWeek'
         },
         events: [],
-        eventClick: handleEventClick 
+        eventClick: handleEventClick ,
+         dayMaxEvents: 5,
+        eventContent: function(arg: any) {
+          if (arg.isMirror) {
+            return { domNodes: [] };
+          }
+          if (arg.isStart) {
+            return { html: `<span class='event-title'>${arg.event.title}</span>` };
+          } else {
+            return { domNodes: [] };
+          }
+        },
       })
 
     return {
