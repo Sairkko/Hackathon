@@ -1,7 +1,9 @@
 <script setup>
-import { defineProps, ref } from 'vue';
+import {defineProps, ref} from 'vue';
+import axios from "axios";
 
 const props = defineProps({
+  id: Number,
   title: String,
   type: String,
   millesime: Number,
@@ -36,6 +38,17 @@ function prepareForDeletion(){
   isEdit.value = false;
   visible.value = true;
 }
+
+async function deleteProduct() {
+  try {
+    const response = await axios.delete(`/product/delete/${props.id}`);
+    console.log(response.data.message);
+    visible.value=false;
+  } catch (error) {
+    console.error('Error deleting product:', error.response.data);
+  }
+}
+
 </script>
 
 <template>
@@ -96,7 +109,7 @@ function prepareForDeletion(){
     <h1 class="m-8">Êtes-vous sûr de vouloir supprimer le vin "{{ props.title }}" ?</h1>
     <div class="flex justify-center gap-3">
       <a @click="visible=false" class="bg-grey text-center text-white px-3 pb-1 pt-2 mt-3 rounded-md cursor-pointer max-w-max">Annuler</a>
-      <a @click="visible=false" class="bg-[#E04242] text-center text-white px-3 pb-1 pt-2 mt-3 rounded-md cursor-pointer max-w-max">Confirmer la suppression</a>
+      <a @click="deleteProduct" class="bg-[#E04242] text-center text-white px-3 pb-1 pt-2 mt-3 rounded-md cursor-pointer max-w-max">Confirmer la suppression</a>
     </div>
   </Dialog>
 </template>

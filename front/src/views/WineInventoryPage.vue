@@ -20,9 +20,12 @@ const new_wine_cepage = ref('');
 const new_wine_note = ref('');
 const new_wine_stock = ref('');
 
+const allWine = ref([]);
+
 onMounted(async () => {
-  const allWine = await AtelierApi.product();
-  console.log(allWine);
+  const requ = await AtelierApi.product();
+  allWine.value = requ.data.data;
+  console.log(allWine)
 });
 
 
@@ -46,14 +49,15 @@ onMounted(async () => {
       <a @click="visible=true" class="border border-[#c10041] text-[#c10041] px-3 pb-1 pt-2 mx-1 rounded-md cursor-pointer">+ Ajouter un vin</a>
     </div>
     <div class="flex flex-wrap gap-x-5">
-      <div v-for="i in 8" :key="i">
+      <div v-for="item in allWine" :key="item">
         <WineCardComponent
-            title="Tavel 75cl du Rhone"
-            type="Vin rouge"
-            :millesime=2004
-            cepage="le cépage"
-            note="Fin et sucré en bouche"
-            :stock=25
+            :id=item.id
+            :title= "`${item.name}, ${item.region}`"
+            :type="item.type"
+            :millesime=item.millesime
+            :cepage=item.cepage
+            :note=item.description
+            :stock=item.stock
             image="../assets/winApp.png"
         />
       </div>
