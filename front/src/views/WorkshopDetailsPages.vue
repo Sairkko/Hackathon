@@ -39,18 +39,22 @@
                           </li>
                       </ul>
                       <Dialog v-model:visible="display" :style="{ width: '50vw' }" :header="selectedAtelier ? 'Réserver Atelier #' + selectedAtelier.id : 'Réserver Atelier'">
+                        <div class="grid grid-cols-2 gap-4">
                           <div>
-                              <label for="reservationCount">Nombre de réservations:</label>
-                              <input type="number" id="reservationCount" v-model="reservation.nombre_participant">
-                              <div v-if="selectedAtelier && hasSchool(selectedAtelier)">
-                                  <p>Cet évenement est reservé pour les etudiant de l'Ecole : {{selectedAtelier.ecole.nom}}</p>
-                                  <p>Si vous ne faite pas partis de cette école veuillez annuler sinon préciser votre classe</p>
-                                  <label for="classe">Classe:</label>
-                                  <input type="text" id="classe" v-model="reservation.classe">
-                              </div>
-                              <br>
-                              <Button @click="reservate" label="Participer a cet evenement" class="bg-red px-2 py-0.5" />
+                            <label for="reservationCount">Nombre de réservations:</label>
+                            <input type="number" id="reservationCount" v-model="reservation.nombre_participant" class="input-field" placeholder="Nombre de personnes">
                           </div>
+                          <div>
+                            <template v-if="selectedAtelier && hasSchool(selectedAtelier)">
+                              <p class="text-red">Cet événement est réservé aux étudiants de l'école : {{ selectedAtelier.ecole.nom }}</p>
+                              <p>Si vous n'appartenez pas à cette école, veuillez annuler ou indiquer votre classe.</p>
+                              <label for="classe">Classe:</label>
+                              <input type="text" id="classe" v-model="reservation.classe" class="input-field" placeholder="Votre classe">
+                            </template>
+                          </div>
+                        </div>
+                        <br>
+                        <Button @click="reservate" label="Participer a cet evenement" class="bg-red px-2 py-0.5" />
                       </Dialog>
                   </div>
               </div>
@@ -131,4 +135,11 @@ export default {
 </script>
 
 <style scoped>
+.input-field {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
 </style>

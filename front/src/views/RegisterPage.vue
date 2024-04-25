@@ -11,6 +11,7 @@
             </template>
             <template #content>
                 <div class="px-8">
+                  <div class="mt-2">
                     <InputText
                         :class="'w-full ' + ((user.firstName === '') ? 'p-invalid' : '')"
                         id="firstName"
@@ -20,6 +21,8 @@
                         @keyup.enter="onClick"
                         @blur="user.firstName === undefined ? user.firstName = '' : ''"
                     />
+                </div>
+                <div class="mt-2">
                     <InputText
                         :class="'w-full ' + ((user.lastName === '') ? 'p-invalid' : '')"
                         id="lastName"
@@ -29,6 +32,8 @@
                         @keyup.enter="onClick"
                         @blur="user.lastName === undefined ? user.lastName = '' : ''"
                     />
+                </div>
+                <div class="mt-2">
                     <InputText
                         class="w-full"
                         id="phoneNumber"
@@ -37,6 +42,8 @@
                         v-model="user.phoneNumber"
                         @keyup.enter="onClick"
                     />
+                </div>
+                <div class="mt-2">
                     <InputText
                         :class="'w-full ' + ((user.email === '') ? 'p-invalid' : '')"
                         id="email"
@@ -46,6 +53,8 @@
                         @keyup.enter="onClick"
                         @blur="user.email === undefined ? user.email = '' : ''"
                     />
+                </div>
+                <div class="mt-2">
                     <InputText
                         :class="'w-full ' + ((user.password === '') ? 'p-invalid' : '')"
                         id="password"
@@ -55,6 +64,7 @@
                         @keyup.enter="onClick"
                         @blur="user.password === undefined ? user.password = '' : ''"
                     />
+                </div>
                     <div class="flex items-center flex-col justify-between gap-2">
                         <CustomButton label="Valider" @click="onClick"/>
                         <span>

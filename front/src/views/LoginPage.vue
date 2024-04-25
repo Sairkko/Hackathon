@@ -10,6 +10,7 @@
             </template>
             <template #content>
                 <div class="px-8">
+                  <div class="mt-2">
                     <InputText
                         :class="'w-full ' + ((user.email === '') ? 'p-invalid' : '')"
                         id="username"
@@ -19,6 +20,8 @@
                         @blur="user.email === undefined ? user.email = '' : ''"
                         @keyup.enter="onClick"
                     />
+                </div>
+                <div class="mt-2">
                     <InputText
                         :class="'w-full ' + ((user.password === '') ? 'p-invalid' : '')"
                         id="password"
@@ -28,6 +31,7 @@
                         @blur="user.password === undefined ? user.password = '' : ''"
                         @keyup.enter="onClick"
                     />
+                </div>
                     <div class="flex items-center flex-col justify-between gap-2 pt-4">
                         <!-- <router-link :to="{name: 'ResetPasswordPage'}">
                           <span class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800">
