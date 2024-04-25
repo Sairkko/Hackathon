@@ -2,6 +2,7 @@ import { createWebHistory, createRouter, RouteRecordRaw } from 'vue-router';
 import LoginPage from '../views/LoginPage.vue';
 import RegisterPage from '../views/RegisterPage.vue';
 import HomePage from '../views/HomePage.vue';
+import WorkshopDetailsPage from '../views/WorkshopDetailsPages.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -28,6 +29,14 @@ const routes: RouteRecordRaw[] = [
     path: '/home',
     name: 'HomePage',
     component: HomePage,
+    meta: {
+      layout: 'PageLayout'
+    }
+  },
+  {
+    path: '/detail',
+    name: 'WorkshopDetailsPage',
+    component: WorkshopDetailsPage,
     meta: {
       layout: 'PageLayout'
     }
