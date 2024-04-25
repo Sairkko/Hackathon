@@ -12,7 +12,7 @@ class UserApi {
   }
 
   getReservations() {
-    return apiClient.delete('/reservation/all');
+    return apiClient.get('/reservation/all');
   }
 
   getReservation(reservation: Reservation) {
