@@ -1,18 +1,21 @@
 <script setup>
 import WineCardComponent from "@/components/WineCardComponent.vue";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import AtelierApi from "@/api/AtelierApi";
 import ProductApi from "@/api/ProductApi";
 
-const selectedFilter = ref();
-const options = ref([
-  {name: 'Vins rouge', code: 'VR'},
-  {name: 'Vins blancs', code: 'VB'},
-  {name: 'Stock croissant', code: 'SC'},
-  {name: 'Stock décroissant', code: 'SD'},
-]);
+// const selectedFilter = ref();
+// const options = ref([
+//   {name: 'Vins rouge', code: 'VR'},
+//   {name: 'Vins blancs', code: 'VB'},
+//   {name: 'Stock croissant', code: 'SC'},
+//   {name: 'Stock décroissant', code: 'SD'},
+// ]);
 
 const visible = ref(false);
+
+const searchText = ref('')
+const searchResult = ref([])
 
 const new_wine_nom = ref('');
 const new_wine_region = ref('');
@@ -25,10 +28,13 @@ const new_wine_stock = ref('');
 
 const allWine = ref([]);
 
+watch(searchText, (newValue) => {
+  searchResult.value = allWine.value.filter(item => item.nom.includes(newValue));
+});
+
 onMounted(async () => {
   const requ = await AtelierApi.product();
   allWine.value = requ.data.data;
-  console.log(allWine.value)
 });
 
 function deleteComponent(identifiant) {
@@ -37,7 +43,7 @@ function deleteComponent(identifiant) {
 
 function updateComponent(newData, id) {
   const index = allWine.value.findIndex(el => el.id === id);
-    allWine.value[index] = newData;
+  allWine.value[index] = newData;
 }
 
 async function addProduct() {
@@ -62,14 +68,14 @@ async function addProduct() {
   <h1 class="text-2xl my-8">Inventaire des vins</h1>
   <main class="my-8 mx-28">
     <div class="flex items-center justify-between">
-      <div class="flex gap-8 bg-[#F3F2F2] p-2 w-min">
-        <div class="flex gap-2 items-center mx-2 justify-center">
-          <label class="text-sm">Affichage</label>
-          <Dropdown v-model="selectedFilter" :options="options" optionLabel="nom"
-                    placeholder="Sélectionner un affichage" class="w-full md:w-[14rem]"/>
-        </div>
+      <div class="flex gap-8 p-2 w-min">
+        <!--        <div class="flex gap-2 items-center mx-2 justify-center">-->
+        <!--          <label class="text-sm">Affichage</label>-->
+        <!--          <Dropdown v-model="selectedFilter" :options="options" optionLabel="nom"-->
+        <!--                    placeholder="Sélectionner un affichage" class="w-full md:w-[14rem]"/>-->
+        <!--        </div>-->
         <InputGroup class="flex gap-1">
-          <InputText class="pl-3" placeholder="Rechercher un dossier"/>
+          <InputText v-model="searchText" class="pl-3" placeholder="Rechercher un dossier"/>
           <a class="bg-[#c10041] text-white px-3 pb-1 pt-2 mx-1 rounded-md cursor-pointer">Rechercher</a>
         </InputGroup>
       </div>
@@ -77,8 +83,16 @@ async function addProduct() {
          class="border border-[#c10041] text-[#c10041] px-3 pb-1 pt-2 mx-1 rounded-md cursor-pointer">+ Ajouter un
         vin</a>
     </div>
-    <div class="flex flex-wrap gap-x-5">
+    <div v-if="searchText==='' || null" class="flex flex-wrap gap-x-5">
       <div v-for="item in allWine" :key="item">
+        <WineCardComponent @deleteOne="deleteComponent" @updateOne="updateComponent"
+                           :data=item
+                           image="../assets/winApp.png"
+        />
+      </div>
+    </div>
+    <div v-else class="flex flex-wrap gap-x-5">
+      <div v-for="item in searchResult" :key="item">
         <WineCardComponent @deleteOne="deleteComponent" @updateOne="updateComponent"
                            :data=item
                            image="../assets/winApp.png"

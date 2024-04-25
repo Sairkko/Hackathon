@@ -137,7 +137,7 @@ async function editProduct() {
     </div>
   </Dialog>
   <Dialog v-else v-model:visible="visible" modal header="Supression du vin" class="w-1/3">
-    <h1 class="m-8">Êtes-vous sûr de vouloir supprimer le vin "{{ props.title }}" ?</h1>
+    <h1 class="m-8">Êtes-vous sûr de vouloir supprimer le vin "{{ props.data.nom }} ({{ props.data.millesime }})" ?</h1>
     <div class="flex justify-center gap-3">
       <a @click="visible=false"
          class="bg-grey text-center text-white px-3 pb-1 pt-2 mt-3 rounded-md cursor-pointer max-w-max">Annuler</a>
