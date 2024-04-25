@@ -56,11 +56,7 @@
                         @blur="user.password === undefined ? user.password = '' : ''"
                     />
                     <div class="flex items-center flex-col justify-between gap-2">
-                        <Button
-                            class="bg-red hover:bg-red-700 text-white font-bold py-2 px-20"
-                            @click="onClick"
-                            label="Valider"
-                        />
+                        <CustomButton label="Valider" @click="onClick"/>
                         <span>
                             Vous avez un compte ?
                         </span>
@@ -84,18 +80,20 @@
 import { defineComponent, ref, computed } from "vue";
 import { useUserStore } from "../store/UserStrore";
 import InputText from "primevue/inputtext";
-import Button from "primevue/button";
+// import Button from "primevue/button";
 import userApi from "../api/UserApi"
 import User from "../models/User"
 import Card from "primevue/card"
 import router from "../router/index";
+import CustomButton from "../components/CustomButton.vue";
 
 export default defineComponent({
   name: "RegisterPage",
   components: {
     InputText,
-    Button,
-    Card
+    // Button,
+    Card,
+    CustomButton
   },
   setup() {
     const usersStore = useUserStore();

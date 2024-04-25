@@ -29,28 +29,20 @@
                         @keyup.enter="onClick"
                     />
                     <div class="flex items-center flex-col justify-between gap-2">
-                        <a
-                            class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800"
-                            href="#"
-                            @click="resetPassword"
-                        >
+                        <!-- <router-link :to="{name: 'ResetPasswordPage'}">
+                          <span class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800">
                             Mot de passe oublié?
-                        </a>
-                        <Button
-                            class="bg-red hover:bg-red-700 text-white font-bold py-2 px-20"
-                            @click="onClick"
-                            label="Valider"
-                        />
+                          </span>
+                        </router-link> -->
+                        <CustomButton label="Valider" @click="onClick"/>
+                        
                         <span>
                             Vous n'avez pas de compte ?
                         </span>
-                        <router-link :to="{path: '/register'}">
-                            <a
-                                class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800"
-                                href="#"
-                            >
-                                Créez votre compte
-                            </a>
+                        <router-link :to="{name: 'RegisterPage'}">
+                            <span class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800">
+                              Créez votre compte
+                            </span>
                         </router-link>
                     </div>
                 </div>
@@ -64,19 +56,21 @@
 import { defineComponent, ref, computed } from "vue";
 import { useUserStore } from "../store/UserStrore";
 import InputText from "primevue/inputtext";
-import Button from "primevue/button";
+// import Button from "primevue/button";
 import userApi from "../api/UserApi"
 import User from "../models/User"
 import Card from "primevue/card"
 import router from "../router";
 import { useToast } from 'primevue/usetoast';
+import CustomButton from "../components/CustomButton.vue";
 
 export default defineComponent({
   name: "LoginPage",
   components: {
     InputText,
-    Button,
-    Card
+    // Button,
+    Card,
+    CustomButton
   },
   setup() {
     const usersStore = useUserStore();

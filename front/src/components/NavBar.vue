@@ -34,10 +34,18 @@ function toggleMenu() {
         </div>
         <div class="hidden md:flex">
           <div class="flex items-center space-x-4">
-            <a href="/vignification" class="text-gray-700 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">Procédé de vinification</a>
-            <a href="#" class="text-gray-700 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">Les ateliers</a>
-            <a href="#" class="text-gray-700 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">Mes réservations</a>
-            <a href="#" class="text-gray-700 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">À propos</a>
+            <router-link :to="{name: 'VignificationComponent'}">
+              <span class="text-gray-700 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">Procédé de vinification</span>
+            </router-link>
+            <router-link :to="{name: 'atelier'}">
+              <span class="text-gray-700 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">Les ateliers</span>
+            </router-link>
+            <router-link :to="{name: 'MyReservation'}">
+              <span class="text-gray-700 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">Mes réservations</span>
+            </router-link>
+            <router-link :to="{name: 'propos'}">
+              <span class="text-gray-700 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">À propos</span>
+            </router-link>
           </div>
         </div>
         <div class="flex items-center md:hidden">
@@ -47,10 +55,18 @@ function toggleMenu() {
           </button>
           <!-- Menu mobile -->
           <div class="mobile-menu flex-col space-y-1 bg-white shadow-md" v-show="isMenuOpen">
-            <a href="/vignification" class="text-gray-700 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">Procédé de vinification</a>
-            <a href="#" class="text-gray-700 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">Les ateliers</a>
-            <a href="#" class="text-gray-700 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">Mes réservations</a>
-            <a href="#" class="text-gray-700 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">À propos</a>
+            <router-link :to="{name: 'VignificationComponent'}">
+              <span class="text-gray-700 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">Procédé de vinification</span>
+            </router-link>
+            <router-link :to="{name: 'atelier'}">
+              <span class="text-gray-700 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">Les ateliers</span>
+            </router-link>
+            <router-link :to="{name: 'MyReservation'}">
+              <span class="text-gray-700 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">Mes réservations</span>
+            </router-link>
+            <router-link :to="{name: 'propos'}">
+              <span class="text-gray-700 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">À propos</span>
+            </router-link>
           </div>
         </div>
         <div class="flex items-center">
@@ -59,7 +75,9 @@ function toggleMenu() {
             <font-awesome-icon @click="deconnexion" class="md:hidden ml-4 text-dark-red hover:text-red" icon="sign-out-alt" />
             <button @click="deconnexion" class="hidden md:block text-white bg-red hover:bg-hover-red px-5 py-2 rounded-md text-sm font-medium">Déconnexion</button>
           </div>
-          <a v-else href="/login" class="text-white bg-red hover:bg-hover-red px-5 py-2 rounded-md text-sm font-medium">Connexion</a>
+          <router-link v-else :to="{name: 'LoginPage'}">
+            <span class="text-white bg-red hover:bg-hover-red px-5 py-2 rounded-md text-sm font-medium">Connexion</span>
+          </router-link>
         </div>
       </div>
     </div>
