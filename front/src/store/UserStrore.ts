@@ -17,7 +17,6 @@ export const useUserStore = defineStore('userStore', {
     }
   },
   getters: {
-    // Le getter est typé automatiquement, mais vous pouvez spécifier le type de retour si vous le souhaitez.
     getUser: (state): User | null => state.user
   }
 });

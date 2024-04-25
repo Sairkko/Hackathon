@@ -16,12 +16,11 @@ import Textarea from "primevue/textarea";
 import Dropdown from "primevue/dropdown";
 import InputGroup from "primevue/inputgroup";
 
+import ToastService from 'primevue/toastservice';
 import './assets/tailwind.css';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {fas} from "@fortawesome/free-solid-svg-icons"
 import { faXTwitter, faInstagram, faFacebookF, faTwitter } from '@fortawesome/free-brands-svg-icons';
-
-
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -30,6 +29,7 @@ createApp(App)
     .use(router)
     .use(PrimeVue)
     .use(pinia)
+    .use(ToastService)
     .component('Toast',Toast)
     .component('Card',Card)
     .component('Button', Button)
