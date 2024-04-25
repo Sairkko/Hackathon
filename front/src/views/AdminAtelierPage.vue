@@ -162,7 +162,7 @@ async function saveAtelier() {
 
 
 <template>
-  <div class="bg-white text-gray-800">
+  <div class="text-gray-800">
     <div v-if="isLoading" class="loading-overlay text-6xl">
       <font-awesome-icon :icon="'wine-bottle'" class="loading-icon"/>
     </div>
@@ -258,6 +258,7 @@ async function saveAtelier() {
 </template>
 
 <style scoped>
+
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
