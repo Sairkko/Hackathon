@@ -30,6 +30,11 @@ class AppFixtures extends Fixture
         "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     ];
 
+    private array $thematiques = [
+        "Exploration terrestre",
+        "Exploration celeste"
+    ];
+
     public function load(ObjectManager $manager): void
     {
         $users = [];
@@ -74,7 +79,7 @@ class AppFixtures extends Fixture
 
         for ($i = 0; $i < 5; ++$i) {
             $atelierContent = new AtelierContent();
-            $atelierContent->setThematique('Thématique '.$i)
+            $atelierContent->setThematique($this->getRandomThematique())
                 ->setNom('Contenu '.$i)
                 ->setPrix(rand(100, 500))
                 ->setDescription($this->getRandomDescription());
@@ -124,5 +129,10 @@ class AppFixtures extends Fixture
     private function getRandomDescription(): string
     {
         return $this->descriptions[array_rand($this->descriptions)];
+    }
+
+    private function getRandomThematique(): string
+    {
+        return $this->thematiques[array_rand($this->thematiques)];
     }
 }

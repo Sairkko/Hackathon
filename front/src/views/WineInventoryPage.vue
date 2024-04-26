@@ -74,20 +74,25 @@ async function addProduct() {
         <!--          <Dropdown v-model="selectedFilter" :options="options" optionLabel="nom"-->
         <!--                    placeholder="Sélectionner un affichage" class="w-full md:w-[14rem]"/>-->
         <!--        </div>-->
-        <InputGroup class="flex gap-1">
-          <InputText v-model="searchText" class="pl-3" placeholder="Rechercher un dossier"/>
-          <a class="bg-[#c10041] text-white px-3 pb-1 pt-2 mx-1 rounded-md cursor-pointer">Rechercher</a>
+
+        <InputGroup>
+          <InputText v-model="searchText" placeholder="Rechercher un nom de vin" class="w-60"/>
+          <a class="bg-[#c10041] text-white px-3 pb-1 pt-2 rounded-r-lg cursor-pointer">Rechercher</a>
         </InputGroup>
+
+        <!--        <InputGroup class="flex gap-1">-->
+        <!--          <InputText v-model="searchText" placeholder="Rechercher un dossier"/>-->
+        <!--          <a class="bg-[#c10041] text-white px-3 pb-1 pt-2 mx-1 rounded-md cursor-pointer">Rechercher</a>-->
+        <!--        </InputGroup>-->
       </div>
       <a @click="visible=true"
          class="border border-[#c10041] text-[#c10041] px-3 pb-1 pt-2 mx-1 rounded-md cursor-pointer">+ Ajouter un
         vin</a>
     </div>
-    <div v-if="searchText==='' || null" class="flex flex-wrap gap-x-5">
-      <div v-for="item in allWine" :key="item">
+    <div v-if="searchText==='' || null" class="flex flex-wrap gap-x-5 w-full justify-center">
+      <div class="w-full xl:w-[547px]" v-for="item in allWine" :key="item">
         <WineCardComponent @deleteOne="deleteComponent" @updateOne="updateComponent"
                            :data=item
-                           image="../assets/winApp.png"
         />
       </div>
     </div>
@@ -102,35 +107,37 @@ async function addProduct() {
   </main>
 
   <Dialog v-model:visible="visible" modal header="Ajout d'un nouveau vin" class="w-1/3">
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 my-2">
       <label class="text-sm font-semibold" for="new_wine_nom">Nom du vin</label>
       <InputText id="new_wine_nom" v-model="new_wine_nom" placeholder="Nom du vin"/>
     </div>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 my-2">
       <label class="text-sm font-semibold" for="new_wine_region">Région</label>
       <InputText id="new_wine_region" v-model="new_wine_region" placeholder="Région"/>
     </div>
-    <div class="flex flex-col gap-2">
-      <label class="text-sm font-semibold" for="new_wine_millesime">Milésime</label>
-      <InputText id="new_wine_millesime" v-model="new_wine_millesime" placeholder="Milésime"/>
+    <div class="flex gap-2 justify-between my-2">
+      <div class="flex flex-col my-2">
+        <label class="text-sm font-semibold" for="new_wine_millesime">Milésime</label>
+        <InputText id="new_wine_millesime" v-model="new_wine_millesime" placeholder="Milésime"/>
+      </div>
+      <div class="flex flex-col my-2">
+        <label class="text-sm font-semibold" for="new_wine_volume">Volume</label>
+        <InputText id="new_wine_volume" v-model="new_wine_volume" placeholder="Volume"/>
+      </div>
     </div>
-    <div class="flex flex-col gap-2">
-      <label class="text-sm font-semibold" for="new_wine_volume">Volume</label>
-      <InputText id="new_wine_volume" v-model="new_wine_volume" placeholder="Volume"/>
-    </div>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 my-2">
       <label class="text-sm font-semibold" for="new_wine_type">Type de vin</label>
       <InputText id="new_wine_type" v-model="new_wine_type" placeholder="Vin rouge"/>
     </div>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 my-2">
       <label class="text-sm font-semibold" for="new_wine_cepage">Cépages</label>
       <InputText id="new_wine_cepage" v-model="new_wine_cepage" placeholder="Cépage"/>
     </div>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 my-2">
       <label class="text-sm font-semibold" for="new_wine_stock">Stock</label>
       <InputText id="new_wine_stock" v-model="new_wine_stock" placeholder="300"/>
     </div>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 my-2">
       <label class="text-sm font-semibold" for="new_wine_description">Note</label>
       <Textarea class="bg-white" v-model="new_wine_description" variant="filled" rows="5" cols="30"
                 placeholder="Une petite notation du vin..."/>

@@ -138,6 +138,7 @@ class ReservationController extends AbstractController
                     $usersSet[$userId] = [
                         'userId' => $userId,
                         'reservationId' => $reservation->getId(),
+                        'is_paid' => $reservation->isIsPaid(),
                         'name' => $user->getNom(),
                         'email' => $user->getMail(),
                         'nombre_participant' => $reservation->getNombre(),
@@ -197,18 +198,17 @@ class ReservationController extends AbstractController
         }
 
         $entityManager->persist($user);
+        $reservationId = null;
 
-        foreach ($data['ateliersId'] as $atelierId) {
-            $atelier = $atelierRepository->find($atelierId);
-            if ($atelier) {
-                $reservation = new Reservation();
-                $reservation->addUser($user);
-                $reservation->addAtelier($atelier);
-                $reservation->setNombre(1);
-                $reservation->setIsPaid(false);
-
-                $entityManager->persist($reservation);
-            }
+        $atelier = $atelierRepository->find($data['atelierId']);
+        if ($atelier) {
+            $reservation = new Reservation();
+            $reservation->addUser($user);
+            $reservation->addAtelier($atelier);
+            $reservation->setNombre($data['nb_participants']);
+            $reservation->setIsPaid(false);
+        
+            $entityManager->persist($reservation);
         }
 
         $entityManager->flush();
@@ -221,7 +221,20 @@ class ReservationController extends AbstractController
 
         $mailer->send($email);
 
-        return $this->createApiResponse(['userId' => $user->getId()], 'User and reservations created.', Response::HTTP_CREATED);
+        $reservationId = $reservation->getId();
+
+
+        $response = [
+            'userId' => $user->getId(),
+            'name' => $user->getNom(),
+            'email' => $user->getMail(),
+            'nombre_participant' => $data['nb_participants'],
+            'is_paid' => false,
+            'reservationId' => $reservationId,
+        ];
+
+        return $this->createApiResponse($response, 'User and reservations created.', Response::HTTP_CREATED);
+
     }
 
     #[Route('/relance/{id}', name: 'relance', methods: ['GET'])]

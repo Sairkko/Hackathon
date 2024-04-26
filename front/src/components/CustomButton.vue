@@ -15,21 +15,12 @@ export default defineComponent({
   components: {
     Button
   },
-  setup(props,{emit}) {
-    
-    const click = () => {
-      emit('click')
-    }
-    return {
-      click
-    };
-  },
 });
 </script>
 
 
 <template>
-  <Button @click="click" class="my-button" :icon="icon" :label="label" />
+  <Button class="my-button" :icon="icon" :label="label" />
 </template>
 
 <style scoped>
