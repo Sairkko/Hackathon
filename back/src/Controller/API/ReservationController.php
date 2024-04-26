@@ -182,7 +182,7 @@ class ReservationController extends AbstractController
     }
 
     #[Route('/create-with-ateliers', name: 'create_user_with_ateliers', methods: ['POST'])]
-    public function createUserWithAteliers(Request $request, UserRepository $userRepository, AtelierRepository $atelierRepository, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
+    public function createUserWithAteliers(Request $request, MailerInterface $mailer, AtelierRepository $atelierRepository, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
     {
         $data = json_decode($request->getContent(), true);
 
@@ -212,6 +212,14 @@ class ReservationController extends AbstractController
         }
 
         $entityManager->flush();
+
+        $email = (new Email())
+            ->from('hackathon@esgi.com')
+            ->to($user->getMail())
+            ->subject("Confirmation d'inscription à un atelier")
+            ->html("<p>Votre compte a bien été créer vous pouvez vous connecter avec l'email suivant : {$user->getMail()} et ce mot de passe que vous pourriez changer : 123456789</p>");
+
+        $mailer->send($email);
 
         return $this->createApiResponse(['userId' => $user->getId()], 'User and reservations created.', Response::HTTP_CREATED);
     }
