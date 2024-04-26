@@ -43,6 +43,7 @@
 
         <section class="px-4 mb-10">
             <h2 class="text-3xl font-bold text-center text-dark-red mb-10">Mes réservations validées</h2>
+            <p>Une fois la resservation validé la validation n'est pas disponible. Pour plus de précision veuillez contacter bonnetonolivier@gmail.com</p>
             <template v-if="paidReservations.length">
                 <div v-for="event in paidReservations" :key="event.id" class="flex flex-row overflow-hidden rounded-lg shadow-md mb-8 mx-4 md:mx-auto max-w-4xl">
                     <img class="w-full md:w-2/5 lg:w-1/5 object-cover" src="../assets/atelier.png" alt="Wine tasting experience">
@@ -101,19 +102,14 @@ export default {
         );
 
       const formatDate = (dateObj) => {
-        // Extraire la propriété 'date' de l'objet, si 'dateObj' est un objet
         const dateString = dateObj.date || dateObj;
 
-        // Assurez-vous que nous avons une chaîne de caractères
         const dateStr = String(dateString);
 
-        // Supprimer la partie microsecondes de la date si elle existe
         const dateWithoutMicroseconds = dateStr.replace(/\.\d+/, '');
 
-        // Créer un objet Date
         const date = new Date(dateWithoutMicroseconds);
 
-        // Vérifier si la date est valide
         if (Number.isNaN(date.getTime())) {
           console.warn('Invalid date passed to formatDate:', dateString);
           return 'Invalid date'; // Ou tout autre texte de remplacement que vous préférez
