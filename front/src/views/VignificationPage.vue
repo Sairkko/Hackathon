@@ -1,17 +1,30 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import {ref, nextTick, onMounted} from 'vue';
 
 import Accordion from 'primevue/accordion';
 import AccordionTab from 'primevue/accordiontab';
 
+const activeIndex = ref([]);
 
-const activeIndex = ref(null);
+const openAllAccordions = () => {
+  activeIndex.value = [0, 1, 2, 3];
+};
+
+onMounted(openAllAccordions)
+
+const generatePDF = async () => {
+    await nextTick();
+
+    window.print()
+};
 </script>
 
+
 <template>
-  <div class="bg-white text-gray-800">
+  <div id="test" class="bg-white text-gray-800">
     <section class="px-4 py-16">
       <h1 class="text-3xl font-bold text-center text-dark-red">La vinification, qu'est-ce que c'est ?</h1>
+        <p class="underline mt-5 text-red" @click="generatePDF">Exporter les ressources</p>
       <p class="mt-12 mx-16 text-justify font-bold">
         La vinification est l'opération qui permet de transformer le raisin en  vin. Il faut environ 1,3 à 1,5 kg de raisin pour obtenir un litre de  vin. Pour chaque type de vin, rouge, blanc, rosé ou effervescent,  différentes étapes permettent de produire le vin. Les principales  opérations, qui s’enchainent différemment selon le type de vin, sont  notamment : l’égrappage, le pressurage, la macération et la  fermentation.
       </p>
@@ -67,12 +80,27 @@ const activeIndex = ref(null);
 
 <style scoped>
 .h-img {
-  height: 22rem;
+    height: 22rem;
 }
 
 @media screen and (min-width: 568px) {
-  .h-img {
-    height: 40rem;
-  }
+    .h-img {
+        height: 40rem;
+    }
+}
+
+@media print {
+    .navbar, .footer {
+        display: none;
+    }
+
+    .bg-white {
+        background-color: #FFF !important;
+    }
+
+    .text-gray-800 {
+        color: #000 !important;
+    }
 }
 </style>
+

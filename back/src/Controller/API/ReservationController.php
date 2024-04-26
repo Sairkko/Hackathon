@@ -228,5 +228,24 @@ class ReservationController extends AbstractController
         return $this->createApiResponse($response, 'User and reservations created.', Response::HTTP_CREATED);
     }
 
+    #[Route('/relance/{id}', name: 'relance', methods: ['GET'])]
+    public function relanceMail(UserRepository $userRepository, int $id, Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
+    {
+        $user = $userRepository->find($id);
+
+        if (!$user) {
+            return $this->createApiResponse([], 'User not Found.', Response::HTTP_BAD_REQUEST);
+        }
+
+        $email = (new Email())
+            ->from('hackathon@esgi.com')
+            ->to($user->getMail())
+            ->subject("Relance de payement")
+            ->html("<p>Veuillez payer votre reservation afin d'etre inscrit definitivement</p>");
+
+        $mailer->send($email);
+
+        return $this->createApiResponse(['message' => 'Reservation updated and emails sent successfully'], Response::HTTP_OK);
+    }
 
 }
