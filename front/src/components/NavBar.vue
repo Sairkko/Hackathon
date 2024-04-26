@@ -317,5 +317,11 @@ function toggleMenu() {
   left: 50%;
   transform: translateX(-50%);
 }
+
+@media print {
+    nav {
+        display: none;
+    }
+}
 </style>
 

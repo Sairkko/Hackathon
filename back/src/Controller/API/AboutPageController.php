@@ -48,11 +48,11 @@ class AboutPageController extends AbstractController
 
         return $this->createApiResponse(['message'=> 'Atelier updated successfully'],  Response::HTTP_OK);
     }
-
-    #[Route('/content', name: 'get_atelier_by_id', methods: ['GET'])]
+    #[Route('/content', name: 'get_content', methods: ['GET'])]
     public function getContent(EntityManagerInterface $entityManager): Response
     {
-        $about = $entityManager->getRepository(AboutPage::class)->find(1);
+        // Récupère la première entrée trouvée dans la base de données
+        $about = $entityManager->getRepository(AboutPage::class)->findOneBy([]);
 
         if (!$about) {
             throw new NotFoundHttpException('Content about not found.');
@@ -67,4 +67,5 @@ class AboutPageController extends AbstractController
 
         return $this->createApiResponse($aboutArray, Response::HTTP_OK);
     }
+
 }
