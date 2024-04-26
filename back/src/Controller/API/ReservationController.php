@@ -217,7 +217,7 @@ class ReservationController extends AbstractController
             ->from('hackathon@esgi.com')
             ->to($user->getMail())
             ->subject("Confirmation d'inscription à un atelier")
-            ->html("<p>Votre compte a bien été créer vous pouvez vous connecter avec l'email suivant : {$user->getMail()} et ce mot de passe que vous pourriez changer : 123456789</p>");
+            ->html("<p>Votre compte a bien été créé vous pouvez vous connecter avec l'email suivant : {$user->getMail()} et ce mot de passe que vous pourrez changer : 123456789</p>");
 
         $mailer->send($email);
 
