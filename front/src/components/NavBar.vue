@@ -11,9 +11,6 @@ const user = computed(() => {
   return usersStore.getUser;
 });
 
-console.log(user.value)
-console.log(user.value?.role);
-
 const isAtelierMenuOpen = ref(false);
 const isAdminMenuOpen = ref (false);
 const route = useRoute();
