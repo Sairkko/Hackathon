@@ -12,9 +12,9 @@
       </div>
       <section class="px-10 pt-24 pb-24 bg-black">
           <div class="grid lg:grid-cols-3 items-center justify-items-center text-left">
-              <div class="shadow-2xl lg:col-span-1">
-                  <img src="@/assets/imageVin.png" alt="Image du Vin" class="mx-auto">
-              </div>
+            <div class="shadow-2xl lg:col-span-1">
+              <img src="@/assets/imageVin.png" alt="Image du Vin" class="mx-auto rounded-lg">
+            </div>
               <div class="md:flex md:space-x-8 lg:col-span-2">
                 <div class="md:flex-1">
                   <p v-if="atelier.description">{{ atelier.description }}</p>
@@ -41,14 +41,15 @@
                       <Dialog v-model:visible="display" :style="{ width: '50vw' }" :header="selectedAtelier ? 'Réserver Atelier #' + selectedAtelier.id : 'Réserver Atelier'">
                         <div class="grid grid-cols-2 gap-4">
                           <div>
-                            <label for="reservationCount">Nombre de réservations:</label>
+                            <label for="reservationCount" class="font-bold">Nombre de réservations:</label>
                             <input type="number" id="reservationCount" v-model="reservation.nombre_participant" class="input-field" placeholder="Nombre de personnes">
                           </div>
                           <div>
                             <template v-if="selectedAtelier && hasSchool(selectedAtelier)">
                               <p class="text-red">Cet événement est réservé aux étudiants de l'école : {{ selectedAtelier.ecole.nom }}</p>
                               <p>Si vous n'appartenez pas à cette école, veuillez annuler ou indiquer votre classe.</p>
-                              <label for="classe">Classe:</label>
+                              <label for="classe" class="font-bold">Classe:</label>
+
                               <input type="text" id="classe" v-model="reservation.classe" class="input-field" placeholder="Votre classe">
                             </template>
                           </div>
