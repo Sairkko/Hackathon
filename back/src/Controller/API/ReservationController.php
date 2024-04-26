@@ -115,6 +115,7 @@ class ReservationController extends AbstractController
                     $usersSet[$userId] = [
                         'userId' => $userId,
                         'reservationId' => $reservation->getId(),
+                        'is_paid' => $reservation->isIsPaid(),
                         'name' => $user->getNom(),
                         'email' => $user->getMail(),
                         'nombre_participant' => $reservation->getNombre(),

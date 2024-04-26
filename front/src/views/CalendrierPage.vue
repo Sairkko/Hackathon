@@ -1,8 +1,13 @@
 <template>
   <div id="calendrier-page" class="p-10">
+    <ConfirmDialog></ConfirmDialog>
     <h2 class="text-2xl font-bold">Calendrier des ateliers</h2>
     <FullCalendar :options="calendarOptions" />
-    <Sidebar v-model:visible="visibleRight" :header="event.id ? 'Détail d\'un évènement' : 'Création d\'un nouvel évènement'" position="right" class="w-1/3">
+    <Sidebar 
+      v-model:visible="visibleRight" 
+      :header="event.id ? 'Détail d\'un évènement' : 'Création d\'un nouvel évènement'" 
+      position="right" 
+      class="w-full md:w-1/2 lg:w-1/3">
       <div class="p-fluid p-grid">
         <div class="mb-2">
           <label for="atelier">Choix de l'atelier</label>
@@ -19,8 +24,12 @@
           </div>
         </div>
         <div class="mb-2">
-          <label for="inscriptionDate">Date d'inscription max.</label>
+          <label for="inscriptionDate">Date d'inscription max</label>
           <Calendar id="inscriptionDate" v-model="event.inscriptionDate" />
+        </div>
+        <div class="mb-2">
+          <label for="limite_participant">Limite de participants</label>
+          <InputNumber id="limite_participant" v-model="event.limite_participant" :min="0" showButtons buttonLayout="horizontal"/>
         </div>
         <div class="mb-2">
           <label for="location">Lieu</label>
@@ -28,12 +37,36 @@
         </div>
       </div>
       <div class="text-right mb-2">
-        <StrokeButton label="Créer l'événement" icon="pi pi-plus" class="mt-2" />
+        <StrokeButton :label="event.id ? 'Modifier' : 'Créer l\'événement'" :icon="event.id ? 'pi pi-pencil' : 'pi pi-plus'" class="mt-2" @click="sendEvent" />
       </div>
       
       <hr/>
-      <div class="text-center py-4">
-        <h4>Participants ({{1+"/"+"18"}})</h4>
+      <div v-if="event.reservations">
+        <div class="text-center py-4" >
+          <h4 class="text-xl">Participants ({{nbParticipants+"/"+event.limite_participant}})</h4>
+        </div>
+        <div class="text-right mb-2">
+          <StrokeButton label="Ajouter un participant" icon="pi pi-plus" class="mt-2" @click="addParticipant" />
+        </div>
+        <p class="text-dark-red">Participants confirmés :</p>
+        <div  v-for="user in event.reservations.filter(el => el.is_paid)" :key="user.id" class="flex px-1 justify-between">
+          <span>
+            {{user.name + " / " + user.email + " / " + user.nombre_participant + "p."}}
+          </span>
+          <font-awesome-icon class="text-red hover:text-red-600" icon="times" @click="deleteReservation(user)"></font-awesome-icon>
+        </div>
+        
+        <p class="text-dark-red mt-3">Participants en attente :</p>
+        <div v-for="user in event.reservations.filter(el => !el.is_paid)" :key="user.id" class="flex px-1 justify-between mb-2">
+          <span>
+            {{user.name + " / " + user.email + " / " + user.nombre_participant + "p."}}
+          </span>
+          <div>
+            <font-awesome-icon class="text-green hover:text-blue-cyan mr-3" icon="check" @click="validateReservation(user)"></font-awesome-icon>
+            <font-awesome-icon class="text-red hover:text-red-600" icon="times" @click="deleteReservation(user)"></font-awesome-icon>
+          </div>
+          
+        </div>
       </div>
       
     </Sidebar>
@@ -58,6 +91,10 @@ import Event from "../models/Event"
 import AtelierApi from "../api/AtelierApi"
 import Atelier from "../models/Atelier";
 import Dropdown from "primevue/dropdown"
+import ReservationApi from "../api/ReservationApi"
+import { useConfirm } from "primevue/useconfirm";
+import { useToast } from "primevue/usetoast";
+import InputNumber from "primevue/inputnumber"
 
 export default defineComponent({
   name: "LoginPage",
@@ -68,7 +105,8 @@ export default defineComponent({
     InputText,
     // Button,
     StrokeButton,
-    Dropdown
+    Dropdown,
+    InputNumber
   },
   setup() {
     const usersStore = useUserStore();
@@ -77,6 +115,9 @@ export default defineComponent({
     const event = ref<any>({})
     const events = ref<Event[]>([])
     const ateliers = ref<Atelier[]>([])
+    const confirm = useConfirm();
+    const toast = useToast();
+    const loading = ref<boolean>(false)
 
     const appUser = computed(() => {
       return usersStore.getUser;
@@ -84,6 +125,7 @@ export default defineComponent({
 
     EventApi.getEvents().then(response => {
       events.value = response.data.data.map((event: Event) => Object.assign(new Event(), event))
+      console.log(events.value)
       calendarOptions.value.events = events.value
     })
 
@@ -94,20 +136,32 @@ export default defineComponent({
 
     const handleEventClick = (clickInfo: any) => {
       event.value.id = clickInfo.event.id
-      EventApi.getEvent(event.value).then(response => {
-        console.log(response)
-      })
-      // event.value = new Event()
-      // event.value.id = clickInfo.event.id
-      // event.value.atelier = clickInfo.event._def.extendedProps.atelier.id
-      // event.value.date_debut = new Date(clickInfo.event._def.extendedProps.date_debut.date)
-      // event.value.date_fin = new Date(clickInfo.event._def.extendedProps.date_fin.date)
-      // event.value.date_inscription_maximum = new Date(clickInfo.event._def.extendedProps.date_inscription_maximum.date)
-      // event.value.localisation = clickInfo.event._def.extendedProps.localisation
-      // visibleRight.value = true;
-      // ReservationApi.getReservations
-      // event.value.reservations = 
+      event.value = new Event()
+      event.value.id = clickInfo.event.id
+      event.value.atelier = clickInfo.event._def.extendedProps.atelier.id
+      event.value.date_debut = new Date(clickInfo.event._def.extendedProps.date_debut.date)
+      event.value.date_fin = new Date(clickInfo.event._def.extendedProps.date_fin.date)
+      event.value.limite_participant = clickInfo.event._def.extendedProps.limite_participant
+      if(clickInfo.event._def.extendedProps.date_inscription_maximum){
+        event.value.date_inscription_maximum = new Date(clickInfo.event._def.extendedProps.date_inscription_maximum.date)
+      }
+      event.value.localisation = clickInfo.event._def.extendedProps.localisation
+      visibleRight.value = true;
+      ReservationApi.reservationByEvenement(event.value.id).then(response => {
+        event.value.reservations = response.data.data.users.map((resa: any) => Object.assign({}, resa))
+        event.value.reservations.push({id: 100, is_paid: false, name: "test", email: "test@fv.fr"})
+      }) 
     };
+
+    const nbParticipants = computed(() => {
+      let compter = 0
+      event.value.reservations.forEach((el: any) => {
+        if(el.is_paid){
+          compter += el.nombre_participant
+        }
+      })
+      return compter
+    })
 
     const calendarOptions = ref<any>({
         plugins: [ dayGridPlugin, interactionPlugin, timeGridWeek ],
@@ -150,12 +204,82 @@ export default defineComponent({
         },
       })
 
+    const deleteReservation = (reservation: any) => {
+      confirm.require({
+      message: 'Voulez vous supprimer cette réservation?',
+      header: 'Annuler une réservation',
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Annuler',
+      acceptLabel: 'Supprimer',
+      rejectClass: 'p-button-secondary p-button-outlined',
+      acceptClass: 'p-button-danger',
+      accept: () => {
+        const index = event.value.reservations.findIndex((el: any) => el.reservationId === reservation.reservationId && el.userId === reservation.userId)
+        event.value.reservations.splice(index, 1)
+        ReservationApi.deleteOneReservation(reservation.reservationId,reservation.userId).then(() => {
+          toast.add({ severity: 'info', summary: 'Confirmé', detail: 'Réservation supprimée', life: 3000 });
+        })
+      },
+      reject: () => {
+          // toast.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
+      }
+      });
+        
+        
+    }
+
+    const validateReservation = (reservation: any) => {
+      confirm.require({
+      message: 'Etes-vous sur de vouloir valider cette réservation?',
+      header: 'Validation de payement',
+      icon: 'pi pi-exclamation-triangle',
+      rejectClass: 'p-button-secondary p-button-outlined',
+      rejectLabel: 'Annuler',
+      acceptLabel: 'Valider',
+      accept: () => {
+        ReservationApi.validPaiement(reservation.reservationId).then(() => {
+          toast.add({ severity: 'info', summary: 'Confirmé', detail: 'Vous avez validé une réservation', life: 3000 });
+        })
+        reservation.is_paid = true;
+          
+      },
+      reject: () => {
+          // toast.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000 });
+      }
+    }); 
+    }
+      
+    const sendEvent = () => {
+      loading.value = true
+      if(event.value.id){
+        EventApi.editEvent(event.value).then(() => {
+          toast.add({ severity: 'info', summary: 'Enregistré', detail: 'Evènement modifié', life: 3000 });
+          loading.value = false;
+          // Pour l'instant on recharge la page pour voir les modification dans le calendrier
+          // const index = events.value.findIndex((el: any) => el.id == event.value.id)
+          // events.value[index] = event.value
+        })
+      }else{
+        EventApi.createEvent(event.value).then((response: any) => {
+          toast.add({ severity: 'info', summary: 'Enregistré', detail: 'Evènement crée', life: 3000 });
+          console.log(response.data.data)
+          loading.value = false;
+          event.value = Object.assign(new Event(), response.data.data)
+          events.value.push(event.value)
+        })
+      }
+    }
+
     return {
       appUser,
       calendarOptions,
       visibleRight,
       event,
-      ateliers
+      ateliers,
+      nbParticipants,
+      deleteReservation,
+      validateReservation,
+      sendEvent
     };
   },
 });

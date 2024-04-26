@@ -8,7 +8,7 @@ class UserApi {
   }
 
   reservationByEvenement(evenementId :bigint, ) {
-    return apiClient.delete(`/reservation/show/${evenementId}`);
+    return apiClient.get(`/reservation/show/${evenementId}`);
   }
 
   getReservations() {
@@ -23,8 +23,8 @@ class UserApi {
     return apiClient.post('/reservation/new');
   }
 
-  validPaiement(reservation: Reservation) {
-    return apiClient.put(`/reservation/paid/${reservation.id}`);
+  validPaiement(reservationId: string) {
+    return apiClient.put(`/reservation/paid/${reservationId}`);
   }
 }
 
