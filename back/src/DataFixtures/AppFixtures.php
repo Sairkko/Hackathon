@@ -76,8 +76,8 @@ class AppFixtures extends Fixture
             $atelierContent = new AtelierContent();
             $atelierContent->setThematique('Thématique '.$i)
                 ->setNom('Contenu '.$i)
-                ->setPrix(rand(100, 500));
-            // Randomly assign products to this atelierContent
+                ->setPrix(rand(100, 500))
+                ->setDescription($this->getRandomDescription());
             for ($j = 0; $j < rand(1, 3); $j++) {
                 $atelierContent->addProduct($products[array_rand($products)]);
             }
