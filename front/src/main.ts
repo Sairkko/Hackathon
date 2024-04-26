@@ -24,6 +24,8 @@ import { faXTwitter, faInstagram, faFacebookF, faTwitter } from '@fortawesome/fr
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
+import clickOutside from './directives/click-outside';
+
 library.add(fas, faXTwitter, faInstagram, faFacebookF, faTwitter)
 createApp(App)
     .use(router)
@@ -39,4 +41,5 @@ createApp(App)
     .component('Dropdown', Dropdown)
     .component('ImputGroup', InputGroup)
     .component("font-awesome-icon", FontAwesomeIcon)
+    .directive('click-outside', clickOutside)
     .mount('#app')

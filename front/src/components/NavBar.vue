@@ -15,13 +15,21 @@ const isAtelierMenuOpen = ref(false);
 const isAdminMenuOpen = ref (false);
 const route = useRoute();
 
-function toggleAtelierMenu() {
-  isAtelierMenuOpen.value = !isAtelierMenuOpen.value;
-}
-
 function toggleAdminMenu() {
   isAdminMenuOpen.value = !isAdminMenuOpen.value;
+  if (isAdminMenuOpen.value) {
+    isAtelierMenuOpen.value = false;  // Fermez l'autre menu
+  }
 }
+
+function toggleAtelierMenu() {
+  isAtelierMenuOpen.value = !isAtelierMenuOpen.value;
+  if (isAtelierMenuOpen.value) {
+    isAdminMenuOpen.value = false;  // Fermez l'autre menu
+  }
+}
+
+
 
 function isActiveRoute(routeName: string) {
   return computed(() => route.name === routeName);
@@ -54,14 +62,14 @@ function toggleMenu() {
         </div>
         <div class="hidden md:flex" style="z-index: 1001;">
           <div v-if="user?.role === 'ROLE_ADMIN'" class="flex items-center space-x-4">
-            <div class="relative">
+            <div class="relative" v-click-outside="{ open: isAdminMenuOpen, close: toggleAdminMenu }">
               <div>
                 <button @click="toggleAdminMenu" type="button" class="inline-flex justify-center w-full rounded-md px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none" id="menu-button" aria-expanded="true" aria-haspopup="true">
                   Administration de contenu
                 </button>
               </div>
 
-              <div v-show="isAdminMenuOpen" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+              <div v-show="isAdminMenuOpen" class="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
                 <div class="py-1" role="none">
                   <router-link
                       :class="{'text-red hover:text-red-800': isActiveRoute('HomePage').value, 'text-gray-700 hover:text-gray-800': !isActiveRoute('HomePage').value}"
@@ -106,14 +114,14 @@ function toggleMenu() {
                 </div>
               </div>
             </div>
-            <div class="relative">
+            <div class="relative" v-click-outside="{ open: isAtelierMenuOpen, close: toggleAtelierMenu }">
               <div>
                 <button @click="toggleAtelierMenu" type="button" class="inline-flex justify-center w-full rounded-md px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none" id="menu-button" aria-expanded="true" aria-haspopup="true">
                   Gestion
                 </button>
               </div>
 
-              <div v-show="isAtelierMenuOpen" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+              <div v-show="isAtelierMenuOpen" class="origin-top-middle absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
                 <div class="py-1" role="none">
                   <router-link
                       :class="{'text-red hover:text-red-800': isActiveRoute('atelier_Admin').value, 'text-gray-700 hover:text-gray-800': !isActiveRoute('atelier_Admin').value}"
@@ -302,6 +310,12 @@ function toggleMenu() {
 
 .mobile-menu a {
   text-align: center;
+}
+
+.origin-top-middle {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 </style>
 
