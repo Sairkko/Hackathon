@@ -45,8 +45,9 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
-    path: '/detail',
+    path: '/atelier/:id',
     name: 'WorkshopDetailsPage',
+    props: true,
     component: WorkshopDetailsPage,
   },
   {
