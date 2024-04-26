@@ -20,11 +20,15 @@ class UserApi {
   }
 
   createReservation(reservation: Reservation) {
-    return apiClient.post('/reservation/new');
+    return apiClient.post('/reservation/new', reservation);
   }
 
   validPaiement(reservationId: string) {
     return apiClient.put(`/reservation/paid/${reservationId}`);
+  }
+
+  createUserWithReservation(inscription: any){
+    return apiClient.post(`/reservation/create-with-ateliers`, inscription);
   }
 }
 

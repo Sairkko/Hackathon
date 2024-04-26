@@ -46,7 +46,8 @@
           <h4 class="text-xl">Participants ({{nbParticipants+"/"+event.limite_participant}})</h4>
         </div>
         <div class="text-right mb-2">
-          <StrokeButton label="Ajouter un participant" icon="pi pi-plus" class="mt-2" @click="addParticipant" />
+          <InscriptionForm :eventId="event.id" @addParticipation="el => event.reservations.push(el)" />
+          <!-- <StrokeButton label="Ajouter un participant" icon="pi pi-plus" class="mt-2" @click="addParticipant" /> -->
         </div>
         <p class="text-dark-red">Participants confirmés :</p>
         <div  v-for="user in event.reservations.filter(el => el.is_paid)" :key="user.id" class="flex px-1 justify-between">
@@ -95,6 +96,7 @@ import ReservationApi from "../api/ReservationApi"
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
 import InputNumber from "primevue/inputnumber"
+import InscriptionForm from "../components/InscriptionForm.vue";
 
 export default defineComponent({
   name: "LoginPage",
@@ -106,7 +108,8 @@ export default defineComponent({
     // Button,
     StrokeButton,
     Dropdown,
-    InputNumber
+    InputNumber,
+    InscriptionForm
   },
   setup() {
     const usersStore = useUserStore();
@@ -149,7 +152,6 @@ export default defineComponent({
       visibleRight.value = true;
       ReservationApi.reservationByEvenement(event.value.id).then(response => {
         event.value.reservations = response.data.data.users.map((resa: any) => Object.assign({}, resa))
-        event.value.reservations.push({id: 100, is_paid: false, name: "test", email: "test@fv.fr"})
       }) 
     };
 
@@ -270,6 +272,10 @@ export default defineComponent({
       }
     }
 
+    const addParticipant = () => {
+      console.log("add P")
+    }
+
     return {
       appUser,
       calendarOptions,
@@ -279,7 +285,8 @@ export default defineComponent({
       nbParticipants,
       deleteReservation,
       validateReservation,
-      sendEvent
+      sendEvent,
+      addParticipant
     };
   },
 });
