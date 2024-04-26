@@ -8,7 +8,7 @@ class ReservationApi {
   }
 
   reservationByEvenement(evenementId :bigint, ) {
-    return apiClient.delete(`/reservation/show/${evenementId}`);
+    return apiClient.get(`/reservation/show/${evenementId}`);
   }
 
   getReservations() {
@@ -23,8 +23,12 @@ class ReservationApi {
     return apiClient.post('/reservation/new', reservation);
   }
 
-  validPaiement(reservation: Reservation) {
-    return apiClient.put(`/reservation/paid/${reservation.id}`);
+  validPaiement(reservationId: string) {
+    return apiClient.put(`/reservation/paid/${reservationId}`);
+  }
+
+  createUserWithReservation(inscription: any){
+    return apiClient.post(`/reservation/create-with-ateliers`, inscription);
   }
 }
 
