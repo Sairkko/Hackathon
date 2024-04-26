@@ -4,11 +4,14 @@ import router from '../router';
 import { useUserStore } from '@/store/UserStrore';
 import { useRoute } from 'vue-router';
 
+
+
 const usersStore = useUserStore();
 const user = computed(() => {
   return usersStore.getUser;
 });
 
+console.log(user.value)
 console.log(user.value?.role);
 
 const isAtelierMenuOpen = ref(false);
@@ -81,7 +84,7 @@ function toggleMenu() {
                   >
                     Accueil
                   </router-link>
-                  <router-link
+                  <router-link v-if="user"
                       :class="{'text-red hover:text-red-800': isActiveRoute('HomePage').value, 'text-gray-700 hover:text-gray-800': !isActiveRoute('HomePage').value}"
                       :to="{ name: 'HomePage' }"
                       class="block px-4 py-2 text-sm"
@@ -152,13 +155,13 @@ function toggleMenu() {
             </router-link>
           </div>
           <div v-else class="flex items-center space-x-4">
-            <router-link :to="{name: 'vignification'}">
+            <router-link v-if="user" :to="{name: 'vignification'}">
               <span class="text-gray-700 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">Procédé de vinification</span>
             </router-link>
             <router-link :to="{name: 'atelier'}">
               <span class="text-gray-700 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">Les ateliers</span>
             </router-link>
-            <router-link :to="{name: 'myReservation'}">
+            <router-link v-if="user" :to="{name: 'myReservation'}">
               <span class="text-gray-700 hover:text-gray-800 px-3 py-2 rounded-md text-sm font-medium">Mes réservations</span>
             </router-link>
             <router-link :to="{name: 'propos'}">

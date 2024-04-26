@@ -28,27 +28,14 @@ export default defineComponent({
     const layout = shallowRef(PageLayout);
     const route = useRoute();
 
-    //  router.beforeEach((to, from, next) => {
-    //   if (to.name != 'Login' && user.token == "" ) {
-    //     next({ name: 'Login' });
-    //   }
-    //   else {
-    //     const permissions: string = typeof to.meta.permissions == 'string' ? to.meta.permissions : '';
-    //     if (permissions != '' && !usersStore.can(permissions)) {
-    //       next({ name: 'Forbidden403' });
-    //     } else {
-    //       next();
-    //     }
-    //   }
-    // })
-
     router.beforeEach((to, from, next) => {
-      const allowedRoles = to.meta.roles as string[] | undefined; // Les rôles autorisés pour cette route
-      const userRole = user.value ? user.value.role : undefined;
-      if (allowedRoles && userRole && !allowedRoles.includes(userRole)) {
-        next({ name: 'Forbidden403' });
-      } else {
+      const allowedRoles = to.meta.roles! as any;
+      if(user.value && allowedRoles.includes(user.value.role!)){
         next();
+      }else if(to.meta.roles == "*"){
+        next();
+      }else{
+        next({ name: 'Forbidden403' });
       }
     });
 

@@ -25,6 +25,7 @@ const routes: RouteRecordRaw[] = [
     name: 'LoginPage',
     component: LoginPage,
     meta: {
+      roles: '*',
       layout: 'BaseLayout'
     }
   },
@@ -33,6 +34,7 @@ const routes: RouteRecordRaw[] = [
     name: 'RegisterPage',
     component: RegisterPage,
     meta: {
+      roles: '*',
       layout: 'BaseLayout'
     }
   },
@@ -41,7 +43,7 @@ const routes: RouteRecordRaw[] = [
     name: 'HomePage',
     component: HomePage,
     meta: {
-      roles: ['ROLE_ADMIN', 'ROLE_USER'],
+      roles: '*',
       layout: 'PageLayout'
     }
   },
@@ -74,7 +76,7 @@ const routes: RouteRecordRaw[] = [
     name: 'propos',
     component: ProposPage,
     meta: {
-      roles: ['ROLE_USER'],
+      roles: '*',
       layout: 'PageLayout'
     }
   },
@@ -92,7 +94,7 @@ const routes: RouteRecordRaw[] = [
     name: 'atelier',
     component: AtelierPage,
     meta: {
-      roles: ['ROLE_USER'],
+      roles: '*',
       layout: 'PageLayout'
     }
   },
