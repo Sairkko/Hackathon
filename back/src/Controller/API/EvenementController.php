@@ -94,7 +94,7 @@ class EvenementController extends AbstractController
             'date_inscription_maximum' => $atelier->getDateInscriptionMaximum(),
             'limite_participant' => $atelier->getLimiteParticipant(),
             'localisation' => $atelier->getLocalisation(),
-            'ecole' => $atelier->getEcole()->getId(),
+            'ecole' => $atelier->getEcole()?->getId(),
             'atelierContent' => $atelier->getAtelierContent()->getId()
         ];
 
