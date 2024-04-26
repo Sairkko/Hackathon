@@ -29,7 +29,7 @@ class LoginController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register', methods: ['POST'])]
-    public function register(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    public function register(MailerInterface $mailer, Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $data = json_decode($request->getContent(), true);
 
@@ -54,6 +54,14 @@ class LoginController extends AbstractController
 
         $entityManager->persist($user);
         $entityManager->flush();
+
+        $email = (new Email())
+            ->from('hackathon@esgi.com')
+            ->to($user->getMail())
+            ->subject("Confirmation d'inscription à un atelier")
+            ->html("<p>Votre compte a bien été créer</p>");
+
+        $mailer->send($email);
 
         return $this->createApiResponse(['user' => ['id' => $user->getId()]], 'User registered successfully.', Response::HTTP_CREATED);
     }
