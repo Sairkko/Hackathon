@@ -11,9 +11,6 @@ const user = computed(() => {
   return usersStore.getUser;
 });
 
-console.log(user.value)
-console.log(user.value?.role);
-
 const isAtelierMenuOpen = ref(false);
 const isAdminMenuOpen = ref (false);
 const route = useRoute();
@@ -283,8 +280,8 @@ function toggleMenu() {
         <div class="flex items-center">
           <div v-if="user" class="text-sm text-red">
             <font-awesome-icon icon="user" class="mr-1" /><span>{{user.firstName}}</span>
-            <font-awesome-icon @click="deconnexion" class="md:hidden ml-4 text-dark-red hover:text-red" icon="sign-out-alt" />
-            <button @click="deconnexion" class="hidden md:block text-white bg-red hover:bg-hover-red px-5 py-2 rounded-md text-sm font-medium">Déconnexion</button>
+            <font-awesome-icon @click="deconnexion" class="ml-4 text-dark-red hover:text-red" icon="sign-out-alt" />
+            <!-- <button @click="deconnexion" class="hidden md:block text-white bg-red hover:bg-hover-red px-5 py-2 rounded-md text-sm font-medium">Déconnexion</button> -->
           </div>
           <router-link v-else :to="{name: 'LoginPage'}">
             <span class="text-white bg-red hover:bg-hover-red px-5 py-2 rounded-md text-sm font-medium">Connexion</span>

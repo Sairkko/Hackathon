@@ -65,7 +65,7 @@
                         @blur="user.password === undefined ? user.password = '' : ''"
                     />
                 </div>
-                    <div class="flex items-center flex-col justify-between gap-2">
+                    <div class="flex items-center flex-col justify-between gap-2 mt-3">
                         <CustomButton label="Valider" @click="onClick"/>
                         <span>
                             Vous avez un compte ?

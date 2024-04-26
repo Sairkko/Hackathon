@@ -28,6 +28,7 @@ export default class Event {
 function parseAndFormatDate(dateString: string) {
     // Créer un objet Date à partir de la chaîne de date initiale
     const date = new Date(dateString);
+    console.log(date)
   
     // Obtenir les composantes de la date
     const year = date.getFullYear();

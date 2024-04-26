@@ -13,6 +13,9 @@ import VignificationPage from "@/views/VignificationPage.vue";
 import CalendrierPage from "@/views/CalendrierPage.vue"
 import WineInventoryPage from "@/views/WineInventoryPage.vue";
 import GestionProposPage from "@/views/GestionProposPage.vue";
+import ResetPasswordPage from "@/views/ResetPasswordPage.vue";
+import NewPasswordPage from "@/views/NewPasswordPage.vue";
+import ForbiddenPage from "@/views/ForbiddenPage.vue"
 
 
 const routes: RouteRecordRaw[] = [
@@ -39,6 +42,24 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
+    path: '/resetPassword',
+    name: 'ResetPasswordPage',
+    component: ResetPasswordPage,
+    meta: {
+      roles: '*',
+      layout: 'BaseLayout'
+    }
+  },
+  {
+    path: '/newPassword',
+    name: 'NewPasswordPage',
+    component: NewPasswordPage,
+    meta: {
+      roles: '*',
+      layout: 'BaseLayout'
+    }
+  },
+  {
     path: '/home',
     name: 'HomePage',
     component: HomePage,
@@ -52,6 +73,10 @@ const routes: RouteRecordRaw[] = [
     name: 'WorkshopDetailsPage',
     props: true,
     component: WorkshopDetailsPage,
+    meta: {
+      roles: '*',
+      layout: 'PageLayout'
+    }
   },
   {
     path: '/my-reservation',
@@ -85,7 +110,7 @@ const routes: RouteRecordRaw[] = [
     name: 'propos_Admin',
     component: GestionProposPage,
     meta: {
-      roles: ['ROLE_USER'],
+      roles: ['ROLE_ADMIN'],
       layout: 'PageLayout'
     }
   },
@@ -132,6 +157,15 @@ const routes: RouteRecordRaw[] = [
     component: WineInventoryPage,
     meta: {
       roles: ['ROLE_ADMIN'],
+      layout: 'PageLayout'
+    }
+  },
+  {
+    path: '/forbidden',
+    name: 'ForbiddenPage',
+    component: ForbiddenPage,
+    meta: {
+      roles: '*',
       layout: 'PageLayout'
     }
   }

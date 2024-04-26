@@ -47,7 +47,6 @@
         </div>
         <div class="text-right mb-2">
           <InscriptionForm :eventId="event.id" @addParticipation="el => event.reservations.push(el)" />
-          <!-- <StrokeButton label="Ajouter un participant" icon="pi pi-plus" class="mt-2" @click="addParticipant" /> -->
         </div>
         <p class="text-dark-red">Participants confirmés :</p>
         <div  v-for="user in event.reservations.filter(el => el.is_paid)" :key="user.id" class="flex px-1 justify-between">
@@ -193,17 +192,8 @@ export default defineComponent({
         },
         events: [],
         eventClick: handleEventClick ,
-         dayMaxEvents: 5,
-        eventContent: function(arg: any) {
-          if (arg.isMirror) {
-            return { domNodes: [] };
-          }
-          if (arg.isStart) {
-            return { html: `<span class='event-title'>${arg.event.title}</span>` };
-          } else {
-            return { domNodes: [] };
-          }
-        },
+        dayMaxEvents: 5,
+        
       })
 
     const deleteReservation = (reservation: any) => {
@@ -272,10 +262,6 @@ export default defineComponent({
       }
     }
 
-    const addParticipant = () => {
-      console.log("add P")
-    }
-
     return {
       appUser,
       calendarOptions,
@@ -286,7 +272,6 @@ export default defineComponent({
       deleteReservation,
       validateReservation,
       sendEvent,
-      addParticipant
     };
   },
 });
