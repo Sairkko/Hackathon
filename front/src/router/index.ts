@@ -41,6 +41,7 @@ const routes: RouteRecordRaw[] = [
     name: 'HomePage',
     component: HomePage,
     meta: {
+      roles: ['ROLE_ADMIN', 'ROLE_USER'],
       layout: 'PageLayout'
     }
   },
@@ -54,6 +55,7 @@ const routes: RouteRecordRaw[] = [
     name: 'myReservation',
     component: MyReservation,
     meta: {
+      roles: ['ROLE_USER'],
       layout: 'PageLayout'
     }
   },
@@ -62,6 +64,7 @@ const routes: RouteRecordRaw[] = [
     name: 'vignification',
     component: VignificationPage,
     meta: {
+      roles: ['ROLE_USER'],
       layout: 'PageLayout'
     }
   },
@@ -70,6 +73,7 @@ const routes: RouteRecordRaw[] = [
     name: 'propos',
     component: ProposPage,
     meta: {
+      roles: ['ROLE_USER'],
       layout: 'PageLayout'
     }
   },
@@ -78,6 +82,7 @@ const routes: RouteRecordRaw[] = [
     name: 'propos_Admin',
     component: GestionProposPage,
     meta: {
+      roles: ['ROLE_USER'],
       layout: 'PageLayout'
     }
   },
@@ -86,6 +91,7 @@ const routes: RouteRecordRaw[] = [
     name: 'atelier',
     component: AtelierPage,
     meta: {
+      roles: ['ROLE_USER'],
       layout: 'PageLayout'
     }
   },
@@ -94,6 +100,7 @@ const routes: RouteRecordRaw[] = [
     name: 'atelier_Admin',
     component: AdminAtelierPage,
     meta: {
+      roles: ['ROLE_ADMIN'],
       layout: 'PageLayout'
     }
   },
@@ -102,6 +109,7 @@ const routes: RouteRecordRaw[] = [
     name: 'vignification',
     component: VignificationComponent,
     meta: {
+      roles: ['ROLE_USER'],
       layout: 'PageLayout'
     }
   },
@@ -111,6 +119,7 @@ const routes: RouteRecordRaw[] = [
     name: 'calendrierPage',
     component: CalendrierPage,
     meta: {
+      roles: ['ROLE_ADMIN'],
       layout: 'PageLayout'
     }
   },
@@ -119,6 +128,7 @@ const routes: RouteRecordRaw[] = [
     name: 'inventaire',
     component: WineInventoryPage,
     meta: {
+      roles: ['ROLE_ADMIN'],
       layout: 'PageLayout'
     }
   }

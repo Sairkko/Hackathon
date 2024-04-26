@@ -15,6 +15,7 @@ import User from "../models/User";
 import { useUserStore } from '../store/UserStrore';
 import BaseLayout from "./BaseLayout.vue";
 import PageLayout from "./PageLayout.vue";
+import router from "@/router";
 
 
 export default defineComponent({
@@ -30,7 +31,7 @@ export default defineComponent({
     //  router.beforeEach((to, from, next) => {
     //   if (to.name != 'Login' && user.token == "" ) {
     //     next({ name: 'Login' });
-    //   } 
+    //   }
     //   else {
     //     const permissions: string = typeof to.meta.permissions == 'string' ? to.meta.permissions : '';
     //     if (permissions != '' && !usersStore.can(permissions)) {
@@ -41,10 +42,20 @@ export default defineComponent({
     //   }
     // })
 
+    router.beforeEach((to, from, next) => {
+      const allowedRoles = to.meta.roles as string[] | undefined; // Les rôles autorisés pour cette route
+      const userRole = user.value ? user.value.role : undefined;
+      if (allowedRoles && userRole && !allowedRoles.includes(userRole)) {
+        next({ name: 'Forbidden403' });
+      } else {
+        next();
+      }
+    });
+
     if (!user.value && localStorage.getItem("user")) {
       usersStore.setUser(Object.assign(new User(),JSON.parse(localStorage.getItem("user")!)))
     }
-    
+
     watch(
       () => route.meta,
         (meta) => {
@@ -59,7 +70,7 @@ export default defineComponent({
       },
       { immediate: false }
     );
-    
+
     return { layout };
   }
 })
