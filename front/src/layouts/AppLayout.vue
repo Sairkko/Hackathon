@@ -35,7 +35,7 @@ export default defineComponent({
       }else if(to.meta.roles == "*"){
         next();
       }else{
-        next({ name: 'Forbidden403' });
+        router.push({path: "forbidden"});
       }
     });
 

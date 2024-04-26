@@ -46,6 +46,7 @@ const routes: RouteRecordRaw[] = [
     name: 'ResetPasswordPage',
     component: ResetPasswordPage,
     meta: {
+      roles: '*',
       layout: 'BaseLayout'
     }
   },
@@ -54,6 +55,7 @@ const routes: RouteRecordRaw[] = [
     name: 'NewPasswordPage',
     component: NewPasswordPage,
     meta: {
+      roles: '*',
       layout: 'BaseLayout'
     }
   },
@@ -71,6 +73,10 @@ const routes: RouteRecordRaw[] = [
     name: 'WorkshopDetailsPage',
     props: true,
     component: WorkshopDetailsPage,
+    meta: {
+      roles: '*',
+      layout: 'PageLayout'
+    }
   },
   {
     path: '/my-reservation',
@@ -104,7 +110,7 @@ const routes: RouteRecordRaw[] = [
     name: 'propos_Admin',
     component: GestionProposPage,
     meta: {
-      roles: ['ROLE_USER'],
+      roles: ['ROLE_ADMIN'],
       layout: 'PageLayout'
     }
   },

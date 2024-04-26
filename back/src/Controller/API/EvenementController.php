@@ -94,8 +94,11 @@ class EvenementController extends AbstractController
             'date_inscription_maximum' => $atelier->getDateInscriptionMaximum(),
             'limite_participant' => $atelier->getLimiteParticipant(),
             'localisation' => $atelier->getLocalisation(),
-            'ecole' => $atelier->getEcole()?->getId(),
-            'atelierContent' => $atelier->getAtelierContent()->getId()
+            'ecole' => $atelier->getEcole() ? $atelier->getEcole()->getId(): null,
+            'atelier' => [
+                "id" => $atelier->getAtelierContent()->getId(),
+                "name" => $atelier->getAtelierContent()->getNom()
+            ]
         ];
 
         return $this->createApiResponse($newEvent, Response::HTTP_CREATED);
