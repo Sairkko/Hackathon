@@ -2,6 +2,7 @@
 
 namespace App\Controller\API;
 
+use App\Entity\AtelierContent;
 use App\Entity\Product;
 use App\Entity\User;
 use App\Repository\ProductRepository;
@@ -30,7 +31,7 @@ class ProductController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        $requiredFields = ['region', 'millesime', 'cepage', 'nom', 'type'];
+        $requiredFields = ['region', 'millesime', 'cepage', 'nom', 'type', 'volume'];
         foreach ($requiredFields as $field) {
             if (empty($data[$field])) {
                 return $this->createApiResponse([], sprintf('Missing required field: %s.', $field), Response::HTTP_BAD_REQUEST);
@@ -40,11 +41,12 @@ class ProductController extends AbstractController
         $product = new Product();
         $product->setRegion($data['region']);
         $product->setNom($data['nom']);
+        $product->setVolume($data['volume']);
         $product->setStock($data['stock'] ?? 0);
         $product->setCepage($data['cepage']);
         $product->setMillesime($data['millesime']);
         $product->setType($data['type']);
-        $product->setDescription($data['type'] ?? "");
+        $product->setDescription($data['description'] ?? "");
 
         $entityManager->persist($product);
         $entityManager->flush();
@@ -60,12 +62,13 @@ class ProductController extends AbstractController
         $productData = array_map(function ($product) {
             return [
                 'id' => $product->getId(),
-                'name' => $product->getNom(),
+                'nom' => $product->getNom(),
                 'region' => $product->getRegion(),
                 'millesime' => $product->getMillesime(),
                 'cepage' => $product->getCepage(),
                 'stock' => $product->getStock(),
                 'type' => $product->getType(),
+                'volume' => $product->getVolume(),
                 'description' => $product->getDescription(),
             ];
         }, $products);
@@ -84,11 +87,12 @@ class ProductController extends AbstractController
 
         $productData = [
             'id' => $product->getId(),
-            'name' => $product->getNom(),
+            'nom' => $product->getNom(),
             'region' => $product->getRegion(),
             'millesime' => $product->getMillesime(),
             'cepage' => $product->getCepage(),
             'stock' => $product->getStock(),
+            'volume' => $product->getVolume(),
             'type' => $product->getType(),
             'description' => $product->getDescription(),
         ];
@@ -99,7 +103,7 @@ class ProductController extends AbstractController
     #[Route('/delete/{id}', name: 'delete_product', methods: ['DELETE'])]
     public function deleteProduct(int $id, ProductRepository $productRepository, EntityManagerInterface $entityManager): Response
     {
-        $product = $productRepository->find($id);
+        $product = $entityManager->getRepository(Product::class)->find($id);
 
         if (!$product) {
             return $this->createApiResponse([], 'Product not Found.', Response::HTTP_BAD_REQUEST);
@@ -122,7 +126,8 @@ class ProductController extends AbstractController
 
         $data = json_decode($request->getContent(), true);
 
-        $product->setNom($data['name'] ?? $product->getNom());
+        $product->setNom($data['nom'] ?? $product->getNom());
+        $product->setVolume($data['volume'] ?? $product->getVolume());
         $product->setRegion($data['region'] ?? $product->getRegion());
         $product->setMillesime($data['millesime'] ?? $product->getMillesime());
         $product->setCepage($data['cepage'] ?? $product->getCepage());

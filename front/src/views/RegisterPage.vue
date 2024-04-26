@@ -11,6 +11,7 @@
             </template>
             <template #content>
                 <div class="px-8">
+                  <div class="mt-2">
                     <InputText
                         :class="'w-full ' + ((user.firstName === '') ? 'p-invalid' : '')"
                         id="firstName"
@@ -20,6 +21,8 @@
                         @keyup.enter="onClick"
                         @blur="user.firstName === undefined ? user.firstName = '' : ''"
                     />
+                </div>
+                <div class="mt-2">
                     <InputText
                         :class="'w-full ' + ((user.lastName === '') ? 'p-invalid' : '')"
                         id="lastName"
@@ -29,6 +32,8 @@
                         @keyup.enter="onClick"
                         @blur="user.lastName === undefined ? user.lastName = '' : ''"
                     />
+                </div>
+                <div class="mt-2">
                     <InputText
                         class="w-full"
                         id="phoneNumber"
@@ -37,6 +42,8 @@
                         v-model="user.phoneNumber"
                         @keyup.enter="onClick"
                     />
+                </div>
+                <div class="mt-2">
                     <InputText
                         :class="'w-full ' + ((user.email === '') ? 'p-invalid' : '')"
                         id="email"
@@ -46,6 +53,8 @@
                         @keyup.enter="onClick"
                         @blur="user.email === undefined ? user.email = '' : ''"
                     />
+                </div>
+                <div class="mt-2">
                     <InputText
                         :class="'w-full ' + ((user.password === '') ? 'p-invalid' : '')"
                         id="password"
@@ -55,18 +64,15 @@
                         @keyup.enter="onClick"
                         @blur="user.password === undefined ? user.password = '' : ''"
                     />
-                    <div class="flex items-center flex-col justify-between gap-2">
-                        <Button
-                            class="bg-red hover:bg-red-700 text-white font-bold py-2 px-20"
-                            @click="onClick"
-                            label="Valider"
-                        />
+                </div>
+                    <div class="flex items-center flex-col justify-between gap-2 mt-3">
+                        <CustomButton label="Valider" @click="onClick"/>
                         <span>
                             Vous avez un compte ?
                         </span>
                         <router-link :to="{path: '/login'}">
                           <a
-                              class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800"
+                              class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800 pb-4"
                               href="#"
                           >
                               Connectez vous !
@@ -84,18 +90,20 @@
 import { defineComponent, ref, computed } from "vue";
 import { useUserStore } from "../store/UserStrore";
 import InputText from "primevue/inputtext";
-import Button from "primevue/button";
+// import Button from "primevue/button";
 import userApi from "../api/UserApi"
 import User from "../models/User"
 import Card from "primevue/card"
 import router from "../router/index";
+import CustomButton from "../components/CustomButton.vue";
 
 export default defineComponent({
   name: "RegisterPage",
   components: {
     InputText,
-    Button,
-    Card
+    // Button,
+    Card,
+    CustomButton
   },
   setup() {
     const usersStore = useUserStore();

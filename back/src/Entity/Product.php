@@ -18,8 +18,8 @@ class Product
     #[ORM\Column(length: 255)]
     private ?string $region = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $millesime = null;
+    #[ORM\Column]
+    private ?int $millesime = null;
 
     #[ORM\Column(length: 255)]
     private ?string $cepage = null;
@@ -33,15 +33,19 @@ class Product
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
-    #[ORM\ManyToMany(targetEntity: Atelier::class, mappedBy: 'products')]
-    private Collection $ateliers;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
+
+    #[ORM\Column]
+    private ?int $volume = null;
+
+    #[ORM\ManyToMany(targetEntity: AtelierContent::class, mappedBy: 'products')]
+    private Collection $atelierContents;
 
     public function __construct()
     {
         $this->ateliers = new ArrayCollection();
+        $this->atelierContents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -61,12 +65,12 @@ class Product
         return $this;
     }
 
-    public function getMillesime(): ?string
+    public function getMillesime(): ?int
     {
         return $this->millesime;
     }
 
-    public function setMillesime(string $millesime): static
+    public function setMillesime(int $millesime): static
     {
         $this->millesime = $millesime;
 
@@ -121,33 +125,6 @@ class Product
         return $this;
     }
 
-    /**
-     * @return Collection<int, Atelier>
-     */
-    public function getAteliers(): Collection
-    {
-        return $this->ateliers;
-    }
-
-    public function addAtelier(Atelier $atelier): static
-    {
-        if (!$this->ateliers->contains($atelier)) {
-            $this->ateliers->add($atelier);
-            $atelier->addProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAtelier(Atelier $atelier): static
-    {
-        if ($this->ateliers->removeElement($atelier)) {
-            $atelier->removeProduct($this);
-        }
-
-        return $this;
-    }
-
     public function getDescription(): ?string
     {
         return $this->description;
@@ -156,6 +133,45 @@ class Product
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getVolume(): ?int
+    {
+        return $this->volume;
+    }
+
+    public function setVolume(int $volume): static
+    {
+        $this->volume = $volume;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AtelierContent>
+     */
+    public function getAtelierContents(): Collection
+    {
+        return $this->atelierContents;
+    }
+
+    public function addAtelierContent(AtelierContent $atelierContent): static
+    {
+        if (!$this->atelierContents->contains($atelierContent)) {
+            $this->atelierContents->add($atelierContent);
+            $atelierContent->addProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAtelierContent(AtelierContent $atelierContent): static
+    {
+        if ($this->atelierContents->removeElement($atelierContent)) {
+            $atelierContent->removeProduct($this);
+        }
 
         return $this;
     }
