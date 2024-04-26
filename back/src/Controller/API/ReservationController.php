@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
@@ -27,13 +29,15 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ReservationController extends AbstractController
 {
     use ApiResponseTrait;
+    private MailerInterface $mailer;
 
-    public function __construct(private readonly EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager, MailerInterface $mailer)
     {
+        $this->mailer = $mailer;
     }
 
     #[Route('/new', name: 'new_reservation', methods: ['POST'])]
-    public function createReservation(Request $request, EntityManagerInterface $entityManager, AtelierRepository $atelierRepository, UserRepository $userRepository, ReservationRepository $reservationRepository): Response
+    public function createReservation(Request $request, EntityManagerInterface $entityManager, AtelierRepository $atelierRepository, UserRepository $userRepository, ReservationRepository $reservationRepository, MailerInterface $mailer): Response
     {
         $data = json_decode($request->getContent(), true);
 
@@ -47,6 +51,11 @@ class ReservationController extends AbstractController
             throw new BadRequestHttpException('Invalid atelier.');
         }
 
+        $atelierContent = $atelier->getAtelierContent();
+        if (!$atelierContent || $atelierContent->getPrix() === null) {
+            throw new BadRequestHttpException('Atelier price not set.');
+        }
+
         if ($atelier->getEcole() && empty($data['classe'])) {
             return $this->createApiResponse([], 'Atelier with school requires a class.', Response::HTTP_BAD_REQUEST);
         }
@@ -57,32 +66,36 @@ class ReservationController extends AbstractController
 
         $currentTotalParticipants = $reservationRepository->countTotalParticipantsForAtelier($atelier->getId());
         $proposedTotalParticipants = $currentTotalParticipants + $data['nombre_participant'];
-
         if ($proposedTotalParticipants > $atelier->getLimiteParticipant()) {
             return $this->createApiResponse([], 'This reservation exceeds the participant limit for the atelier.', Response::HTTP_BAD_REQUEST);
         }
 
-        $reservation = new Reservation();
+        $totalPrice = $atelierContent->getPrix() * $data['nombre_participant'];
 
+        $reservation = new Reservation();
         $reservation->addUser($user);
         $reservation->addAtelier($atelier);
         $reservation->setIsPaid(false);
         $reservation->setNombre($data['nombre_participant']);
-
-        if (!empty($data['classe'])) {
-            $reservation->setClasse($data['classe']);
-        } else {
-            $reservation->setClasse(null);
-        }
+        $reservation->setClasse($data['classe'] ?? null);
 
         $entityManager->persist($reservation);
         $entityManager->flush();
 
+        $email = (new Email())
+            ->from('hackathon@esgi.com')
+            ->to($user->getMail())
+            ->subject("Confirmation d'inscription à un atelier")
+            ->html("<p>Pour confirmer votre inscription veuillez envoyer la somme : {$totalPrice}€ <br> Payer par PayPal à bonnetonolivier@gmail.com <br> Payer par Lydia ou Paylib: 06 83 05 90 70</p>");
+
+        $mailer->send($email);
+
         return $this->createApiResponse(['reservationId' => $reservation->getId()], 'Reservation created.', Response::HTTP_CREATED);
     }
 
-    #[Route('/paid/{id}', name: 'payement', methods: ['PUT'])]
-    public function Payement(ReservationRepository $reservationRepository, int $id, Request $request, EntityManagerInterface $entityManager): Response
+
+    #[Route('/paid/{id}', name: 'payment', methods: ['PUT'])]
+    public function payment(UserRepository $userRepository, ReservationRepository $reservationRepository, int $id, Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         $reservation = $reservationRepository->find($id);
 
@@ -90,10 +103,20 @@ class ReservationController extends AbstractController
             return $this->createApiResponse([], 'Reservation not Found.', Response::HTTP_BAD_REQUEST);
         }
 
-        $reservation->setIsPaid(true );
+        $reservation->setIsPaid(true);
         $entityManager->flush();
 
-        return $this->createApiResponse(['message'=> 'Reservation updated successfully'],  Response::HTTP_OK);
+        $users = $reservation->getUser();
+        foreach ($users as $user) {
+            $email = (new Email())
+                ->from('hackathon@esgi.com')
+                ->to($user->getMail()) // Assurez-vous que getMail retourne une adresse email valide
+                ->subject("Confirmation d'inscription à un atelier")
+                ->html("<p>Le paiement a bien été reçu, votre inscription est confirmée</p>");
+
+            $mailer->send($email);
+        }
+        return $this->createApiResponse(['message' => 'Reservation updated and emails sent successfully'], Response::HTTP_OK);
     }
 
     #[Route('/show/{idAtelier}', name: 'show_by_atelier', methods: ['GET'])]
@@ -115,6 +138,7 @@ class ReservationController extends AbstractController
                     $usersSet[$userId] = [
                         'userId' => $userId,
                         'reservationId' => $reservation->getId(),
+                        'is_paid' => $reservation->isIsPaid(),
                         'name' => $user->getNom(),
                         'email' => $user->getMail(),
                         'nombre_participant' => $reservation->getNombre(),
@@ -174,23 +198,34 @@ class ReservationController extends AbstractController
         }
 
         $entityManager->persist($user);
+        $reservationId = null;
 
-        foreach ($data['ateliersId'] as $atelierId) {
-            $atelier = $atelierRepository->find($atelierId);
-            if ($atelier) {
-                $reservation = new Reservation();
-                $reservation->addUser($user);
-                $reservation->addAtelier($atelier);
-                $reservation->setNombre(1);
-                $reservation->setIsPaid(false);
-
-                $entityManager->persist($reservation);
-            }
+        $atelier = $atelierRepository->find($data['atelierId']);
+        if ($atelier) {
+            $reservation = new Reservation();
+            $reservation->addUser($user);
+            $reservation->addAtelier($atelier);
+            $reservation->setNombre($data['nb_participants']);
+            $reservation->setIsPaid(false);
+        
+            $entityManager->persist($reservation);
         }
 
         $entityManager->flush();
 
-        return $this->createApiResponse(['userId' => $user->getId()], 'User and reservations created.', Response::HTTP_CREATED);
+        $reservationId = $reservation->getId();
+
+
+        $response = [
+            'userId' => $user->getId(),
+            'name' => $user->getNom(),
+            'email' => $user->getMail(),
+            'nombre_participant' => $data['nb_participants'],
+            'is_paid' => false,
+            'reservationId' => $reservationId,
+        ];
+
+        return $this->createApiResponse($response, 'User and reservations created.', Response::HTTP_CREATED);
     }
 
 

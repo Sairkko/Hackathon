@@ -2,13 +2,13 @@ import User from '@/models/User';
 import apiClient from './apiClient';
 import Reservation from '@/models/Reservation';
 
-class UserApi {
+class ReservationApi {
   deleteOneReservation(reservationId :bigint, userId :bigint) {
     return apiClient.delete(`/reservation/delete/${reservationId}/${userId}`);
   }
 
   reservationByEvenement(evenementId :bigint, ) {
-    return apiClient.delete(`/reservation/show/${evenementId}`);
+    return apiClient.get(`/reservation/show/${evenementId}`);
   }
 
   getReservations() {
@@ -20,12 +20,16 @@ class UserApi {
   }
 
   createReservation(reservation: Reservation) {
-    return apiClient.post('/reservation/new');
+    return apiClient.post('/reservation/new', reservation);
   }
 
-  validPaiement(reservation: Reservation) {
-    return apiClient.put(`/reservation/paid/${reservation.id}`);
+  validPaiement(reservationId: string) {
+    return apiClient.put(`/reservation/paid/${reservationId}`);
+  }
+
+  createUserWithReservation(inscription: any){
+    return apiClient.post(`/reservation/create-with-ateliers`, inscription);
   }
 }
 
-export default new UserApi();
+export default new ReservationApi();

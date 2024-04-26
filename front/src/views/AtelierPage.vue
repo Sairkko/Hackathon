@@ -71,7 +71,7 @@ function organiserAteliersParThematique() {
       <p class="my-4 mx-16 text-center font-semibold">
         {{ descriptionParThematique[atelier.thematique!] }}
       </p>
-      <AtelierCard :nom="atelier.nom" :description="atelier.description" :thematique="atelier.thematique"/>
+      <AtelierCard :nom="atelier.nom" :description="atelier.description" :thematique="atelier.thematique" :id="atelier.id"/>
     </section>
     </div>
   </div>

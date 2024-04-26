@@ -100,22 +100,56 @@ export default {
             events.value.filter(event => event.reservation && !event.reservation.is_paid)
         );
 
-        const formatDate = (date) => {
-            return format(new Date(date), 'dd-MM-yyyy à HH:mm');
+      const formatDate = (dateObj) => {
+        // Extraire la propriété 'date' de l'objet, si 'dateObj' est un objet
+        const dateString = dateObj.date || dateObj;
+
+        // Assurez-vous que nous avons une chaîne de caractères
+        const dateStr = String(dateString);
+
+        // Supprimer la partie microsecondes de la date si elle existe
+        const dateWithoutMicroseconds = dateStr.replace(/\.\d+/, '');
+
+        // Créer un objet Date
+        const date = new Date(dateWithoutMicroseconds);
+
+        // Vérifier si la date est valide
+        if (Number.isNaN(date.getTime())) {
+          console.warn('Invalid date passed to formatDate:', dateString);
+          return 'Invalid date'; // Ou tout autre texte de remplacement que vous préférez
         }
 
-        const calculateDuration = (startDate, endDate) => {
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            const diffMinutes = differenceInMinutes(end, start);
+        return format(date, 'dd-MM-yyyy à HH:mm');
+      };
 
-            const hours = Math.floor(diffMinutes / 60);
-            const minutes = diffMinutes % 60;
+      const calculateDuration = (startDateObj, endDateObj) => {
+        // Extraire la propriété 'date' de l'objet, si 'startDateObj' et 'endDateObj' sont des objets
+        const startDateString = startDateObj.date || startDateObj;
+        const endDateString = endDateObj.date || endDateObj;
 
-            return `${hours}h${minutes < 10 ? '0' + minutes : minutes}`;
+        // Convertir les dates en chaînes si ce ne sont pas déjà des chaînes
+        const startDateStr = String(startDateString);
+        const endDateStr = String(endDateString);
+
+        const startDateWithoutMicroseconds = startDateStr.replace(/\.\d+/, '');
+        const endDateWithoutMicroseconds = endDateStr.replace(/\.\d+/, '');
+
+        const start = new Date(startDateWithoutMicroseconds);
+        const end = new Date(endDateWithoutMicroseconds);
+
+        // Vérifier si les dates sont valides
+        if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+          console.warn('Invalid start or end date passed to calculateDuration:', startDateStr, endDateStr);
+          return 'Invalid duration'; // Ou tout autre texte de remplacement que vous préférez
         }
 
-        const userStr = localStorage.getItem('user');
+        const diffMinutes = differenceInMinutes(end, start);
+        const hours = Math.floor(diffMinutes / 60);
+        const minutes = diffMinutes % 60;
+        return `${hours}h${minutes < 10 ? '0' + minutes : minutes}`;
+      };
+
+      const userStr = localStorage.getItem('user');
         const user = JSON.parse(userStr);
         const userId = user.id;
 

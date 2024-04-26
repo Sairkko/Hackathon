@@ -16,8 +16,11 @@
       <p class="text-dark-red bg-white text-justify mb-4">{{ props.description }}</p>
     </div>
     <div class="flex flex-col justify-center gap-4">
-      <button style="width: 160px" class="border text-white border-red bg-red py-2 px-4 rounded hover:bg-red-700 transition duration-300">Détails</button>
+      <router-link :to="{ name: 'WorkshopDetailsPage', params: { id: props.id } }" style="width: 160px" class="border text-white border-red bg-red py-2 px-4 rounded hover:bg-red-700 transition duration-300">
+        Détails
+      </router-link>
     </div>
+
   </div>
 </div>
 </template>
@@ -28,6 +31,7 @@ import Atelier from '../models/Atelier';
 // eslint-disable-next-line no-unused-vars,no-undef
 const props = defineProps<{
   modelValue: Atelier,
+  id?: String,
   nom?: String,
   description?: String,
   thematique?: String
