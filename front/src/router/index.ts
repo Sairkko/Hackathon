@@ -15,6 +15,7 @@ import WineInventoryPage from "@/views/WineInventoryPage.vue";
 import GestionProposPage from "@/views/GestionProposPage.vue";
 import ResetPasswordPage from "@/views/ResetPasswordPage.vue";
 import NewPasswordPage from "@/views/NewPasswordPage.vue";
+import ForbiddenPage from "@/views/ForbiddenPage.vue"
 
 
 const routes: RouteRecordRaw[] = [
@@ -150,6 +151,15 @@ const routes: RouteRecordRaw[] = [
     component: WineInventoryPage,
     meta: {
       roles: ['ROLE_ADMIN'],
+      layout: 'PageLayout'
+    }
+  },
+  {
+    path: '/forbidden',
+    name: 'ForbiddenPage',
+    component: ForbiddenPage,
+    meta: {
+      roles: '*',
       layout: 'PageLayout'
     }
   }
