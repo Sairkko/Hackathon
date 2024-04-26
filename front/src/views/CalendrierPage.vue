@@ -24,8 +24,8 @@
           </div>
         </div>
         <div class="mb-2">
-          <label for="inscriptionDate">Date d'inscription max</label>
-          <Calendar id="inscriptionDate" v-model="event.inscriptionDate" />
+          <label for="date_inscription_maximum">Date d'inscription max</label>
+          <Calendar id="date_inscription_maximum" v-model="event.date_inscription_maximum" />
         </div>
         <div class="mb-2">
           <label for="limite_participant">Limite de participants</label>
@@ -37,7 +37,7 @@
         </div>
       </div>
       <div class="text-right mb-2">
-        <StrokeButton :label="event.id ? 'Modifier' : 'Créer l\'événement'" :icon="event.id ? 'pi pi-pencil' : 'pi pi-plus'" class="mt-2" @click="sendEvent" />
+        <StrokeButton :label="event.id ? 'Enregistrer' : 'Créer l\'événement'" :icon="event.id ? 'pi pi-pencil' : 'pi pi-plus'" class="mt-2" @click="sendEvent" />
       </div>
       
       <hr/>
@@ -96,6 +96,8 @@ import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
 import InputNumber from "primevue/inputnumber"
 import InscriptionForm from "../components/InscriptionForm.vue";
+// import { getCurrentInstance } from 'vue'
+import router from "../router";
 
 export default defineComponent({
   name: "LoginPage",
@@ -127,7 +129,6 @@ export default defineComponent({
 
     EventApi.getEvents().then(response => {
       events.value = response.data.data.map((event: Event) => Object.assign(new Event(), event))
-      console.log(events.value)
       calendarOptions.value.events = events.value
     })
 
@@ -240,24 +241,30 @@ export default defineComponent({
       }
     }); 
     }
+
+    
+    // const instance = getCurrentInstance();
       
     const sendEvent = () => {
       loading.value = true
+      event.value.date_debut = new Date(event.value.date_debut).toISOString().slice(0, 19).replace('T', ' ');
+      event.value.date_fin = new Date(event.value.date_fin).toISOString().slice(0, 19).replace('T', ' ');
+      if(event.value.date_inscription_maximum){
+        event.value.date_inscription_maximum = new Date(event.value.date_inscription_maximum).toISOString().slice(0, 19).replace('T', ' ');
+      }
       if(event.value.id){
         EventApi.editEvent(event.value).then(() => {
           toast.add({ severity: 'info', summary: 'Enregistré', detail: 'Evènement modifié', life: 3000 });
           loading.value = false;
-          // Pour l'instant on recharge la page pour voir les modification dans le calendrier
-          // const index = events.value.findIndex((el: any) => el.id == event.value.id)
-          // events.value[index] = event.value
+          router.go(0);
         })
       }else{
-        EventApi.createEvent(event.value).then((response: any) => {
+        EventApi.createEvent(event.value).then(() => {
           toast.add({ severity: 'info', summary: 'Enregistré', detail: 'Evènement crée', life: 3000 });
-          console.log(response.data.data)
           loading.value = false;
-          event.value = Object.assign(new Event(), response.data.data)
-          events.value.push(event.value)
+          // event.value = Object.assign(new Event(), response.data.data)
+          // events.value.push(event.value)
+          router.go(0);
         })
       }
     }
