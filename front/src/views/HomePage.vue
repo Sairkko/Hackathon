@@ -34,9 +34,9 @@
                 <div class="text-center bg-white rounded p-4">
                   <h4 class="text-xl font-bold text-dark-red"><span class="text-red">Exploration Terrestre : </span>Plongée dans les Saveurs Vinicoles</h4>
                   <p class="my-4 hidden lg:block">Explorez les secrets des vins régionaux, des blancs subtils aux rouges profonds, en passant par les spécialités uniques.</p>
-                  <a href="#" class="bg-red hover:bg-hover-red text-white py-2 px-4 rounded">
+                  <router-link :to="{path: '/atelier'}" class="bg-red hover:bg-hover-red text-white py-2 px-4 rounded">
                     Réserver
-                  </a>
+                  </router-link>
                 </div>
               </div>
             </div>
@@ -48,9 +48,9 @@
                 <div class="text-center bg-white rounded p-4">
                   <h4 class="text-xl font-bold text-dark-red"><span class="text-red">Exploration Céleste: </span>Astrum Vitis, Alchimie des Terroirs et des Étoiles</h4>
                   <p class="my-4 hidden lg:block">Sous l'égide du Vin et des Étoiles, plongez dans un Voyage Vinicole au Cœur du Cosmos.</p>
-                  <a href="#" class="bg-red hover:bg-hover-red text-white py-2 px-4 rounded">
+                  <router-link :to="{path: '/atelier'}" class="bg-red hover:bg-hover-red text-white py-2 px-4 rounded">
                     Réserver
-                  </a>
+                  </router-link>
                 </div>
               </div>
             </div>
