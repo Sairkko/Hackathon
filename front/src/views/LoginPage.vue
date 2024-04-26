@@ -33,11 +33,11 @@
                     />
                 </div>
                     <div class="flex items-center flex-col justify-between gap-2 pt-4">
-                        <!-- <router-link :to="{name: 'ResetPasswordPage'}">
+                        <router-link :to="{name: 'ResetPasswordPage'}">
                           <span class="inline-block align-baseline font-bold text-sm text-red-500 hover:text-red-800">
                             Mot de passe oublié?
                           </span>
-                        </router-link> -->
+                        </router-link>
                         <CustomButton label="Valider" @click="onClick"/>
                         
                         <span>

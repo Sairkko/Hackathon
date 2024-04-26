@@ -87,7 +87,21 @@ class EvenementController extends AbstractController
         $entityManager->persist($atelier);
         $entityManager->flush();
 
-        return $this->createApiResponse([], Response::HTTP_CREATED);
+        $newEvent = [
+            'id' => $atelier->getId(),
+            'date_debut' => $atelier->getDateDebut(),
+            'date_fin' => $atelier->getDateFin(),
+            'date_inscription_maximum' => $atelier->getDateInscriptionMaximum(),
+            'limite_participant' => $atelier->getLimiteParticipant(),
+            'localisation' => $atelier->getLocalisation(),
+            'ecole' => $atelier->getEcole() ? $atelier->getEcole()->getId(): null,
+            'atelier' => [
+                "id" => $atelier->getAtelierContent()->getId(),
+                "name" => $atelier->getAtelierContent()->getNom()
+            ]
+        ];
+
+        return $this->createApiResponse($newEvent, Response::HTTP_CREATED);
     }
 
     #[Route('/all', name: 'all', methods: ['GET'])]

@@ -5,23 +5,30 @@ export default class Event {
     date_fin?: any;
     localisation?: string;
     date_inscription_maximum?: Date;
+    reservations?: any[];
+    limite_participants?: number;
 
     get start(): string {
-        return parseAndFormatDate(this.date_debut!.date);
+        return this.date_debut!.date ? parseAndFormatDate(this.date_debut!.date) : parseAndFormatDate(this.date_debut)
     }
 
     get end(): string {
-        return parseAndFormatDate(this.date_fin!.date);
+        return this.date_fin!.date ? parseAndFormatDate(this.date_fin!.date) : parseAndFormatDate(this.date_fin)
     }
 
     get title(): string {
         return this.atelier.nom
     }
+
+    // get backgroundColor(): string {
+    //     return "#ECB2C6"
+    // }
 }
 
 function parseAndFormatDate(dateString: string) {
     // Créer un objet Date à partir de la chaîne de date initiale
     const date = new Date(dateString);
+    console.log(date)
   
     // Obtenir les composantes de la date
     const year = date.getFullYear();

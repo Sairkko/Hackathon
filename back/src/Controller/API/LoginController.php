@@ -130,12 +130,12 @@ class LoginController extends AbstractController
         $user->setToken($resetToken);
         $entityManager->flush();
 
-        $resetLink = "https://127.0.0.1:8000/reset-password?token=$resetToken";
+        $resetLink = "localhost:8080/newPassword?token=$resetToken";
         $email = (new Email())
             ->from('hackathon@esgi.com')
             ->to($user->getMail())
             ->subject('Confirmation de compte enseignant')
-            ->html("<p>Please click on the following link to reset your password: <a href='$resetLink'>Reset Password</a></p>");
+            ->html("<p>Cliquez sur le lien pour réinitialiser votre mot de passe: <a href='$resetLink'>Reset Password</a></p>");
 
 
         $this->mailer->send($email);

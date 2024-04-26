@@ -10,18 +10,16 @@ export default defineComponent({
     },
     label: {
       type: String
+    },
+    loading: {
+      type: Boolean
     }
   },
   components: {
     Button
   },
-  setup(props,{emit}) {
-    
-    const click = () => {
-      emit('click')
-    }
+  setup() {
     return {
-      click
     };
   },
 });
@@ -29,7 +27,7 @@ export default defineComponent({
 
 
 <template>
-  <Button @click="click" class="custom-button" :icon="icon" :label="label" />
+  <Button @click="click" class="custom-button" :icon="icon" :label="label" :loading="loading"/>
 </template>
 
 <style scoped>

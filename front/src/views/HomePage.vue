@@ -8,9 +8,9 @@
         <div class="md:flex-1 text-center md:text-left p-4">
           <h2 class="text-2xl font-bold mb-4 text-red">Explorez le Monde des Vins</h2>
           <p class="mb-4">Découvrez, apprenez et savourez une sélection exquise de vins du monde entier, guidé par un passionné.</p>
-          <a href="#" class="bg-red hover:bg-hover-red text-white py-2 px-4 rounded">
+          <router-link :to="{path: '/atelier'}" class="bg-red hover:bg-hover-red text-white py-2 px-4 rounded">
             Découvrir
-          </a>
+          </router-link>
         </div>
       </div>
     </section>

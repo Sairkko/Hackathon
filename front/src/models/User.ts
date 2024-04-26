@@ -7,5 +7,5 @@ export default class User {
     email?: string;
     role?: string;
     phoneNumber?: string;
-
+    newPassword?: string;
 }
