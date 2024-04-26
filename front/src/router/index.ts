@@ -13,6 +13,8 @@ import VignificationPage from "@/views/VignificationPage.vue";
 import CalendrierPage from "@/views/CalendrierPage.vue"
 import WineInventoryPage from "@/views/WineInventoryPage.vue";
 import GestionProposPage from "@/views/GestionProposPage.vue";
+import ResetPasswordPage from "@/views/ResetPasswordPage.vue";
+import NewPasswordPage from "@/views/NewPasswordPage.vue";
 
 
 const routes: RouteRecordRaw[] = [
@@ -32,6 +34,22 @@ const routes: RouteRecordRaw[] = [
     path: '/register',
     name: 'RegisterPage',
     component: RegisterPage,
+    meta: {
+      layout: 'BaseLayout'
+    }
+  },
+  {
+    path: '/resetPassword',
+    name: 'ResetPasswordPage',
+    component: ResetPasswordPage,
+    meta: {
+      layout: 'BaseLayout'
+    }
+  },
+  {
+    path: '/newPassword',
+    name: 'NewPasswordPage',
+    component: NewPasswordPage,
     meta: {
       layout: 'BaseLayout'
     }
