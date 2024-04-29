@@ -63,15 +63,15 @@ function toggleMenu() {
         <div class="hidden md:flex" style="z-index: 1001;">
           <div v-if="user?.role === 'ROLE_ADMIN'" class="flex items-center space-x-4">
             <div class="relative" v-click-outside="{ open: isAdminMenuOpen, close: toggleAdminMenu }">
-<!--              <div>-->
-<!--                <button @click="toggleAdminMenu" type="button" class="inline-flex justify-center w-full rounded-md px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none" id="menu-button" aria-expanded="true" aria-haspopup="true">-->
-<!--                  Administration de contenu-->
-<!--                </button>-->
-<!--              </div>-->
+             <div>
+               <button @click="toggleAdminMenu" type="button" class="inline-flex justify-center w-full rounded-md px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none" id="menu-button" aria-expanded="true" aria-haspopup="true">
+                 Administration de contenu
+               </button>
+             </div>
 
               <div v-show="isAdminMenuOpen" class="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
                 <div class="py-1" role="none">
-                  <router-link
+                  <!-- <router-link
                       :class="{'text-red hover:text-red-800': isActiveRoute('HomePage').value, 'text-gray-700 hover:text-gray-800': !isActiveRoute('HomePage').value}"
                       :to="{ name: 'HomePage' }"
                       class="block px-4 py-2 text-sm"
@@ -80,8 +80,8 @@ function toggleMenu() {
                       id="menu-item-0"
                   >
                     Accueil
-                  </router-link>
-                  <router-link v-if="user"
+                  </router-link> -->
+                  <!-- <router-link v-if="user"
                       :class="{'text-red hover:text-red-800': isActiveRoute('HomePage').value, 'text-gray-700 hover:text-gray-800': !isActiveRoute('HomePage').value}"
                       :to="{ name: 'HomePage' }"
                       class="block px-4 py-2 text-sm"
@@ -90,8 +90,8 @@ function toggleMenu() {
                       id="menu-item-0"
                   >
                     Procédé de vinification
-                  </router-link>
-                  <router-link
+                  </router-link> -->
+                  <!-- <router-link
                       :class="{'text-red hover:text-red-800': isActiveRoute('HomePage').value, 'text-gray-700 hover:text-gray-800': !isActiveRoute('HomePage').value}"
                       :to="{ name: 'HomePage' }"
                       class="block px-4 py-2 text-sm"
@@ -100,7 +100,7 @@ function toggleMenu() {
                       id="menu-item-0"
                   >
                     Détail d'un atelier
-                  </router-link>
+                  </router-link> -->
                   <router-link
                       :class="{'text-red hover:text-red-800': isActiveRoute('propos_Admin').value, 'text-gray-700 hover:text-gray-800': !isActiveRoute('propos_Admin').value}"
                       :to="{ name: 'propos_Admin' }"
@@ -174,14 +174,14 @@ function toggleMenu() {
           <div v-if="user?.role === 'ROLE_ADMIN'" class="mobile-menu flex-col space-y-1 bg-white shadow-md" v-show="isMenuOpen">
             <div class="relative">
               <div>
-<!--                <button @click="toggleAdminMenu" type="button" class="inline-flex justify-center w-full rounded-md px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none" id="menu-button" aria-expanded="true" aria-haspopup="true">-->
-<!--                  Administration de contenu-->
-<!--                </button>-->
+               <button @click="toggleAdminMenu" type="button" class="inline-flex justify-center w-full rounded-md px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none" id="menu-button" aria-expanded="true" aria-haspopup="true">-->
+                  Administration de contenu
+               </button>
               </div>
 
               <div style="z-index: 1000;" v-show="isAdminMenuOpen" class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
                 <div class="py-1" role="none">
-                  <router-link
+                  <!-- <router-link
                       :class="{'text-red hover:text-red-800': isActiveRoute('HomePage').value, 'text-gray-700 hover:text-gray-800': !isActiveRoute('HomePage').value}"
                       :to="{ name: 'HomePage' }"
                       class="block px-4 py-2 text-sm"
@@ -190,8 +190,8 @@ function toggleMenu() {
                       id="menu-item-0"
                   >
                     Accueil
-                  </router-link>
-                  <router-link
+                  </router-link> -->
+                  <!-- <router-link
                       :class="{'text-red hover:text-red-800': isActiveRoute('HomePage').value, 'text-gray-700 hover:text-gray-800': !isActiveRoute('HomePage').value}"
                       :to="{ name: 'HomePage' }"
                       class="block px-4 py-2 text-sm"
@@ -200,8 +200,8 @@ function toggleMenu() {
                       id="menu-item-0"
                   >
                     Procédé de vinification
-                  </router-link>
-                  <router-link
+                  </router-link> -->
+                  <!-- <router-link
                       :class="{'text-red hover:text-red-800': isActiveRoute('HomePage').value, 'text-gray-700 hover:text-gray-800': !isActiveRoute('HomePage').value}"
                       :to="{ name: 'HomePage' }"
                       class="block px-4 py-2 text-sm"
@@ -210,7 +210,7 @@ function toggleMenu() {
                       id="menu-item-0"
                   >
                     Détail d'un atelier
-                  </router-link>
+                  </router-link> -->
                   <router-link
                       :class="{'text-red hover:text-red-800': isActiveRoute('propos_Admin').value, 'text-gray-700 hover:text-gray-800': !isActiveRoute('propos_Admin').value}"
                       :to="{ name: 'propos_Admin' }"
